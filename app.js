@@ -13,7 +13,7 @@ const PRICING = {
   endgameDiscount: 0.20,                             // off (Express boost + 292 gear) inside "Express + Gear"
   extras: [
     { id: 'gear292',  label: '292 ilvl gear',     price: 53.87, desc: 'Ready for M+4 · needs level 90' },
-    { id: 'camp2',    label: 'Both campaigns',    price: 52.27, was: 61.49, desc: "Midnight and Ula'tek together, 15% off" },
+    { id: 'camp2',    label: 'Both campaigns',    price: 52.27, was: 61.49, tag: '-15%', desc: "Midnight and Ula'tek together" },
     { id: 'campaign', label: 'Midnight campaign', price: 36.81, was: 46.01, desc: 'Finished on the way' },
     { id: 'ulatek',   label: "Ula'tek campaign",  price: 24.68, desc: 'Needs level 90' },
     { id: 'honor',    label: 'Honor gear 331',    price: 20.19, desc: '331 ilvl PvP set · needs level 90' },
@@ -188,11 +188,14 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
   </button>`).join('');
 
 const extraPrice = (x, locked) => locked ? (locked === 'set' ? 'In the set' : 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
-$('#extras').innerHTML = PRICING.extras.map((x) => `
+const xrow = (x) => `
   <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
-    <span class="xt"><b>${x.label}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`).join('');
+    <span class="xt"><b>${x.label}${x.tag ? `<i class="xtag">${x.tag}</i>` : ''}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`;
+const CAMPS = ['campaign', 'ulatek', 'camp2'];
+$('#extras').innerHTML = PRICING.extras.filter((x) => !CAMPS.includes(x.id) || x.id === 'campaign').map((x) => x.id === 'campaign'
+  ? `<div class="xgroup" role="group" aria-label="Campaigns"><div class="xg-h">Campaigns <small>take one or both</small></div><div class="xg-rows">${CAMPS.map((id) => xrow(extraDef(id))).join('')}</div></div>`
+  : xrow(x)).join('');
 
-$('#lvlChips').innerHTML = Array.from({ length: 9 }, (_, k) => `<button type="button" class="lc" data-lvl="${81 + k}" aria-pressed="false">${81 + k}</button>`).join('');
 
 /* ================= Render: state → DOM ================= */
 const HOW = {
@@ -221,7 +224,6 @@ function render() {
   el.rangeBox.dataset.mode = mode;
   el.from.value = from; el.to.value = to;
   el.to.readOnly = mode === 'mine';
-  $$('#lvlChips .lc').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.lvl === from && to === 90));
   el.rFrom.value = from; el.rTo.value = to;
   const pos = (v) => `calc(8px + (100% - 16px) * ${(v - 1) / 89})`;
   $('#fill').style.left = pos(from); $('#fill').style.right = `calc(100% - ${pos(to)})`;
@@ -349,8 +351,6 @@ $('#opts').addEventListener('click', (e) => {
     const v = b.dataset.end;
     if (v === 'afk') { state.from = 1; state.to = 80; state.mode = 'custom'; if (state.pkg === 'endgame') { state.pkg = 'express'; } render(); }
     else setRange(Math.min(state.from, +v - 1), +v, 'to');
-  } else if ((b = t('[data-lvl]'))) {
-    setRange(+b.dataset.lvl, 90, 'from');
   } else if (t('#compare')) {
     openCompare();
   }
@@ -362,6 +362,7 @@ $('#opts').addEventListener('change', (e) => {
       const id = e.target.dataset.extra;
       e.target.checked ? state.extras.add(id) : state.extras.delete(id);
       if (id === 'camp2' && e.target.checked) SET.camp2.forEach((s) => state.extras.delete(s));
+      if (SET.camp2.every((s) => state.extras.has(s))) { SET.camp2.forEach((s) => state.extras.delete(s)); state.extras.add('camp2'); }
     }
   }
   render();
@@ -548,10 +549,10 @@ function itemHTML(i, idx) {
   let sw = '';
   if (c) {
     const cur = quote(c).raw;
-    sw = `<div class="mswitch"><span>Switch method</span>${Object.keys(METHODS).filter((m) => m !== c.method).map((m) => {
+    sw = `<div class="mswitch"><span>Switch method</span><div class="msw-row">${Object.keys(METHODS).filter((m) => m !== c.method).map((m) => {
       const d = pretty(Math.abs(quote({ ...c, method: m }).raw - cur)), sign = quote({ ...c, method: m }).raw >= cur ? '+' : '−';
       return `<button type="button" class="msw" data-msw="${idx}:${m}">${METHODS[m].name} ${sign}${money(d)}</button>`;
-    }).join('')}</div>`;
+    }).join('')}</div></div>`;
   }
   return `
     <div class="litem">

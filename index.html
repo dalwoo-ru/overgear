@@ -109,11 +109,6 @@
             <button type="button" class="pre" role="radio" data-p="custom">Custom</button>
           </div>
           <div class="range-box" id="rangeBox" data-mode="pop" hidden>
-            <div class="chiprow lvlchips" id="lvlChips" aria-label="Your level"></div>
-            <div class="chiprow endchips" id="endChips" aria-label="Quick end level">
-              <button type="button" class="lc wide" data-end="afk">1 → 80 · AFK in Azure Span</button>
-              <button type="button" class="lc" data-end="60">To 60</button><button type="button" class="lc" data-end="70">To 70</button><button type="button" class="lc" data-end="80">To 80</button>
-            </div>
             <div class="range-row">
               <label class="num"><span class="sr">From level</span><small id="fromLbl">My level</small><input id="from" inputmode="numeric" pattern="[0-9]*" value="80" autocomplete="off"></label>
               <svg class="ic arrow-r"><use href="#i-arrow"/></svg>
@@ -125,6 +120,10 @@
               <input type="range" id="rTo" min="1" max="90" value="90" aria-label="Maximum">
             </div>
             <div class="dual-l"><span>1</span><span>90</span></div>
+            <div class="chiprow endchips" id="endChips" aria-label="Quick end level">
+              <button type="button" class="lc wide" data-end="afk">1 → 80 · AFK in Azure Span</button>
+              <button type="button" class="lc" data-end="60">To 60</button><button type="button" class="lc" data-end="70">To 70</button><button type="button" class="lc" data-end="80">To 80</button>
+            </div>
           </div>
           </div>
 
