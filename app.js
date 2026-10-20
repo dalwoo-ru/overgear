@@ -248,6 +248,10 @@ function render() {
   $$('[data-extra]').forEach((c) => { c.checked = state.extras.has(c.dataset.extra); });
   $('#addonCount').textContent = state.extras.size ? `${PRICING.extras.length} · ${state.extras.size} selected` : PRICING.extras.length;
 
+  // recap of the choices, next to the price
+  const ex = [...state.extras].map((id) => PRICING.extras.find((x) => x.id === id).label);
+  $('#recap').innerHTML = `<b>${from} → ${to}</b> · ${METHODS[state.method].name} · ${state.express ? 'Express' : 'Standard'} · ${state.chars} char${state.chars > 1 ? 's' : ''} · ${state.region.toUpperCase()}${ex.length ? `<br>+ ${ex.join(', ')}` : ''}`;
+
   // summary (O5)
   const eta = fmtH(q.hours);
   $('#price').textContent = money(q.total);
@@ -528,7 +532,7 @@ function armNudge() {
   const ms = +new URLSearchParams(location.search).get('nudge') || 20000;
   nudgeTimer = setTimeout(() => { if (!nudgeDone && sheet.hidden && drawer.hidden) nudge.hidden = false; }, ms);
 }
-const orderEl = $('.order');
+const orderEl = $('.config');
 ['pointerdown', 'input', 'focusin'].forEach((ev) => orderEl.addEventListener(ev, armNudge));
 $('#nudgeX').addEventListener('click', () => hideNudge(true));
 const openChat = () => { hideNudge(true); say('Prototype: live chat opens here'); };
@@ -548,9 +552,9 @@ cookie.addEventListener('click', (e) => {
 
 /* ================= Mobile sticky buy bar (M1): shown while the in-card buy block is off screen ================= */
 (function () {
-  const bar = $('#mBar'), buy = $('.buy'), order = $('.order');
+  const bar = $('#mBar'), buy = $('.buy');
   if (!('IntersectionObserver' in window)) return;
-  let buyVisible = false, orderVisible = false;
+  let buyVisible = false;
   const upd = () => {
     const on = isMobile() && !buyVisible;
     bar.hidden = false; bar.classList.toggle('show', on);
@@ -558,7 +562,6 @@ cookie.addEventListener('click', (e) => {
     document.documentElement.style.setProperty('--mbar-h', on ? bar.offsetHeight + 'px' : '0px');
   };
   new IntersectionObserver((e) => { buyVisible = e[0].isIntersecting; upd(); }).observe(buy);
-  new IntersectionObserver((e) => { orderVisible = e[0].isIntersecting; upd(); }).observe(order);
   addEventListener('resize', upd);
 })();
 

@@ -57,56 +57,107 @@
 
   <div class="page">
     <main class="main">
-      <div class="intro">
-      <nav aria-label="Breadcrumbs"><a class="back" href="#"><svg class="ic"><use href="#i-chev-l"/></svg>World of Warcraft: Midnight</a>
+      <section class="intro">
+        <nav aria-label="Breadcrumbs"><a class="back" href="#"><svg class="ic"><use href="#i-chev-l"/></svg>World of Warcraft: Midnight</a>
       <ol class="crumbs">
         <li><a href="#">Home</a></li><li><svg class="ic"><use href="#i-chev-r"/></svg></li>
         <li><a href="#">World of Warcraft: Midnight</a></li><li><svg class="ic"><use href="#i-chev-r"/></svg></li>
         <li style="color:var(--n6)">Power Leveling</li>
       </ol></nav>
-
-      <h1>WoW Midnight Level&nbsp;Boost</h1>
-
-      <div class="trust">
+        <div class="title-row">
+          <h1>WoW Midnight Level&nbsp;Boost</h1>
+          <button class="heart" id="heart" aria-pressed="false" aria-label="Add to wishlist"><svg class="ic"><use href="#i-heart"/></svg></button>
+        </div>
+        <div class="trust">
         <a class="tp" href="#" aria-label="Overgear on Trustpilot">Excellent <span>4.9 out of 5</span>
           <i class="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></i><b>Trustpilot</b></a>
         <i class="sep"></i>
         <span style="font-weight:500">546,555 World of Warcraft boosts completed</span>
       </div>
-
-      <div class="chips">
+        <p class="lead">Hit 90 inside a day and be ready to push your first M+10. <span id="gift" hidden>🎁 Free M+10 key included.</span></p>
+        <div class="chips">
         <button class="chip" data-tip="Average time until your booster starts."><svg class="ic"><use href="#i-clock"/></svg>Starts in ~15 min</button>
         <button class="chip" data-tip="Full 1–90 takes about 10 hours; Express brings it to about 6."><img src="assets/ill/chip-24h.svg" alt="">1–90 in ~10 h · 6 h with Express</button>
         <button class="chip" data-tip="Pick Self-play and the whole route is AFK."><img src="assets/ill/chip-afk.svg" alt="">Full AFK on Self-Play</button>
       </div>
-
-      </div>
-
-      <div class="rest">
-      <p class="lead">Buy Midnight Level Boost — <b>hit 90 inside a day</b> and be ready to push your first M+10. <span id="gift" hidden>🎁 Free M+10 key included.</span></p>
-
-      <details class="fold" open><summary><h6 class="sec">Your Wins</h6><svg class="ic"><use href="#i-chev"/></svg></summary><ul class="wins">
-        <li>🚀 <b>Level 90 character</b> — unlocked for raids, M+, Delves, and PvP;</li>
-        <li>⏳ <span class="w">Full 1–90 done in 10 hours</span> — 6 hours with Express;</li>
-        <li>🎯 Full AFK on Self-Play — 1–80 in Azure Span, 80–90 via Harandar/Voidstorm;</li>
-        <li>💎 Up to 5 alts at max level — <span class="w">save up to 20%</span> with bulk packs;</li>
-        <li>🏆 <a href="#">Class Connoisseur</a> achievement — hidden Feat of Strength all classes.</li>
-      </ul></details>
-
-      <details class="fold" open><summary><h6 class="sec">How It Works</h6><svg class="ic"><use href="#i-chev"/></svg></summary><p class="flow">📋 Place Order <i>→</i> 🗺️ Leveling Starts <i>→</i> ✅ Endgame Unlocked</p><ol class="steps" id="how"></ol></details>
-
-      <section class="usp">
-        <img src="assets/img/usp-logo.png" alt="" loading="lazy" decoding="async">
-        <h2>Why Players Choose Overgear</h2>
-        <ul>
-          <li><img src="assets/ill/zeroban.svg" alt=""><p><b>Zero-Ban Protocol</b><span>Manual boosting only. Smart VPN routes. No bots or cheats.</span></p></li>
-          <li><img src="assets/ill/hot-deal.svg" alt=""><p><b>Fair Price Promise</b><span>We don't race to the bottom — pay for results, not shortcuts.</span></p></li>
-          <li><img src="assets/ill/rank.svg" alt=""><p><b>Verified Pros Only</b><span>ID-checked, skill-tested. Top-ranked — including world-first guild members.</span></p></li>
-          <li><img src="assets/ill/customer-service.svg" alt=""><p><b>24/7 Human Support</b><span>Live chat with agents. Instant updates.</span></p></li>
+        <ul class="wins">
+          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Level 90</b> — raids, M+, Delves and PvP unlocked</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Up to 5 alts</b> — save up to 20%</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span><a href="#">Class Connoisseur</a> achievement included</span></li>
         </ul>
       </section>
 
-      <div class="rev-head">
+      <section class="config" aria-label="Configure your boost">
+        <form class="opts" id="opts" onsubmit="return false">
+        <div class="fgroup">
+          <div class="fh"><i class="n">1</i>Leveling range</div>
+          <div class="presets" id="presets" role="radiogroup" aria-label="Leveling range">
+            <button type="button" class="pre" role="radio" data-p="pop">80 → 90 <em>Popular</em></button>
+            <button type="button" class="pre" role="radio" data-p="full">1 → 90</button>
+            <button type="button" class="pre" role="radio" data-p="mine">My level → 90</button>
+            <button type="button" class="pre" role="radio" data-p="custom">Custom</button>
+          </div>
+          <div class="range-box" id="rangeBox" data-mode="pop" hidden>
+            <div class="range-row">
+              <label class="num"><span class="sr">From level</span><small id="fromLbl">My level</small><input id="from" inputmode="numeric" pattern="[0-9]*" value="80" autocomplete="off"></label>
+              <svg class="ic arrow-r"><use href="#i-arrow"/></svg>
+              <label class="num"><span class="sr">To level</span><small>Target</small><input id="to" inputmode="numeric" pattern="[0-9]*" value="90" autocomplete="off"></label>
+            </div>
+            <div class="dual" id="dual">
+              <div class="rail"></div><div class="fill" id="fill"></div>
+              <input type="range" id="rFrom" min="1" max="90" value="80" aria-label="Minimum">
+              <input type="range" id="rTo" min="1" max="90" value="90" aria-label="Maximum">
+            </div>
+            <div class="dual-l"><span>1</span><span>90</span></div>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <div class="fh"><i class="n">2</i>Package</div>
+          <div class="pkgs" id="pkgs" role="radiogroup" aria-label="Package">
+            <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp"></span><small>Standard speed</small></button>
+            <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp"></span><small>Faster start &amp; finish</small></button>
+            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Endgame ready</b><span class="pp"></span><small>90 + Express + 292 gear + campaign</small><i class="save" hidden></i></button>
+          </div>
+        </div>
+
+        <div class="fgroup">
+          <div class="fh"><i class="n">3</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
+          <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
+        </div>
+
+        <div class="fgrid">
+          <div>
+            <div class="fh plain">Speed</div>
+            <div class="speed" id="speed" role="radiogroup" aria-label="Speed">
+              <button type="button" class="sp" role="radio" data-s="std"><b>Standard</b><span id="spStd"></span></button>
+              <button type="button" class="sp" role="radio" data-s="exp"><b>Express</b><span id="spExp"></span><em id="spExpPrice"></em></button>
+            </div>
+          </div>
+          <div>
+            <div class="fh plain">Region</div>
+            <div class="seg" role="radiogroup" aria-label="Region">
+              <label><input type="radio" name="region" value="eu" checked><span>EU</span></label>
+              <label><input type="radio" name="region" value="us"><span>US</span></label>
+            </div>
+          </div>
+          <div>
+            <div class="fh plain">Characters</div>
+            <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
+            <small class="charnote" id="charNote"></small>
+          </div>
+        </div>
+        
+        <div class="acc addons" id="addons">
+          <button type="button" aria-expanded="false"><span>More add-ons (<span id="addonCount">5</span>)</span><svg class="ic"><use href="#i-chev"/></svg></button>
+          <div class="body"><div><div class="in" id="extras"></div></div></div>
+        </div>
+      </form>
+      </section>
+
+      <div class="rest">
+        <details class="fold" open><summary><h6 class="sec">How It Works</h6><svg class="ic"><use href="#i-chev"/></svg></summary><p class="flow">📋 Place Order <i>→</i> 🗺️ Leveling Starts <i>→</i> ✅ Endgame Unlocked</p><ol class="steps" id="how"></ol></details>
+        <div class="rev-head">
         <h2>What players say about Overgear</h2>
         <div class="arrows">
           <button class="arrow" id="revPrev" aria-label="Scroll to the previous section"><svg class="ic"><use href="#i-chev-l"/></svg></button>
@@ -120,7 +171,8 @@
         <article class="rev"><div><div class="st">★★★★★</div><p>Very fast and easy process</p></div><small>by Eastglazefoot</small></article>
       </div>
 
-      <section class="faq-sec">
+      
+        <section class="faq-sec">
         <h2 class="sec">WoW Midnight Leveling Service FAQ</h2>
         <div class="faq" id="faq">
           <div class="acc big"><button aria-expanded="false"><h5>What is a WoW Midnight Leveling Boost?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>It is a service where experienced players level your character to 90 manually, so you can skip repeated questing and go straight to raids, Mythic+, Delves, and PvP.</p></div></div></div></div>
@@ -130,14 +182,12 @@
           <div class="acc big"><button aria-expanded="false"><h5>Can I communicate with my WoW Midnight Level booster?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Yes. Once the order starts you are connected to your booster in Discord, and our support team is available 24/7 in live chat.</p></div></div></div></div>
         </div>
       </section>
-
-      <section class="custom">
+        <section class="custom">
         <img src="assets/img/custom-offer.jpg" alt="" loading="lazy" decoding="async">
         <div><h3>Create Your Custom Offer!</h3><p>If you can't find what you need, let's customize!<br>Click to create your perfect offer now.</p></div>
         <div class="r"><button class="btn solid" id="customBtn">Request custom offer</button><div><svg class="ic"><use href="#i-clock"/></svg><span><b>2 minutes</b> is our usual reply time</span></div></div>
       </section>
-
-      <article class="seo collapsed" id="seo">
+        <article class="seo collapsed" id="seo">
         <h2>About WoW Midnight Leveling Boosting</h2>
         <p>Leveling in Midnight is not hard mechanically, but it takes time when you want to start real seasonal content. The 80–90 stretch can mean repeated campaign steps, zone travel, dungeon queues, Delves, and the same route again on every alt. Higher levels unlock talents, Mythic+, raids, Delves, Housing, and PvP.</p>
         <p>A WoW Midnight leveling boost removes this slow part from your schedule. You choose the character and level range, and our team handles the route manually, with no bots, no cheats, and real players only. Buying a WoW Midnight leveling boost works well for a fresh alt, a returning character, or a class reroll that needs level 90 without repeating the full campaign path.</p>
@@ -183,82 +233,16 @@
           <li>A second WoW Midnight level boost path for alts, catch-up, and seasonal preparation.</li>
         </ul>
       </article>
-      <button class="btn ghost seo-more" id="seoMore" aria-expanded="false">Read more</button>
+      
+        <button class="btn ghost seo-more" id="seoMore" aria-expanded="false">Read more</button>
       </div>
     </main>
 
-    <section class="order" aria-label="Order">
-      <div class="order-hero">
-        <img src="assets/img/hero.avif" alt="" fetchpriority="high">
-        <button class="heart" id="heart" aria-pressed="false" aria-label="Add to wishlist"><svg class="ic"><use href="#i-heart"/></svg></button>
-      </div>
-
-      <form class="opts" id="opts" onsubmit="return false">
-        <div class="rowline">
-          <div class="fh plain">Region</div>
-          <div class="seg" role="radiogroup" aria-label="Region">
-            <label><input type="radio" name="region" value="eu" checked><span>EU</span></label>
-            <label><input type="radio" name="region" value="us"><span>US</span></label>
-          </div>
-        </div>
-
-        <div>
-          <div class="fh">Leveling range</div>
-          <div class="presets" id="presets" role="radiogroup" aria-label="Leveling range">
-            <button type="button" class="pre" role="radio" data-p="pop">80 → 90 <em>Popular</em></button>
-            <button type="button" class="pre" role="radio" data-p="full">1 → 90</button>
-            <button type="button" class="pre" role="radio" data-p="mine">My level → 90</button>
-            <button type="button" class="pre" role="radio" data-p="custom">Custom range</button>
-          </div>
-          <div class="range-box" id="rangeBox" data-mode="pop" hidden>
-            <div class="range-row">
-              <label class="num"><span class="sr">From level</span><small id="fromLbl">My level</small><input id="from" inputmode="numeric" pattern="[0-9]*" value="80" autocomplete="off"></label>
-              <svg class="ic arrow-r"><use href="#i-arrow"/></svg>
-              <label class="num"><span class="sr">To level</span><small>Target</small><input id="to" inputmode="numeric" pattern="[0-9]*" value="90" autocomplete="off"></label>
-            </div>
-            <div class="dual" id="dual">
-              <div class="rail"></div><div class="fill" id="fill"></div>
-              <input type="range" id="rFrom" min="1" max="90" value="80" aria-label="Minimum">
-              <input type="range" id="rTo" min="1" max="90" value="90" aria-label="Maximum">
-            </div>
-            <div class="dual-l"><span>1</span><span>90</span></div>
-          </div>
-        </div>
-
-        <div>
-          <div class="fh">Package</div>
-          <div class="pkgs" id="pkgs" role="radiogroup" aria-label="Package">
-            <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp"></span><small>Standard speed</small></button>
-            <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp"></span><small>Faster start &amp; finish</small></button>
-            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Endgame ready</b><span class="pp"></span><small>90 + Express + 292 gear + campaign</small><i class="save" hidden></i></button>
-          </div>
-        </div>
-
-        <div>
-          <div class="fh">Speed</div>
-          <div class="speed" id="speed" role="radiogroup" aria-label="Speed">
-            <button type="button" class="sp" role="radio" data-s="std"><b>Standard</b><span id="spStd"></span></button>
-            <button type="button" class="sp" role="radio" data-s="exp"><b>Express</b><span id="spExp"></span><em id="spExpPrice"></em></button>
-          </div>
-        </div>
-
-        <div>
-          <div class="fh">Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
-          <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
-        </div>
-
-        <div class="rowline chars">
-          <div><div class="ct1">Characters</div><small id="charNote"></small></div>
-          <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
-        </div>
-
-        <div class="acc addons" id="addons">
-          <button type="button" aria-expanded="false"><span>More add-ons (<span id="addonCount">5</span>)</span><svg class="ic"><use href="#i-chev"/></svg></button>
-          <div class="body"><div><div class="in" id="extras"></div></div></div>
-        </div>
-      </form>
-
+    <aside class="side" aria-label="Order summary">
+      <div class="side-in">
       <div class="buy">
+        <h2 class="bh">Your order</h2>
+        <p class="recap" id="recap"></p>
         <div class="price-row">
           <span class="price" id="price" aria-live="polite">$0.00</span>
           <span class="cashback">Cashback 1% <svg class="coin"><use href="#i-coin"/></svg></span>
@@ -273,7 +257,18 @@
           <img src="assets/pay/apple-pay.svg" alt="Apple Pay"><img src="assets/pay/google-pay.svg" alt="Google Pay"><img src="assets/pay/visa.svg" alt="Visa"><img src="assets/pay/mastercard.svg" alt="Mastercard"><img src="assets/pay/paypal.svg" alt="PayPal"><img src="assets/pay/stripe.svg" alt="Stripe"><img src="assets/pay/crypto.svg" alt="Crypto">
         </div>
       </div>
-    </section>
+      <section class="usp why">
+        
+        <h2>Why players choose Overgear</h2>
+        <ul>
+          <li><img src="assets/ill/zeroban.svg" alt=""><p><b>Zero-Ban Protocol</b><span>Manual boosting only. Smart VPN routes. No bots or cheats.</span></p></li>
+          <li><img src="assets/ill/hot-deal.svg" alt=""><p><b>Fair Price Promise</b><span>We don't race to the bottom — pay for results, not shortcuts.</span></p></li>
+          <li><img src="assets/ill/rank.svg" alt=""><p><b>Verified Pros Only</b><span>ID-checked, skill-tested. Top-ranked — including world-first guild members.</span></p></li>
+          <li><img src="assets/ill/customer-service.svg" alt=""><p><b>24/7 Human Support</b><span>Live chat with agents. Instant updates.</span></p></li>
+        </ul>
+      </section>
+      </div>
+    </aside>
   </div>
 </div>
 

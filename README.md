@@ -13,6 +13,34 @@ python3 -m http.server 8000   # then open http://localhost:8000/
 | `app.js` | Behaviour and the `PRICING` model |
 | `assets/` | Logo, images, payment icons and illustrations taken from the saved page, Geist font |
 
+## Page structure and information priority
+
+Desktop (≥1200px): main block on the left, a sticky right column.
+
+| Block | Contents, in reading order |
+|---|---|
+| Main · title | Breadcrumbs, H1, Trustpilot and orders line, one-line promise, three key USP tags (start in ~15 min, 1–90 in ~10 h / 6 h with Express, full AFK), three wins |
+| Main · form | 1 Leveling range → 2 Package → 3 Boost method (the decisions that move the price), then one row of fine-tuning: Speed, Region, Characters, and the collapsed add-ons |
+| Main · more information | How It Works (follows the method), reviews, FAQ, custom offer, SEO text behind "Read more" |
+| Right column | "Your order": recap of the choices, price, start and ready time, Add to cart, Trustpilot and money-back, payment icons. Below it, "Why players choose Overgear" |
+
+The right column is about 550px tall, so on a 1366×768 screen both cards stay in view while the page scrolls. On tablets and phones the order is: title → form → order card → why us → more information, and a sticky bottom bar (price, ETA, Add to cart, chat, plus a trust strip) shows while the order card is off screen.
+
+## Type scale
+
+| Token | Desktop | Phone |
+|---|---|---|
+| Body | 16/24 | 14/20 |
+| Secondary text and controls | 14/20 | 13/18 |
+| Tags and captions | 12/16 | 12/16 |
+| H1 | 40/46 | 26/32 |
+| H2 | 24/30 | 20/26 |
+| Card titles | 16/22 | 15/20 |
+| Price | 32/36 | 26/30 |
+| Control height | 40 | 44 |
+
+Tags are 32px high on desktop and 28px on phones. The sidebar is 220px wide with 44px rows. On phones the unselected method cards show only the "For" line.
+
 ## Product hypotheses in the prototype
 
 | ID | What changed |
