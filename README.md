@@ -19,12 +19,12 @@ Desktop (≥1200px): main block on the left, a sticky right column.
 
 | Block | Contents, in reading order |
 |---|---|
-| Main · title | Breadcrumbs, H1, Trustpilot and orders line, one-line promise, three key USP tags (start in ~15 min, 1–90 in ~10 h / 6 h with Express, full AFK), three wins |
-| Main · form | 1 Leveling range → 2 Package → 3 Boost method (the decisions that move the price), then one row of fine-tuning: Speed, Region, Characters, and the collapsed add-ons |
+| Main · title | Breadcrumbs, H1, Trustpilot and orders line, three key USP tags (start in ~15 min, 1–90 in ~10 h / 6 h with Express, full AFK), the one-line promise, three short wins in one row |
+| Main · form | Region with flags first, then 1 Leveling range → 2 Package (Express shows its time and how much faster it is) → 3 Boost method (one short line per method; the table is in Compare methods) → Characters → 4 Add-ons, all visible |
 | Main · more information | How It Works (follows the method), reviews, FAQ, custom offer, SEO text behind "Read more" |
-| Right column | "Your order": recap of the choices, price, start and ready time, Add to cart, Trustpilot and money-back, payment icons. Below it, "Why players choose Overgear" |
+| Right column | The buy block, laid out like the original: price with Cashback, start time, completion time, Add to cart, payment icons, money-back line. It is the page accent (brand border and glow). Below it, a calmer "Why players choose Overgear" card |
 
-The right column is about 550px tall, so on a 1366×768 screen both cards stay in view while the page scrolls. On tablets and phones the order is: title → form → order card → why us → more information, and a sticky bottom bar (price, ETA, Add to cart, chat, plus a trust strip) shows while the order card is off screen.
+The right column is about 640px tall, so on a 1366×768 screen both cards stay in view while the page scrolls. On tablets and phones the order is: title → form → order card → why us → more information, and a sticky bottom bar (price, ETA, Add to cart, chat, plus a trust strip) shows while the order card is off screen.
 
 ## Type scale
 
@@ -39,7 +39,7 @@ The right column is about 550px tall, so on a 1366×768 screen both cards stay i
 | Price | 32/36 | 26/30 |
 | Control height | 40 | 44 |
 
-Tags are 32px high on desktop and 28px on phones. The sidebar is 220px wide with 44px rows. On phones the unselected method cards show only the "For" line.
+Tags are 36px high on desktop and 28px on phones. Spacing: 20px between form groups on desktop, 36px between content sections. The right column is 404px wide.
 
 ## Product hypotheses in the prototype
 
@@ -47,8 +47,8 @@ Tags are 32px high on desktop and 28px on phones. The sidebar is 220px wide with
 |---|---|
 | O1, M3 | Range presets: `80 → 90 Popular`, `1 → 90`, `My level → 90`, `Custom range`. Numeric fields (`inputmode=numeric`) everywhere; the dual slider only on mouse desktops, only in Custom |
 | O2 | Three method cards: for whom / what you share / your time, with the price delta. The same Piloted note appears in the cart |
-| O3 | Speed block: Standard ~N h / Express ~N h, +$X, computed from the range |
-| O4 | Five rare add-ons sit in "More add-ons (5)", each with a price and one line "what you get · what is needed" |
+| O3 | No separate Speed block: the Express package states its time and "N% faster" (computed from the time factor, 40% with the current model) |
+| O4 | Add-ons are shown in a two-column grid, each with a price and one line "what you get · what is needed" (collapsing them is parked for now) |
 | O5, M8 | Summary under the price: total, start ~15 min, ready ~N h, Trustpilot 4.9 · 36,206 reviews, money-back link |
 | O6 | Packages Basic / Express / Endgame ready (90 + Express + 292 gear + campaign, 10% off the pair). Derived from the form, so they stay in sync with the other controls |
 | O7 | First-screen badges: "Starts in ~15 min", "1–90 in ~10 h · 6 h with Express" |

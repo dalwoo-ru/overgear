@@ -25,13 +25,16 @@ const CHAR_STEPS = [1, 2, 3, 5];
 
 /* Copy for the three methods. The "share / keep" lines are drafts: confirm them with ops before shipping. */
 const METHODS = {
-  piloted: { name: 'Piloted', who: 'You want to be offline',
+  piloted: { name: 'Piloted', line: 'Booster plays for you. You share your login only.',
+    who: 'You want to be offline',
     share: 'Battle.net login, used through a VPN in your region. Email access and authenticator stay with you.',
     time: 'None — log in at the end', whoPlays: 'A verified booster' },
-  self:    { name: 'Self-play', who: 'You want to stay in control',
+  self:    { name: 'Self-play', line: 'You stay in control. Nothing is shared.',
+    who: 'You want to stay in control',
     share: 'Nothing. You stay on your own account.',
     time: 'AFK route, you keep the game running', whoPlays: 'You, on an AFK route' },
-  remote:  { name: 'Remote', who: "You don't want to share a login",
+  remote:  { name: 'Remote', line: 'Booster plays remotely. No login shared.',
+    who: "You don't want to share a login",
     share: 'A remote session only. Account details are never given out.',
     time: 'Be online to start the session', whoPlays: 'A booster, via remote access' },
 };
@@ -157,6 +160,7 @@ const PKG = {
   express: () => cfgWith({ express: true, extras: new Set() }),
   endgame: () => cfgWith({ to: 90, express: true, extras: new Set(['gear292', 'campaign']) }),
 };
+const fmtLong = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} minutes` : `${Math.round(h)} hours`);
 const fmtH = (h) => (h < 1 ? `~${Math.max(1, Math.round(h * 60))} min` : `~${Math.round(h)} h`);
 
 /* ================= Order form: build static parts ================= */
@@ -167,14 +171,13 @@ const el = {
 $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
   <button type="button" class="mc" role="radio" data-m="${id}">
     <span class="mh"><b>${m.name}</b><em data-delta="${id}"></em></span>
-    <dl><dt>For</dt><dd>${m.who}</dd><dt>You share</dt><dd>${m.share}</dd><dt>Your time</dt><dd>${m.time}</dd></dl>
+    <span class="ml">${m.line}</span>
   </button>`).join('');
 
 $('#extras').innerHTML = PRICING.extras.map((x) => `
   <label class="check xrow"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
     <span class="xt"><b>${x.label}</b><small>${x.desc}</small></span>
-    <span class="p ${x.was ? 'hot' : ''}">${x.was ? `<s>${money(x.was)}</s>` : '+'}${x.was ? money(x.price) : money(x.price)}</span></label>`).join('');
-$('#addonCount').textContent = PRICING.extras.length;
+    <span class="p ${x.was ? 'hot' : ''}">${x.was ? `<s>${money(x.was)}</s>` : '+'}${money(x.price)}</span></label>`).join('');
 
 /* ================= Render: state → DOM ================= */
 const HOW = {
@@ -209,23 +212,19 @@ function render() {
   el.rFrom.style.zIndex = from > 45 ? 3 : 1; el.rTo.style.zIndex = 2;
 
   // packages
+  const std = quote(cfgWith({ express: false, extras: new Set() })), exp = quote(cfgWith({ express: true, extras: new Set() }));
   const cur = pkgOf(state);
   $$('#pkgs .pkg').forEach((b) => {
     const k = b.dataset.k, pq = quote(PKG[k]());
     b.setAttribute('aria-checked', cur === k);
     $('.pp', b).textContent = money(pq.total);
+    if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
+    if (k === 'express') $('small', b).textContent = `Ready ${fmtH(exp.hours)} · ${Math.round((1 - PRICING.express.timeFactor) * 100)}% faster`;
     if (k === 'endgame') {
       const sv = $('.save', b);
       sv.hidden = !pq.bundle; sv.textContent = pq.bundle ? `Save ${money(pq.bundle)}` : '';
     }
   });
-
-  // speed
-  const std = quote(cfgWith({ express: false })), exp = quote(cfgWith({ express: true }));
-  $('#spStd').textContent = fmtH(std.hours);
-  $('#spExp').textContent = fmtH(exp.hours);
-  $('#spExpPrice').textContent = '+' + money(exp.core - std.core);
-  $$('#speed .sp').forEach((b) => b.setAttribute('aria-checked', (b.dataset.s === 'exp') === state.express));
 
   // methods
   const piloted = quote(cfgWith({ method: 'piloted' }));
@@ -246,17 +245,11 @@ function render() {
 
   // extras
   $$('[data-extra]').forEach((c) => { c.checked = state.extras.has(c.dataset.extra); });
-  $('#addonCount').textContent = state.extras.size ? `${PRICING.extras.length} · ${state.extras.size} selected` : PRICING.extras.length;
-
-  // recap of the choices, next to the price
-  const ex = [...state.extras].map((id) => PRICING.extras.find((x) => x.id === id).label);
-  $('#recap').innerHTML = `<b>${from} → ${to}</b> · ${METHODS[state.method].name} · ${state.express ? 'Express' : 'Standard'} · ${state.chars} char${state.chars > 1 ? 's' : ''} · ${state.region.toUpperCase()}${ex.length ? `<br>+ ${ex.join(', ')}` : ''}`;
 
   // summary (O5)
   const eta = fmtH(q.hours);
   $('#price').textContent = money(q.total);
-  $('#sumTotal').textContent = money(q.total);
-  $('#eta').textContent = eta;
+  $('#eta').textContent = fmtLong(q.hours);
   $('#mPrice').textContent = money(q.total);
   $('#mEta').textContent = `starts ~15 min · ready ${eta}`;
   $('#gift').hidden = !GIFT_M10;
