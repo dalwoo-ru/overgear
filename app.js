@@ -36,7 +36,7 @@ const CHAR_STEPS = [1, 2, 3, 5];
 
 /* Copy for the three methods. The "share / keep" lines are drafts: confirm them with ops before shipping. */
 const METHODS = {
-  piloted: { name: 'Piloted', line: 'Booster plays for you. You share your login only.',
+  piloted: { name: 'Piloted', line: 'Verified booster plays for you. You share your login only.',
     share: 'Your login, used through a VPN. Email and authenticator stay with you.',
     time: 'None — log in at the end', whoPlays: 'A verified booster' },
   self:    { name: 'Self-play', line: 'You stay in control. Nothing is shared.',
@@ -540,7 +540,6 @@ function drawerHTML() {
     </div>`).join('');
   const foot = cart.length ? `
     <div class="dfoot">
-      <div class="frow small"><span>Item(s)</span><b>${money(t.items)}</b></div>
       ${promo ? `<div class="frow small promo-on"><span>Promo ${promo.code} <button type="button" class="rm-promo" data-promo-off>Remove</button></span><b>−${money(t.disc)}</b></div>` : ''}
       <form class="promo" data-promo-form>
         <button type="button" class="promo-toggle" aria-expanded="false" data-promo-toggle><span>Apply promo code</span><svg class="ic"><use href="#i-plus"/></svg></button>
