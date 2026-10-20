@@ -447,7 +447,8 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .dpanel header{padding:18px 24px 12px;margin:0;flex:none}
 .dbody{flex:1;min-height:0;display:flex;flex-direction:column}
 .dscroll{flex:1;min-height:0;overflow:auto;padding:0 24px 20px}
-.litem{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid #ffffff14}
+.litem{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:start;padding:14px 0;border-top:1px solid #ffffff14}
+.litem>img{width:64px;height:64px;object-fit:cover;object-position:50% 18%;border-radius:var(--r-control);background:var(--n3)}
 .litem:first-child{border-top:0}
 .litem .li-main b{font-size:var(--fs);line-height:var(--lh)}
 .litem small{display:block;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6);margin-top:2px}
@@ -468,7 +469,8 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .xcard .btn{min-height:40px;padding:0 14px}
 /* pinned bottom: subtotal, wallets, card, safety line */
 .dfoot{flex:none;padding:16px 24px calc(18px + env(safe-area-inset-bottom));background:#080d26;border-top:1px solid #564fff40;box-shadow:0 -12px 24px #0006}
-.subtotal{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.subtotal{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.subtotal b{margin-left:auto}
 .subtotal span{font-size:var(--fs-s);color:var(--n7)}
 .subtotal b{font:800 24px/30px var(--font);letter-spacing:-.4px;font-variant-numeric:tabular-nums}
 .wallets{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}

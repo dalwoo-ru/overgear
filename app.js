@@ -464,7 +464,7 @@ function describe(c) {
   const q = quote(c), m = METHODS[c.method];
   const parts = [`${c.from} → ${c.to}`, m.name, isExpress(c) ? 'Express' : 'Standard', `${c.chars} character${c.chars > 1 ? 's' : ''}`];
   const ex = [...allExtras(c)].map((id) => extraDef(id).label);
-  return { id: 'lvl-' + Date.now(), title: 'WoW Midnight Leveling', meta: parts.join(' · '), extras: ex, price: q.total, was: q.was, method: c.method, eta: fmtH(q.hours) };
+  return { id: 'lvl-' + Date.now(), img: 'hero', title: 'WoW Midnight Leveling', meta: parts.join(' · '), extras: ex, price: q.total, was: q.was, method: c.method, eta: fmtH(q.hours) };
 }
 function addToCart() {
   const it = describe(state);
@@ -481,11 +481,11 @@ $('#cartBtn').addEventListener('click', () => openDrawer());
 const drawer = $('#drawer');
 function drawerHTML() {
   const total = cart.reduce((s, i) => s + i.price, 0);
-  const piloted = cart.some((i) => i.method === 'piloted');
   const items = cart.length ? cart.map((i, idx) => {
     const off = i.was > i.price ? Math.round((1 - i.price / i.was) * 100) : 0;
     return `
     <div class="litem">
+      <img src="assets/img/${i.img || 'hero'}.avif" alt="" width="64" height="64">
       <div class="li-main"><b>${i.title}</b><small>${i.meta}</small>${i.extras?.length ? `<small>+ ${i.extras.join(', ')}</small>` : ''}${i.eta ? `<small>Ready ${i.eta}</small>` : ''}</div>
       <div class="lr">
         <span class="lp"><b>${money(i.price)}</b>${off ? `<s>${money(i.was)}</s>` : ''}</span>
@@ -494,8 +494,8 @@ function drawerHTML() {
       </div>
     </div>`;
   }).join('') : '<p class="muted">Your cart is empty.</p>';
-  const note = piloted ? `<div class="note"><svg class="ic"><use href="#i-shield"/></svg><p><b>Piloted order.</b> You share your Battle.net login, used through a VPN. Your email access and authenticator stay with you.</p></div>` : '';
-  const next = CROSS.map((c) => `
+  const left = CROSS.filter((c) => !cart.some((i) => i.cid === c.id));
+  const next = left.map((c) => `
     <div class="xcard">
       <img src="assets/img/${c.img}.avif" alt="" loading="lazy" decoding="async">
       <div><b>${c.title}</b><small>${c.line}</small></div>
@@ -503,15 +503,15 @@ function drawerHTML() {
     </div>`).join('');
   const foot = cart.length ? `
     <div class="dfoot">
-      <div class="subtotal"><span>Subtotal</span><b>${money(total)}</b></div>
+      <div class="subtotal"><span>Subtotal</span><span class="cashback">Cashback 1% <svg class="coin"><use href="#i-coin"/></svg></span><b>${money(total)}</b></div>
       <div class="wallets">
         <button type="button" class="wallet apple" data-pay>&#63743; Pay</button>
         <button type="button" class="wallet google" data-pay><span>G</span> Pay</button>
       </div>
       <button type="button" class="btn solid wide" data-pay>Pay by card</button>
-      <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% money-back guarantee · Cashback 1%</p>
+      <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% money-back guarantee</p>
     </div>` : '';
-  return `<div class="dscroll">${items}${note}<h4 class="nx">What's next after 90</h4>${next}</div>${foot}`;
+  return `<div class="dscroll">${items}${left.length ? `<h4 class="nx">You might also need</h4>${next}` : ''}</div>${foot}`;
 }
 function renderDrawer() { $('#dBody').innerHTML = drawerHTML(); }
 function openDrawer() {
@@ -532,7 +532,7 @@ drawer.addEventListener('click', (e) => {
   const add = e.target.closest('[data-add]');
   if (add) {
     const c = CROSS.find((x) => x.id === add.dataset.add);
-    cart.push({ id: c.id + Date.now(), title: c.title, meta: c.line, extras: [], price: c.price });
+    cart.push({ id: c.id + Date.now(), cid: c.id, img: c.img, title: c.title, meta: c.line, extras: [], price: c.price });
     saveCart(); counters(); bump('cartCnt'); return renderDrawer();
   }
   if (e.target.closest('[data-pay]')) say('Prototype: checkout is not built yet');
