@@ -740,17 +740,12 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 }
 
 /* Piloted review and note live inside the method list: after the cards on desktop, right after Piloted on phones */
-.mcards>.mquote,.mcards>.mnote{grid-column:1/-1;order:10;margin:0}
-.mcards>.mnote{order:11}
 @media (max-width:767px){
   .config{border-radius:var(--r-surface);margin-left:-16px;margin-right:-16px;padding:20px 16px 22px}
   .opts{gap:32px}
   .fh{margin-bottom:14px}
-  .mcards{display:flex;flex-direction:column;gap:10px}
-  .mcards>.mc{order:4}
-  .mcards>.mc[data-m=piloted]{order:1}
-  .mcards>.mquote{order:2;margin-top:2px}
-  .mcards>.mnote{order:3;margin-bottom:6px}
+  .mquote{margin-top:12px}
+  .mnote{margin-bottom:6px}
   .subgroup{margin-top:28px}
   .xgroup{margin-bottom:2px}
   .extras{gap:14px}
@@ -770,7 +765,14 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 @media (max-width:767px){
   .pkgs{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;margin-left:-16px;margin-right:-16px;padding:14px 16px 2px;margin-top:-12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scroll-padding-left:16px}
   .pkgs::-webkit-scrollbar{display:none}
-  .pkg{flex:none;width:calc((100vw - 16px - 16px) / 2.5);scroll-snap-align:start;min-height:0;padding:10px 12px}
+  .pkg{flex:none;width:calc((100vw - 32px) / 2.8);scroll-snap-align:start;min-height:0;padding:10px 12px}
   .pkg small{white-space:normal}
   .pkg .save{right:8px}
+}
+
+/* phones: boost methods in a horizontal scrolling row, like the packages */
+@media (max-width:767px){
+  .mcards{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;margin-left:-16px;margin-right:-16px;padding:0 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scroll-padding-left:16px}
+  .mcards::-webkit-scrollbar{display:none}
+  .mc{flex:none;width:calc((100vw - 32px) / 2.2);scroll-snap-align:start;min-height:0;padding:10px 12px}
 }
