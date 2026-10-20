@@ -803,3 +803,24 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .seo.collapsed{max-height:none}
 .seo.collapsed::after{display:none}
 .fold h2.sec{margin-top:0}
+
+/* ---- rhythm: one gap (--sec) between the big blocks after the form, on every platform ---- */
+.rest{margin-top:var(--sec);padding-bottom:var(--sec)}
+@media (max-width:767px){.rest{margin-top:var(--sec)}}
+.rest>:first-child{margin-top:0}
+.custom{margin:var(--sec) 0 0}
+.seo{margin-top:var(--sec)}
+.seo>h2:first-child{margin-top:0}
+
+/* ---- brighter text in the blocks after the form ---- */
+.steps li,.flow,.seo p,.seo li,.acc .in,.faq .acc .in,.faq .acc .in p{color:var(--n10)}
+.seo p,.seo li,.steps li{color:var(--n9)}
+.acc .in,.faq .acc .in{color:var(--n9)}
+.acc .in b{color:#fff}
+.rev p,.custom p{color:#fff}
+.rev small,.custom .r{color:var(--n8)}
+.rev .st{color:var(--brand-4)}
+.steps li::before,.seo ol li::before{color:var(--n7)}
+.seo ul li::before{background:var(--n7)}
+.faq .acc>button h5,.rev-head h2,h2.sec,.seo h2{color:#fff}
+.main{padding-bottom:0}
