@@ -453,9 +453,11 @@ const CROSS = [
   { id: 'm0', title: 'Mythic +0', line: '292 ilvl loot, ready for M+4', price: pretty(6.72), img: 'mythic-0' },
 ];
 let wish = store.get('og:wish', 0);
-let cart = store.get('og:cart3', []);
+let cart = store.get('og:cart4', []);
+let promo = null;                                  // { code, pct }
+const PROMOS = { WELCOME5: 0.05 };                 // demo code
 const heart = $('#heart');
-const saveCart = () => store.set('og:cart3', cart);
+const saveCart = () => store.set('og:cart4', cart);
 function counters() {
   const wc = $('#wishCnt'); wc.textContent = wish; wc.hidden = !wish;
   const cc = $('#cartCnt'); cc.textContent = cart.length; cc.hidden = !cart.length;
@@ -474,10 +476,15 @@ function say(text, link = false) {
 $('#toastCart').addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
 
 function describe(c) {
-  const q = quote(c), m = METHODS[c.method];
-  const parts = [`${c.from} → ${c.to}`, m.name, isExpress(c) ? 'Express' : 'Standard', `${c.chars} character${c.chars > 1 ? 's' : ''}`];
+  const q = quote(c);
   const ex = [...allExtras(c)].map((id) => extraDef(id).label);
-  return { id: 'lvl-' + Date.now(), img: 'hero', title: 'WoW Midnight Leveling', meta: parts.join(' · '), extras: ex, price: q.total, was: q.was, method: c.method, eta: fmtH(q.hours) };
+  return {
+    id: 'lvl-' + Date.now(), img: 'hero', title: 'Power Leveling',
+    parts: [c.region.toUpperCase(), `${c.from} - ${c.to}`, `${c.chars} character${c.chars > 1 ? 's' : ''}`, c.pkg === 'basic' ? '' : c.pkg === 'express' ? 'Express' : 'Endgame ready'].filter(Boolean),
+    method: METHODS[c.method].name, extras: ex,
+    sold: 'OvergearSales', start: '15 minutes', delivery: fmtLong(q.hours),
+    price: q.total, was: q.was,
+  };
 }
 function addToCart() {
   const it = describe(state);
@@ -492,21 +499,38 @@ $('#mAdd').addEventListener('click', addToCart);
 $('#cartBtn').addEventListener('click', () => openDrawer());
 
 const drawer = $('#drawer');
-function drawerHTML() {
-  const total = cart.reduce((s, i) => s + i.price, 0);
-  const items = cart.length ? cart.map((i, idx) => {
-    const off = i.was > i.price ? Math.round((1 - i.price / i.was) * 100) : 0;
-    return `
+const cartTotals = () => {
+  const items = cart.reduce((s, i) => s + i.price, 0);
+  const disc = promo ? Math.floor(items * promo.pct * 100) / 100 : 0;
+  const sub = items - disc;
+  return { items, disc, sub, cash: sub * 0.01 };
+};
+function itemHTML(i, idx) {
+  const off = i.was > i.price ? Math.round((1 - i.price / i.was) * 100) : 0;
+  const meta = i.parts
+    ? [...i.parts.map((p) => `<span>${p}</span>`), `<span class="mt">${i.method}</span>`].join('<span class="dot"> • </span>')
+    : `<span>${i.line || ''}</span>`;
+  const row = (icon, label, val) => `<div class="lrow"><svg class="ic"><use href="#${icon}"/></svg><span><b>${label}</b>${val}</span></div>`;
+  return `
     <div class="litem">
       <img src="assets/img/${i.img || 'hero'}.avif" alt="" width="64" height="64">
-      <div class="li-main"><b>${i.title}</b><small>${i.meta}</small>${i.extras?.length ? `<small>+ ${i.extras.join(', ')}</small>` : ''}${i.eta ? `<small>Ready ${i.eta}</small>` : ''}</div>
+      <div class="li-main">
+        <b class="lt">${i.title}</b>
+        <div class="lmeta">${meta}</div>
+        ${i.extras?.length ? `<div class="lmeta">+ ${i.extras.join(', ')}</div>` : ''}
+        ${i.sold ? row('i-user', 'Sold by ', i.sold) : ''}
+        ${i.start ? row('i-timer', 'Start time: ', i.start) : ''}
+        ${i.delivery ? row('i-clock', 'Delivery time: ', i.delivery) : ''}
+      </div>
       <div class="lr">
         <span class="lp"><b>${money(i.price)}</b>${off ? `<s>${money(i.was)}</s>` : ''}</span>
         ${off ? `<span class="disc">-${off}%</span>` : ''}
-        <button type="button" class="rm" data-rm="${idx}" aria-label="Remove">Remove</button>
+        <button type="button" class="rm" data-rm="${idx}" aria-label="Remove item"><svg class="ic"><use href="#i-trash"/></svg></button>
       </div>
     </div>`;
-  }).join('') : '<p class="muted">Your cart is empty.</p>';
+}
+function drawerHTML() {
+  const t = cartTotals();
   const left = CROSS.filter((c) => !cart.some((i) => i.cid === c.id));
   const next = left.map((c) => `
     <div class="xcard">
@@ -516,17 +540,29 @@ function drawerHTML() {
     </div>`).join('');
   const foot = cart.length ? `
     <div class="dfoot">
-      <div class="subtotal"><span>Subtotal</span><span class="cashback">Cashback 1% <svg class="coin"><use href="#i-coin"/></svg></span><b>${money(total)}</b></div>
+      <div class="frow small"><span>Item(s)</span><b>${money(t.items)}</b></div>
+      ${promo ? `<div class="frow small promo-on"><span>Promo ${promo.code} <button type="button" class="rm-promo" data-promo-off>Remove</button></span><b>−${money(t.disc)}</b></div>` : ''}
+      <form class="promo" data-promo-form>
+        <button type="button" class="promo-toggle" aria-expanded="false" data-promo-toggle><span>Apply promo code</span><svg class="ic"><use href="#i-plus"/></svg></button>
+        <div class="promo-body" hidden><input name="code" placeholder="Promo code" autocomplete="off" aria-label="Promo code"><button type="submit" class="btn ghost">Apply</button></div>
+        <small class="promo-msg" role="status"></small>
+      </form>
+      <div class="subtotal"><span>Subtotal</span><b>${money(t.sub)}</b></div>
+      <div class="frow cashrow"><span>Cashback you will receive <i class="q" tabindex="0" data-tip="1% of your order comes back as OG Coins.">?</i></span><span class="cashback">${t.cash.toFixed(2)} <svg class="coin"><use href="#i-coin"/></svg></span></div>
       <div class="wallets">
         <button type="button" class="wallet apple" data-pay>&#63743; Pay</button>
         <button type="button" class="wallet google" data-pay><span>G</span> Pay</button>
       </div>
-      <button type="button" class="btn solid wide" data-pay>Pay by card</button>
+      <button type="button" class="btn solid wide" data-pay>Secure checkout</button>
       <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% money-back guarantee</p>
     </div>` : '';
+  const items = cart.length ? cart.map(itemHTML).join('') : '<p class="muted">Your cart is empty.</p>';
   return `<div class="dscroll">${items}${left.length ? `<h4 class="nx">You might also need</h4>${next}` : ''}</div>${foot}`;
 }
-function renderDrawer() { $('#dBody').innerHTML = drawerHTML(); }
+function renderDrawer() {
+  $('#dBody').innerHTML = drawerHTML();
+  $('#dCount').textContent = `(${cart.length} Item${cart.length === 1 ? '' : 's'})`;
+}
 function openDrawer() {
   renderDrawer();
   drawer.hidden = false;
@@ -538,6 +574,14 @@ function closeDrawer() {
   document.body.classList.remove('lock');
   setTimeout(() => { drawer.hidden = true; }, 220);
 }
+drawer.addEventListener('submit', (e) => {
+  const f = e.target.closest('[data-promo-form]');
+  if (!f) return;
+  e.preventDefault();
+  const code = f.code.value.trim().toUpperCase();
+  if (PROMOS[code]) { promo = { code, pct: PROMOS[code] }; renderDrawer(); }
+  else $('.promo-msg', f).textContent = code ? 'Promo code not found. Try WELCOME5 in this prototype.' : 'Enter a promo code.';
+});
 drawer.addEventListener('click', (e) => {
   if (e.target.closest('[data-close]')) return closeDrawer();
   const rm = e.target.closest('[data-rm]');
@@ -545,9 +589,16 @@ drawer.addEventListener('click', (e) => {
   const add = e.target.closest('[data-add]');
   if (add) {
     const c = CROSS.find((x) => x.id === add.dataset.add);
-    cart.push({ id: c.id + Date.now(), cid: c.id, img: c.img, title: c.title, meta: c.line, extras: [], price: c.price });
+    cart.push({ id: c.id + Date.now(), cid: c.id, img: c.img, title: c.title, line: c.line, sold: 'OvergearSales', extras: [], price: c.price });
     saveCart(); counters(); bump('cartCnt'); return renderDrawer();
   }
+  if (e.target.closest('[data-promo-toggle]')) {
+    const b = e.target.closest('[data-promo-toggle]'), body = $('.promo-body', b.parentElement), open = body.hidden;
+    body.hidden = !open; b.setAttribute('aria-expanded', open);
+    if (open) $('input', body).focus();
+    return;
+  }
+  if (e.target.closest('[data-promo-off]')) { promo = null; return renderDrawer(); }
   if (e.target.closest('[data-pay]')) say('Prototype: checkout is not built yet');
 });
 $('#customBtn').addEventListener('click', () => say('Prototype: custom offer form is not built yet'));

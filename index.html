@@ -28,6 +28,9 @@
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 2.900 6.900 7.100.6-5.400 4.700 1.700 7.300L12 17.800 5.700 21.500l1.700-7.300L2 9.500l7.100-.6L12 2Z"/></symbol>
   <symbol id="i-cart-plus" viewBox="0 0 24 24"><path d="M3 4h2.200l2 11h10.200l1.800-8H6.300"/><circle cx="9" cy="19.500" r="1.200"/><circle cx="17" cy="19.500" r="1.200"/></symbol>
   <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 3.500V6a1 1 0 0 1 1-1Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/></symbol>
+  <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7.500"/><path d="M12 13V9.500M10 3h4M18.500 6.500l1.200-1.200"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
   <symbol id="i-coin" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#2b2a1f" stroke="#e1b255" stroke-width="1.500"/><path d="M10 4.500 14.500 6.600v3.200c0 2.200-1.700 4-4.500 5.200-2.800-1.200-4.500-3-4.500-5.200V6.600L10 4.500Z" fill="#e1b255"/></symbol>
 </svg>
@@ -304,7 +307,7 @@
   <div class="scrim" data-close></div>
   <div class="dpanel">
     <div class="grab"></div>
-    <header><h3>Your cart</h3><button type="button" data-close aria-label="Close"><svg class="ic"><use href="#i-x"/></svg></button></header>
+    <header><h3>Shopping Cart <span class="cnt-label" id="dCount"></span></h3><button type="button" data-close aria-label="Close"><svg class="ic"><use href="#i-x"/></svg></button></header>
     <div class="dbody" id="dBody"></div>
   </div>
 </aside>
