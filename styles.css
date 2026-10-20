@@ -790,3 +790,6 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .mc .mh b{font-size:var(--fs-s)}
   .mc .ml{font-size:11px;line-height:15px}
 }
+
+/* "Popular" tag: lower and fully rounded */
+.pre em{font-size:10px;line-height:14px;padding:0 6px;margin-left:0;border-radius:99px;letter-spacing:.2px}
