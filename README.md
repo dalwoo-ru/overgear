@@ -68,7 +68,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 | D2 | "Compare methods" opens a table (popover on desktop, bottom sheet on phones) with Choose buttons |
 | D3 | Order: configurator, wins, how it works, reviews, FAQ, custom offer, SEO text collapsed behind "Read more" |
 | D4 | After 20 s idle in the configurator a chat nudge appears (once). Open `?nudge=1500` to see it sooner |
-| D5, M6 | "You may also like" moved into the cart drawer after Add to cart, as "What's next after 90". The drawer puts Apple Pay and Google Pay first |
+| D5, M6 | "You may also like" moved into the cart drawer, as "What's next after 90". Add to cart just opens the cart (no status line). The cart is 520px wide; the upsell sits right under the items, and the bottom block is pinned: subtotal, Apple Pay and Google Pay first, Pay by card, "100% money-back guarantee · Cashback 1%". Line items use the page's price style: new price, struck old price, discount tag |
 | M1, M8 | Sticky bottom bar with price, ETA and Add to cart, plus a trust strip above it. It shows while the in-card buy block is off screen; the chat bubble is part of the bar, so they cannot overlap |
 | M2 | Configurator right after the title and badges; "Your Wins" and "How It Works" are folds on phones. Not done: the PostHog check of how many mobile visits reach the configurator |
 | M4 | On touch screens "?" hints open a bottom sheet; method cards are full width; rows are at least 44 px |

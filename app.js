@@ -464,7 +464,7 @@ function describe(c) {
   const q = quote(c), m = METHODS[c.method];
   const parts = [`${c.from} → ${c.to}`, m.name, isExpress(c) ? 'Express' : 'Standard', `${c.chars} character${c.chars > 1 ? 's' : ''}`];
   const ex = [...allExtras(c)].map((id) => extraDef(id).label);
-  return { id: 'lvl-' + Date.now(), title: 'WoW Midnight Leveling', meta: parts.join(' · '), extras: ex, price: q.total, method: c.method, eta: fmtH(q.hours) };
+  return { id: 'lvl-' + Date.now(), title: 'WoW Midnight Leveling', meta: parts.join(' · '), extras: ex, price: q.total, was: q.was, method: c.method, eta: fmtH(q.hours) };
 }
 function addToCart() {
   const it = describe(state);
@@ -472,43 +472,50 @@ function addToCart() {
   const b = $('#add'); b.classList.add('done'); $('#addLabel').textContent = 'Added to cart';
   setTimeout(() => { b.classList.remove('done'); $('#addLabel').textContent = 'Add to cart'; }, 1600);
   hideNudge(true);
-  openDrawer(true);
+  openDrawer();
 }
 $('#add').addEventListener('click', addToCart);
 $('#mAdd').addEventListener('click', addToCart);
 $('#cartBtn').addEventListener('click', () => openDrawer());
 
 const drawer = $('#drawer');
-function drawerHTML(justAdded) {
+function drawerHTML() {
   const total = cart.reduce((s, i) => s + i.price, 0);
   const piloted = cart.some((i) => i.method === 'piloted');
-  const items = cart.length ? cart.map((i, idx) => `
+  const items = cart.length ? cart.map((i, idx) => {
+    const off = i.was > i.price ? Math.round((1 - i.price / i.was) * 100) : 0;
+    return `
     <div class="litem">
-      <div><b>${i.title}</b><small>${i.meta}</small>${i.extras?.length ? `<small>+ ${i.extras.join(', ')}</small>` : ''}${i.eta ? `<small>Ready ${i.eta}</small>` : ''}</div>
-      <div class="lr"><b>${money(i.price)}</b><button type="button" class="rm" data-rm="${idx}" aria-label="Remove">Remove</button></div>
-    </div>`).join('') : '<p class="muted">Your cart is empty.</p>';
+      <div class="li-main"><b>${i.title}</b><small>${i.meta}</small>${i.extras?.length ? `<small>+ ${i.extras.join(', ')}</small>` : ''}${i.eta ? `<small>Ready ${i.eta}</small>` : ''}</div>
+      <div class="lr">
+        <span class="lp"><b>${money(i.price)}</b>${off ? `<s>${money(i.was)}</s>` : ''}</span>
+        ${off ? `<span class="disc">-${off}%</span>` : ''}
+        <button type="button" class="rm" data-rm="${idx}" aria-label="Remove">Remove</button>
+      </div>
+    </div>`;
+  }).join('') : '<p class="muted">Your cart is empty.</p>';
   const note = piloted ? `<div class="note"><svg class="ic"><use href="#i-shield"/></svg><p><b>Piloted order.</b> You share your Battle.net login, used through a VPN. Your email access and authenticator stay with you.</p></div>` : '';
-  const pay = cart.length ? `
-    <div class="subtotal"><span>Subtotal</span><b>${money(total)}</b></div>
-    <div class="wallets">
-      <button type="button" class="wallet apple" data-pay>&#63743; Pay</button>
-      <button type="button" class="wallet google" data-pay><span>G</span> Pay</button>
-    </div>
-    <button type="button" class="btn solid wide" data-pay>Pay by card</button>
-    <p class="muted c">100% money-back guarantee · Cashback 1%</p>` : '';
   const next = CROSS.map((c) => `
     <div class="xcard">
       <img src="assets/img/${c.img}.avif" alt="" loading="lazy" decoding="async">
       <div><b>${c.title}</b><small>${c.line}</small></div>
       <button type="button" class="btn ghost" data-add="${c.id}">+ ${money(c.price)}</button>
     </div>`).join('');
-  return `${justAdded ? '<p class="added"><svg class="ic"><use href="#i-check"/></svg>Added to cart</p>' : ''}
-    ${items}${note}${pay}
-    <h4 class="nx">What's next after 90</h4>${next}`;
+  const foot = cart.length ? `
+    <div class="dfoot">
+      <div class="subtotal"><span>Subtotal</span><b>${money(total)}</b></div>
+      <div class="wallets">
+        <button type="button" class="wallet apple" data-pay>&#63743; Pay</button>
+        <button type="button" class="wallet google" data-pay><span>G</span> Pay</button>
+      </div>
+      <button type="button" class="btn solid wide" data-pay>Pay by card</button>
+      <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% money-back guarantee · Cashback 1%</p>
+    </div>` : '';
+  return `<div class="dscroll">${items}${note}<h4 class="nx">What's next after 90</h4>${next}</div>${foot}`;
 }
-function renderDrawer(justAdded) { $('#dBody').innerHTML = drawerHTML(justAdded); }
-function openDrawer(justAdded) {
-  renderDrawer(justAdded);
+function renderDrawer() { $('#dBody').innerHTML = drawerHTML(); }
+function openDrawer() {
+  renderDrawer();
   drawer.hidden = false;
   requestAnimationFrame(() => drawer.classList.add('show'));
   document.body.classList.add('lock');
