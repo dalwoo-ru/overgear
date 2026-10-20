@@ -164,7 +164,7 @@ h1{font:800 var(--fs-h1)/var(--lh-h1) var(--font);letter-spacing:-.4px;margin-bo
 .fh .opt{order:0;font-weight:400;font-size:var(--fs-xs);color:var(--n6)}
 .rowline{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .rowline .fh{margin:0}
-.fh .n{width:22px;height:22px;border-radius:50%;background:var(--brand);font:700 12px/22px var(--font);font-style:normal;text-align:center;flex:none}
+.fh .n{width:20px;height:20px;border-radius:50%;background:var(--n4);color:var(--n7);font:600 11px/20px var(--font);font-style:normal;text-align:center;flex:none}
 .link{order:0;margin-left:4px;font-size:var(--fs-xs);line-height:var(--lh-xs);font-weight:400;color:var(--brand-4);text-decoration:underline;text-underline-offset:2px;min-height:24px}
 .link:hover{color:#fff}
 .fgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:12px;align-items:start}
