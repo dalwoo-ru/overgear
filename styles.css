@@ -776,3 +776,17 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .mcards::-webkit-scrollbar{display:none}
   .mc{flex:none;width:calc((100vw - 32px) / 2.2);scroll-snap-align:start;min-height:0;padding:10px 12px}
 }
+
+/* level chips share the region chip look, everywhere */
+.pre,.lc{min-height:36px;padding:0 16px;border-radius:var(--r-control);background:#0a0d2e;border:1px solid transparent;font-size:var(--fs-s);font-weight:500;color:var(--n8);display:inline-flex;align-items:center;gap:8px}
+.pre:hover,.lc:hover{background:var(--n4)}
+.pre[aria-checked=true],.lc[aria-pressed=true]{background:var(--p30);border-color:var(--brand);color:var(--n10)}
+.lc.wide{padding:0 16px}
+.presets,.chiprow{gap:8px}
+@media (max-width:767px){
+  .lc{min-height:36px;min-width:0}
+  .pre{min-height:36px}
+  .mc{width:calc((100vw - 32px) / 3.4);padding:9px 10px}
+  .mc .mh b{font-size:var(--fs-s)}
+  .mc .ml{font-size:11px;line-height:15px}
+}
