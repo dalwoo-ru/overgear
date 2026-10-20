@@ -122,8 +122,8 @@ body.lock{overflow:hidden}
 
 /* ---------- 1. Intro: title + main USPs ---------- */
 .intro{position:relative;isolation:isolate;padding-bottom:4px}
-.intro::before{content:"";position:absolute;right:-32px;top:-16px;width:min(600px,78%);height:320px;z-index:-1;pointer-events:none;
-  background:linear-gradient(90deg,var(--n2) 0%,#0500 55%),linear-gradient(0deg,var(--n2),#0500 65%),url("assets/img/hero.avif") center 12%/cover;opacity:.75}
+.intro::before{content:"";position:absolute;right:-56px;top:-8px;width:300px;height:300px;z-index:-1;pointer-events:none;
+  background:linear-gradient(90deg,var(--n2) 0%,#0500 45%),linear-gradient(0deg,var(--n2) 0%,#0500 40%),url("assets/img/hero.avif") center top/cover;opacity:.9}
 .crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:var(--fs-s);line-height:var(--lh-s);color:var(--n6);margin:4px 0 14px}
 .crumbs a{color:var(--n9)} .crumbs a:hover{color:var(--brand-4)}
 .crumbs svg{width:14px;height:14px}
@@ -518,7 +518,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .hbtn span.l{display:none}
   .hbtn{min-width:40px}
   .hactions .hide-m{display:none}
-  .intro::before{right:-20px}
+  .intro::before{right:-24px}
 }
 
 /* ---------- Phones ---------- */
@@ -536,7 +536,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .back .ic{width:18px;height:18px}
   h1{margin-bottom:4px}
   .heart{width:36px;height:36px}
-  .intro::before{right:-16px;width:85%;height:230px;opacity:.6}
+  .intro::before{right:-16px;top:0;width:200px;height:200px;opacity:.7}
   .trust{flex-direction:column;align-items:flex-start;gap:2px}
   .trust .sep{display:none}
   .lead{margin-bottom:8px}
