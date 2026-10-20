@@ -423,7 +423,6 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .sbody p{color:var(--n7);margin-bottom:8px}
 .cmpgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto repeat(4,auto) auto;gap:0 12px}
 .cmpcol{display:grid;grid-template-rows:subgrid;grid-row:span 6;gap:0;padding:14px;border-radius:var(--r-control);background:#0a0d2e;border:1px solid transparent;text-align:left}
-.cmpcol.sel{background:var(--p30);border-color:var(--brand)}
 .cmpcol h4{font:700 var(--fs-h3)/var(--lh-h3) var(--font);margin:0 0 10px}
 .cmpcol .cr{padding:10px 0;border-top:1px solid #ffffff14}
 .cmpcol .cr small{display:block;font-size:11px;line-height:14px;letter-spacing:.4px;text-transform:uppercase;color:var(--n5);margin-bottom:2px}
@@ -824,3 +823,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .seo ul li::before{background:var(--n7)}
 .faq .acc>button h5,.rev-head h2,h2.sec,.seo h2{color:#fff}
 .main{padding-bottom:0}
+
+.cmpcol .btn.picked{gap:6px;opacity:.6;cursor:default;background:transparent;border-color:var(--n5);color:var(--n8)}
+.cmpcol .btn.picked .ic{width:18px;height:18px;stroke-width:2.4}
+.cmpcol .btn.picked:hover{border-color:var(--n5)}

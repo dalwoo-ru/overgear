@@ -442,11 +442,11 @@ function openCompare() {
   openSheet('Compare methods', `<div class="cmpgrid">${Object.entries(METHODS).map(([id, m]) => {
     const q = quote(cfgWith({ method: id }));
     const sel = state.method === id;
-    return `<section class="cmpcol${sel ? ' sel' : ''}">
+    return `<section class="cmpcol">
       <h4>${m.name}</h4>
       ${rows.map(([label, fn]) => `<div class="cr"><small>${label}</small><p>${fn(id, m)}</p></div>`).join('')}
       <div class="cr"><small>Price</small><p><b>${money(q.total)}</b>${id === 'piloted' ? '' : ` <em>+${money(pretty(q.raw - base.raw))}</em>`}</p></div>
-      <button type="button" class="btn ${sel ? 'solid' : 'ghost'}" data-pick="${id}">${sel ? 'Selected' : 'Choose'}</button>
+      <button type="button" class="btn ghost${sel ? ' picked' : ''}" data-pick="${id}"${sel ? ' disabled aria-label="Selected"' : ''}>${sel ? '<svg class="ic"><use href="#i-check"/></svg>Selected' : 'Choose'}</button>
     </section>`;
   }).join('')}</div>`, true);
 }
