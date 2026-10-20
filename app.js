@@ -10,13 +10,14 @@ const PRICING = {
   express: { pct: 0.30, timeFactor: 0.6 },
   charDiscount: { 1: 0, 2: 0.05, 3: 0.10, 5: 0.20 }, // the 4-character option is dropped (O8)
   method: { piloted: 0, self: 0.70, remote: 0.05 },
-  endgameDiscount: 0.20,                             // off (boost + gear 292 + campaign) inside "Endgame ready"
+  endgameDiscount: 0.20,                             // off (Express boost + 292 gear) inside "Express + Gear"
   extras: [
-    { id: 'ulatek',   label: "Ula'tek campaign",  price: 24.68, desc: "Campaign chain finished on your character · needs level 90" },
-    { id: 'gear292',  label: '292 ilvl gear',     price: 53.87, desc: 'Full 292 ilvl set for M+ and Delves · needs level 90' },
+    { id: 'gear292',  label: '292 ilvl gear',     price: 53.87, desc: 'Ready for M+4 · needs level 90' },
+    { id: 'camp2',    label: 'Both campaigns',    price: 52.27, was: 61.49, desc: "Midnight and Ula'tek together, 15% off" },
+    { id: 'campaign', label: 'Midnight campaign', price: 36.81, was: 46.01, desc: 'Finished on the way' },
+    { id: 'ulatek',   label: "Ula'tek campaign",  price: 24.68, desc: 'Needs level 90' },
     { id: 'honor',    label: 'Honor gear 331',    price: 20.19, desc: '331 ilvl PvP set · needs level 90' },
-    { id: 'campaign', label: 'Midnight campaign', price: 36.81, was: 46.01, desc: 'Leveling campaign finished on the way · 20% off with a leveling order' },
-    { id: 'stream',   label: 'Live stream',       price: 11.23, desc: 'Watch your booster play live · you get a link' },
+    { id: 'stream',   label: 'Live stream',       price: 11.23, desc: 'Watch your booster play live' },
   ],
 };
 /* "Pretty" prices: totals and add-on prices are rounded UP to the next .49 or .99.
@@ -29,7 +30,9 @@ function pretty(n) {
   const w = Math.floor(c);
   return c - w <= 0.49 + 1e-9 ? w + 0.49 : w + 0.99;
 }
-const BUNDLE = ['gear292', 'campaign'];   // included in the Endgame ready package
+const BUNDLE = ['gear292'];                       // included in the Express + Gear package
+const SET = { camp2: ['ulatek', 'campaign'] };   // the two-campaign set replaces its singles
+const PKG_NAME = { basic: 'Basic', express: 'Express', endgame: 'Express + Gear' };
 const GIFT_M10 = false;   // O10: set to true if the free M+10 key is still given with leveling orders
 const TRUST = { rating: '4.9', reviews: '36,206' };
 const CHAR_STEPS = [1, 2, 3, 5];
@@ -39,7 +42,7 @@ const METHODS = {
   piloted: { name: 'Piloted', line: 'Verified booster plays for you. You share your login only.',
     share: 'Your login, used through a VPN. Email and authenticator stay with you.',
     time: 'None — log in at the end', whoPlays: 'A verified booster' },
-  self:    { name: 'Self-play', line: 'You stay in control. Nothing is shared.',
+  self:    { name: 'Self-play', line: 'AFK route included. Nothing is shared.',
     share: 'Nothing — you stay on your own account, no login given.',
     time: 'AFK route, game stays running', whoPlays: 'You, on an AFK route' },
   remote:  { name: 'Remote', line: 'Verified booster plays remotely. No login shared.',
@@ -170,6 +173,7 @@ const PKG = {
 };
 const hrs = (h) => (h < 10 ? Math.round(h * 2) / 2 : Math.round(h));   // 3.6 → 3.5, 6 → 6, 10.4 → 10
 const fmtLong = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} minutes` : `${hrs(h)} hours`);
+const fmtSaved = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} min` : `${hrs(h)} h`);
 const fmtH = (h) => (h < 1 ? `~${Math.max(1, Math.round(h * 60))} min` : `~${hrs(h)} h`);
 
 /* ================= Order form: build static parts ================= */
@@ -183,10 +187,12 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
     <span class="ml">${m.line}</span>
   </button>`).join('');
 
-const extraPrice = (x, locked) => locked ? 'Included' : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
+const extraPrice = (x, locked) => locked ? (locked === 'set' ? 'In the set' : 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
 $('#extras').innerHTML = PRICING.extras.map((x) => `
   <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
     <span class="xt"><b>${x.label}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`).join('');
+
+$('#lvlChips').innerHTML = Array.from({ length: 9 }, (_, k) => `<button type="button" class="lc" data-lvl="${81 + k}" aria-pressed="false">${81 + k}</button>`).join('');
 
 /* ================= Render: state → DOM ================= */
 const HOW = {
@@ -215,6 +221,7 @@ function render() {
   el.rangeBox.dataset.mode = mode;
   el.from.value = from; el.to.value = to;
   el.to.readOnly = mode === 'mine';
+  $$('#lvlChips .lc').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.lvl === from && to === 90));
   el.rFrom.value = from; el.rTo.value = to;
   const pos = (v) => `calc(8px + (100% - 16px) * ${(v - 1) / 89})`;
   $('#fill').style.left = pos(from); $('#fill').style.right = `calc(100% - ${pos(to)})`;
@@ -227,7 +234,7 @@ function render() {
     b.setAttribute('aria-checked', state.pkg === k);
     $('.pp', b).innerHTML = k === 'endgame' && pq.bundle ? `${money(pq.total)}<s>${money(pq.wasBundle)}</s>` : money(pq.total);
     if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
-    if (k === 'express') $('small', b).textContent = `Ready ${fmtH(exp.hours)} · ${Math.round((1 - PRICING.express.timeFactor) * 100)}% faster`;
+    if (k === 'express') $('small', b).textContent = `${fmtH(std.hours)} → ${fmtH(exp.hours)} · ${fmtSaved(std.hours - exp.hours)} faster`;
     if (k === 'endgame') {
       const sv = $('.save', b);
       sv.hidden = !pq.bundle; sv.textContent = `-${Math.round(PRICING.endgameDiscount * 100)}%`;
@@ -238,7 +245,7 @@ function render() {
   $('#chipTimeText').innerHTML = `<b>${from}→${to} ${fmtH(std.hours)}</b> · ${fmtH(exp.hours)} with Express`;
 
   // the Piloted review is shown only while Piloted is chosen
-  $('.mquote').hidden = state.method !== 'piloted';
+  $('.mquote').hidden = $('#mnote').hidden = state.method !== 'piloted';
 
   // methods
   const piloted = quote(cfgWith({ method: 'piloted' }));
@@ -248,23 +255,24 @@ function render() {
     $('em', b).textContent = m === 'piloted' ? '' : '+' + money(d);
   });
 
-  // characters
-  $('#cVal').textContent = state.chars;
-  $('#cMinus').disabled = state.chars === CHAR_STEPS[0];
-  $('#cPlus').disabled = state.chars === CHAR_STEPS.at(-1);
+  // characters: chips with the discount and the price per character
   const n = state.chars, single = quote(cfgWith({ chars: 1 })).core;
+  $$('#cchips .cc').forEach((b) => {
+    const k = +b.dataset.c, kq = quote(cfgWith({ chars: k }));
+    b.setAttribute('aria-checked', k === n);
+    $('small', b).textContent = money(pretty(kq.core / k)) + (k > 1 ? ' each' : '');
+  });
   const ct = $('#charTag'); ct.hidden = n === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[n] * 100)}%`;
-  $('#charNote').textContent = n === 1
-    ? 'Add alts and save up to 20%'
-    : `${money(pretty(q.core / n))} each · you save $${Math.floor(single * n - q.core)}`;
+  $('#charNote').textContent = n === 1 ? 'Add alts and save up to 20%' : `You save $${Math.floor(single * n - q.core)}`;
+  $('#charHint').hidden = n === 1;
 
   // extras: the ones inside "Endgame ready" are ticked and locked; the rest stay free to toggle
   PRICING.extras.forEach((x) => {
-    const locked = state.pkg === 'endgame' && BUNDLE.includes(x.id);
+    const locked = state.pkg === 'endgame' && BUNDLE.includes(x.id) ? 'bundle' : state.extras.has('camp2') && SET.camp2.includes(x.id) ? 'set' : '';
     const row = $(`[data-xrow="${x.id}"]`), inp = $('input', row);
-    inp.checked = locked || state.extras.has(x.id);
-    inp.disabled = locked;
-    row.classList.toggle('locked', locked);
+    inp.checked = !!locked || state.extras.has(x.id);
+    inp.disabled = !!locked;
+    row.classList.toggle('locked', !!locked);
     $('.p', row).innerHTML = extraPrice(x, locked);
   });
 
@@ -333,9 +341,16 @@ $('#opts').addEventListener('click', (e) => {
     render();
   } else if ((b = t('.mc'))) {
     state.method = b.dataset.m; render();
-  } else if (t('#cMinus') || t('#cPlus')) {
-    const i = CHAR_STEPS.indexOf(state.chars) + (t('#cPlus') ? 1 : -1);
-    state.chars = CHAR_STEPS[clamp(i, 0, CHAR_STEPS.length - 1)]; render();
+  } else if ((b = t('[data-pickm]'))) {
+    state.method = b.dataset.pickm; render();
+  } else if ((b = t('.cc'))) {
+    state.chars = +b.dataset.c; render();
+  } else if ((b = t('[data-end]'))) {
+    const v = b.dataset.end;
+    if (v === 'afk') { state.from = 1; state.to = 80; state.mode = 'custom'; if (state.pkg === 'endgame') { state.pkg = 'express'; } render(); }
+    else setRange(Math.min(state.from, +v - 1), +v, 'to');
+  } else if ((b = t('[data-lvl]'))) {
+    setRange(+b.dataset.lvl, 90, 'from');
   } else if (t('#compare')) {
     openCompare();
   }
@@ -343,7 +358,11 @@ $('#opts').addEventListener('click', (e) => {
 $('#opts').addEventListener('change', (e) => {
   if (e.target.name === 'region') state.region = e.target.value;
   if (e.target.dataset.extra) {
-    if (!e.target.disabled) e.target.checked ? state.extras.add(e.target.dataset.extra) : state.extras.delete(e.target.dataset.extra);
+    if (!e.target.disabled) {
+      const id = e.target.dataset.extra;
+      e.target.checked ? state.extras.add(id) : state.extras.delete(id);
+      if (id === 'camp2' && e.target.checked) SET.camp2.forEach((s) => state.extras.delete(s));
+    }
   }
   render();
 });
@@ -384,6 +403,7 @@ function sync() {
   const f = parseInt(p.get('from'), 10), t = parseInt(p.get('to'), 10);
   if (f && t) { state.from = clamp(f, 1, 89); state.to = clamp(t, state.from + 1, 90); }
   if (state.pkg === 'endgame' && state.to !== 90) state.pkg = 'express';
+  if (state.extras.has('camp2')) SET.camp2.forEach((s) => state.extras.delete(s));
   state.mode = ['pop', 'full', 'mine', 'custom'].includes(p.get('mode')) ? p.get('mode')
     : state.from === 80 && state.to === 90 ? 'pop' : state.from === 1 && state.to === 90 ? 'full' : 'custom';
   if (state.mode === 'pop' && !(state.from === 80 && state.to === 90)) state.mode = 'custom';
@@ -431,6 +451,7 @@ $('#sheetBody').addEventListener('click', (e) => {
 });
 
 const SHEETS = {
+  piloted: ['What Piloted shares', `<ul class="bul"><li><b>Your login</b> is the only thing you share. It is used through a VPN in your region.</li><li>Your <b>authenticator</b> stays with you. You confirm the login when asked.</li><li>We never ask for access to your <b>email</b>.</li><li>A verified booster plays by hand. No bots.</li></ul><p>Prefer not to share a login?</p><button type="button" class="btn ghost" data-pick="remote">Choose Remote</button>`],
   guarantee: ['100% money-back guarantee', '<p>If we cannot deliver your order, you get your money back. Disputes are handled by live support 24/7.</p><p class="muted">Prototype copy — replace with the real policy text.</p>'],
   reviews: [`Trustpilot ${TRUST.rating} · ${TRUST.reviews} reviews`, '<p>Overgear is rated Excellent on Trustpilot, based on verified customer reviews.</p><p class="muted">Prototype: this would link out to the Trustpilot page.</p>'],
 };
@@ -453,11 +474,11 @@ const CROSS = [
   { id: 'm0', title: 'Mythic +0', line: '292 ilvl loot, ready for M+4', price: pretty(6.72), img: 'mythic-0' },
 ];
 let wish = store.get('og:wish', 0);
-let cart = store.get('og:cart4', []);
+let cart = store.get('og:cart5', []);
 let promo = null;                                  // { code, pct }
 const PROMOS = { WELCOME5: 0.05 };                 // demo code
 const heart = $('#heart');
-const saveCart = () => store.set('og:cart4', cart);
+const saveCart = () => store.set('og:cart5', cart);
 function counters() {
   const wc = $('#wishCnt'); wc.textContent = wish; wc.hidden = !wish;
   const cc = $('#cartCnt'); cc.textContent = cart.length; cc.hidden = !cart.length;
@@ -475,16 +496,21 @@ function say(text, link = false) {
 }
 $('#toastCart').addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
 
+const cfgOf = (cfg) => ({ ...cfg, extras: new Set(cfg.extras) });
+function refreshItem(i) {
+  const c = cfgOf(i.cfg), q = quote(c);
+  Object.assign(i, {
+    price: q.total, was: q.was, delivery: fmtLong(q.hours), method: METHODS[c.method].name,
+    parts: [c.region.toUpperCase(), `${c.from} - ${c.to}`, `${c.chars} character${c.chars > 1 ? 's' : ''}`, c.pkg === 'basic' ? '' : PKG_NAME[c.pkg]].filter(Boolean),
+  });
+}
 function describe(c) {
-  const q = quote(c);
-  const ex = [...allExtras(c)].map((id) => extraDef(id).label);
-  return {
-    id: 'lvl-' + Date.now(), img: 'hero', title: 'Power Leveling',
-    parts: [c.region.toUpperCase(), `${c.from} - ${c.to}`, `${c.chars} character${c.chars > 1 ? 's' : ''}`, c.pkg === 'basic' ? '' : c.pkg === 'express' ? 'Express' : 'Endgame ready'].filter(Boolean),
-    method: METHODS[c.method].name, extras: ex,
-    sold: 'OvergearSales', start: '15 minutes', delivery: fmtLong(q.hours),
-    price: q.total, was: q.was,
+  const i = {
+    id: 'lvl-' + Date.now(), img: 'hero', title: 'Power Leveling', sold: 'OvergearSales', start: '15 minutes',
+    cfg: { region: c.region, from: c.from, to: c.to, pkg: c.pkg, chars: c.chars, method: c.method, extras: [...c.extras] },
   };
+  refreshItem(i);
+  return i;
 }
 function addToCart() {
   const it = describe(state);
@@ -505,22 +531,39 @@ const cartTotals = () => {
   const sub = items - disc;
   return { items, disc, sub, cash: sub * 0.01 };
 };
+const TIP_PILOTED = 'You share your login only. Email and authenticator stay with you.';
 function itemHTML(i, idx) {
   const off = i.was > i.price ? Math.round((1 - i.price / i.was) * 100) : 0;
-  const meta = i.parts
-    ? [...i.parts.map((p) => `<span>${p}</span>`), `<span class="mt">${i.method}</span>`].join('<span class="dot"> • </span>')
-    : `<span>${i.line || ''}</span>`;
+  const c = i.cfg ? cfgOf(i.cfg) : null;
+  const mth = `<span class="mt">${i.method}</span>${c && c.method === 'piloted' ? `<i class="q" tabindex="0" data-tip="${TIP_PILOTED}">?</i>` : ''}`;
+  const meta = i.parts ? [...i.parts.map((p) => `<span>${p}</span>`), mth].join('<span class="dot"> • </span>') : `<span>${i.line || ''}</span>`;
   const row = (icon, label, val) => `<div class="lrow"><svg class="ic"><use href="#${icon}"/></svg><span><b>${label}</b>${val}</span></div>`;
+  let extras = '';
+  if (c) {
+    const lines = [];
+    if (c.pkg === 'endgame') BUNDLE.forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">Included</span></div>`));
+    [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price))}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
+    if (lines.length) extras = `<div class="xlist">${lines.join('')}</div>`;
+  } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;
+  let sw = '';
+  if (c) {
+    const cur = quote(c).raw;
+    sw = `<div class="mswitch"><span>Switch method</span>${Object.keys(METHODS).filter((m) => m !== c.method).map((m) => {
+      const d = pretty(Math.abs(quote({ ...c, method: m }).raw - cur)), sign = quote({ ...c, method: m }).raw >= cur ? '+' : '−';
+      return `<button type="button" class="msw" data-msw="${idx}:${m}">${METHODS[m].name} ${sign}${money(d)}</button>`;
+    }).join('')}</div>`;
+  }
   return `
     <div class="litem">
       <img src="assets/img/${i.img || 'hero'}.avif" alt="" width="64" height="64">
       <div class="li-main">
         <b class="lt">${i.title}</b>
         <div class="lmeta">${meta}</div>
-        ${i.extras?.length ? `<div class="lmeta">+ ${i.extras.join(', ')}</div>` : ''}
+        ${extras}
         ${i.sold ? row('i-user', 'Sold by ', i.sold) : ''}
         ${i.start ? row('i-timer', 'Start time: ', i.start) : ''}
         ${i.delivery ? row('i-clock', 'Delivery time: ', i.delivery) : ''}
+        ${sw}
       </div>
       <div class="lr">
         <span class="lp"><b>${money(i.price)}</b>${off ? `<s>${money(i.was)}</s>` : ''}</span>
@@ -583,6 +626,10 @@ drawer.addEventListener('submit', (e) => {
 });
 drawer.addEventListener('click', (e) => {
   if (e.target.closest('[data-close]')) return closeDrawer();
+  const xrm = e.target.closest('[data-xrm]');
+  if (xrm) { const [n, id] = xrm.dataset.xrm.split(':'), it = cart[+n]; it.cfg.extras = it.cfg.extras.filter((x) => x !== id); refreshItem(it); saveCart(); return renderDrawer(); }
+  const msw = e.target.closest('[data-msw]');
+  if (msw) { const [n, m] = msw.dataset.msw.split(':'), it = cart[+n]; it.cfg.method = m; refreshItem(it); saveCart(); return renderDrawer(); }
   const rm = e.target.closest('[data-rm]');
   if (rm) { cart.splice(+rm.dataset.rm, 1); saveCart(); counters(); return renderDrawer(); }
   const add = e.target.closest('[data-add]');

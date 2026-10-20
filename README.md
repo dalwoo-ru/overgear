@@ -20,7 +20,7 @@ Desktop (≥1200px): main block on the left, a sticky right column.
 | Block | Contents, in reading order |
 |---|---|
 | Main · title | Breadcrumbs, H1, Trustpilot and orders line, the site's three USP tags word for word with its icons ("90 lvl in 6 Hours", "Up to 20% Off Alts", "Full AFK on Self-Play"), the one-line promise, then three extra USPs that do not repeat the tags: starts in ~15 min, the time for the chosen range ("80→90 ~6 h · ~3.5 h with Express"), level 90 unlocked for raids, M+, Delves and PvP |
-| Main · form | Everything is left-aligned. a plain Europe / America switch with flags (no label), then 2 Leveling range → 3 Package (Express shows its time and how much faster it is) → 4 Boost method (one short line per method; choosing 2, 3 or 5 characters shows a bright green "-5% / -10% / -20%" tag next to the label, and the buy block shows the new price, the struck old price and a total "-N%" tag; the table is in Compare methods; Characters sits under it as part of the same step, hint on one line, stepper below) → 5 Add-ons, all visible. Endgame ready (20% off boost + gear + campaign, "-20%" tag; the new price comes first, then the struck old one) locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
+| Main · form | Everything is left-aligned. a plain Europe / America switch with flags (no label), then 2 Leveling range → 3 Package (Express shows its time and how much faster it is) → 4 Boost method (one short line per method; choosing 2, 3 or 5 characters shows a bright green "-5% / -10% / -20%" tag next to the label, and the buy block shows the new price, the struck old price and a total "-N%" tag; the table is in Compare methods; Characters sits under it as part of the same step, hint on one line, stepper below) → 5 Add-ons, all visible. Express + Gear (20% off boost + gear, "-20%" tag; the new price comes first, then the struck old one) locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
 | Main · more information | How It Works (follows the method), reviews, FAQ, custom offer, SEO text behind "Read more" |
 | Right column | The buy block, laid out like the original: price with Cashback, start time, completion time, Add to cart, payment icons, money-back line. It is the page accent (brand border and glow). Below it, a calmer "Why players choose Overgear" card |
 
@@ -74,6 +74,18 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 | M4 | On touch screens "?" hints open a bottom sheet; method cards are full width; rows are at least 44 px |
 | M5 | Add-on labels are short, no emoji, description on a second line |
 | M7 | Lazy images and `content-visibility` on the SEO text and footer. Not done: LCP/INP measurement on a mid-range Android |
+
+## Changes picked from the data review (third pass)
+
+- **Express** is shown as time saved for the chosen range: "~6 h → ~3.5 h · 2.5 h faster".
+- **Top package** is now "Express + Gear" (Express boost plus 292 ilvl gear, 20% off, struck old price and a "-20%" tag). The Midnight campaign is no longer inside it.
+- **Two campaigns as a set** ("Both campaigns", 15% off) in the add-ons. Choosing it ticks and locks the two single campaigns ("In the set").
+- **Add-on order** by money: 292 gear, the set, Midnight campaign, Ula'tek, Honor gear, Live stream. Descriptions are one short line; "Ready for M+4" under 292 gear comes from the site's Mythic +0 card and needs confirming.
+- **Range:** presets are 80 → 90, My level → 90, 1 → 90, Custom. "My level" shows chips 81…89; Custom shows quick end chips (1 → 80 · AFK in Azure Span, To 60, To 70, To 80).
+- **Piloted:** one short line under the cards ("Don't want to share a login? Choose Remote · Read more"), the details are in a pop-up. Self-play says "AFK route included".
+- **Characters** are chips 1 · 2 · 3 · 5 with the discount and the price per character; with 2+ characters a one-line hint points to the custom offer.
+- **Cart:** an extra shows its own price with a remove button, a switch for the method with the price difference, and a "?" hint next to Piloted. Cart items remember their configuration (storage key `og:cart5`).
+- Not taken, on purpose: analytics, test flags, deep-link parameters, removing Live stream, hiding add-ons.
 
 ## Review fixes (second pass)
 

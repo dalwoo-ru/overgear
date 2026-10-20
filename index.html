@@ -104,11 +104,16 @@
             <div class="fh"><i class="n">1</i>Leveling range</div>
             <div class="presets" id="presets" role="radiogroup" aria-label="Leveling range">
             <button type="button" class="pre" role="radio" data-p="pop">80 → 90 <em>Popular</em></button>
-            <button type="button" class="pre" role="radio" data-p="full">1 → 90</button>
             <button type="button" class="pre" role="radio" data-p="mine">My level → 90</button>
+            <button type="button" class="pre" role="radio" data-p="full">1 → 90</button>
             <button type="button" class="pre" role="radio" data-p="custom">Custom</button>
           </div>
           <div class="range-box" id="rangeBox" data-mode="pop" hidden>
+            <div class="chiprow lvlchips" id="lvlChips" aria-label="Your level"></div>
+            <div class="chiprow endchips" id="endChips" aria-label="Quick end level">
+              <button type="button" class="lc wide" data-end="afk">1 → 80 · AFK in Azure Span</button>
+              <button type="button" class="lc" data-end="60">To 60</button><button type="button" class="lc" data-end="70">To 70</button><button type="button" class="lc" data-end="80">To 80</button>
+            </div>
             <div class="range-row">
               <label class="num"><span class="sr">From level</span><small id="fromLbl">My level</small><input id="from" inputmode="numeric" pattern="[0-9]*" value="80" autocomplete="off"></label>
               <svg class="ic arrow-r"><use href="#i-arrow"/></svg>
@@ -127,8 +132,8 @@
             <div class="fh"><i class="n">2</i>Package</div>
             <div class="pkgs" id="pkgs" role="radiogroup" aria-label="Package">
             <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp">$23.99</span><small>Ready ~6 h</small></button>
-            <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp">$30.99</span><small>Ready ~3.5 h · 40% faster</small></button>
-            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Endgame ready</b><span class="pp">$97.49<s>$121.49</s></span><small>Express, gear, Midnight campaign</small><i class="save">-20%</i></button>
+            <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp">$30.99</span><small>~6 h → ~3.5 h · 2.5 h faster</small></button>
+            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Express + Gear</b><span class="pp">$67.99<s>$84.99</s></span><small>Express and 292 ilvl gear</small><i class="save">-20%</i></button>
           </div>
           </div>
 
@@ -136,9 +141,16 @@
             <div class="fh"><i class="n">3</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
             <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
             <figure class="mquote"><span class="st">★★★★★</span><blockquote>“Pilot was great, communication amazing also. Started quick and delivered on time”</blockquote><figcaption>Bonetarface · Piloted order</figcaption></figure>
+            <p class="mnote" id="mnote">Don't want to share a login? <button type="button" class="tlink" data-pickm="remote">Choose Remote</button> · <button type="button" class="tlink" data-sheet="piloted">Read more</button></p>
             <div class="subgroup">
             <div class="ct1line"><span class="ct1">Characters</span><span class="disc" id="charTag" hidden></span><small class="charnote" id="charNote"></small></div>
-            <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
+            <div class="cchips" id="cchips" role="radiogroup" aria-label="Number of characters">
+              <button type="button" class="cc" role="radio" data-c="1"><b>1</b><i></i><small></small></button>
+              <button type="button" class="cc" role="radio" data-c="2"><b>2</b><i>−5%</i><small></small></button>
+              <button type="button" class="cc" role="radio" data-c="3"><b>3</b><i>−10%</i><small></small></button>
+              <button type="button" class="cc" role="radio" data-c="5"><b>5</b><i>−20%</i><small></small></button>
+            </div>
+            <p class="hint" id="charHint" hidden>One range for all characters. Different levels? <a href="#customOffer">Ask for a custom offer</a>.</p>
             </div>
           </div>
 
@@ -176,7 +188,7 @@
           <div class="acc big"><button aria-expanded="false"><h5>Can I communicate with my WoW Midnight Level booster?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Yes. Once the order starts you are connected to your booster in Discord, and our support team is available 24/7 in live chat.</p></div></div></div></div>
         </div>
       </section>
-        <section class="custom">
+        <section class="custom" id="customOffer">
         <img src="assets/img/custom-offer.jpg" alt="" loading="lazy" decoding="async">
         <div><h3>Create Your Custom Offer!</h3><p>If you can't find what you need, let's customize!<br>Click to create your perfect offer now.</p></div>
         <div class="r"><button class="btn solid" id="customBtn">Request custom offer</button><div><svg class="ic"><use href="#i-clock"/></svg><span><b>2 minutes</b> is our usual reply time</span></div></div>
