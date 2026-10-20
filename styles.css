@@ -732,3 +732,9 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .cc i{position:static;grid-column:2;justify-self:start;margin:0}
   .cc small{grid-column:1/-1}
 }
+@media (max-width:767px){
+  .cchips{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;max-width:none;margin-left:-16px;margin-right:-16px;padding:0 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .cchips::-webkit-scrollbar{display:none}
+  .cc{flex:none;min-width:104px;grid-template-columns:auto auto;justify-content:start}
+  .cc small{white-space:nowrap}
+}
