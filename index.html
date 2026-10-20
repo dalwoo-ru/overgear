@@ -91,7 +91,7 @@
       <section class="config" aria-label="Configure your boost">
         <form class="opts" id="opts" onsubmit="return false">
           <div class="fgroup">
-            <div class="ct1">Region of your character</div>
+            <div class="fh"><i class="n">1</i>Region of your character</div>
             <div class="seg flags" role="radiogroup" aria-label="Region of your character">
               <label><input type="radio" name="region" value="eu" checked><span><img src="assets/flags/eu.svg" alt="" width="22" height="15">Europe</span></label>
               <label><input type="radio" name="region" value="us"><span><img src="assets/flags/us.svg" alt="" width="22" height="15">America</span></label>
@@ -99,7 +99,7 @@
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">1</i>Leveling range</div>
+            <div class="fh"><i class="n">2</i>Leveling range</div>
             <div class="presets" id="presets" role="radiogroup" aria-label="Leveling range">
             <button type="button" class="pre" role="radio" data-p="pop">80 → 90 <em>Popular</em></button>
             <button type="button" class="pre" role="radio" data-p="full">1 → 90</button>
@@ -122,7 +122,7 @@
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">2</i>Package</div>
+            <div class="fh"><i class="n">3</i>Package</div>
             <div class="pkgs" id="pkgs" role="radiogroup" aria-label="Package">
             <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp"></span><small></small></button>
             <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp"></span><small></small></button>
@@ -131,17 +131,16 @@
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">3</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
+            <div class="fh"><i class="n">4</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
             <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
-          </div>
-
-          <div class="fgroup">
+            <div class="subgroup">
             <div class="ct1line"><span class="ct1">Characters</span><small class="charnote" id="charNote"></small></div>
             <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
+            </div>
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">4</i>Add-ons <span class="opt">optional</span></div>
+            <div class="fh"><i class="n">5</i>Add-ons <span class="opt">optional</span></div>
             <div class="extras" id="extras"></div>
           </div>
         </form>

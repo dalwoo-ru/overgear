@@ -20,7 +20,7 @@ Desktop (≥1200px): main block on the left, a sticky right column.
 | Block | Contents, in reading order |
 |---|---|
 | Main · title | Breadcrumbs, H1, Trustpilot and orders line, three key USP tags (start in ~15 min, 1–90 in ~10 h / 6 h with Express, full AFK), the one-line promise, three short wins in one row |
-| Main · form | Everything is left-aligned. "Region of your character" (Europe, America, with flags) first, then 1 Leveling range → 2 Package (Express shows its time and how much faster it is) → 3 Boost method (one short line per method; the table is in Compare methods) → Characters (hint on the same line, stepper below) → 4 Add-ons, all visible. Endgame ready locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
+| Main · form | Everything is left-aligned. 1 "Region of your character" (Europe, America, with flags), then 2 Leveling range → 3 Package (Express shows its time and how much faster it is) → 4 Boost method (one short line per method; the table is in Compare methods; Characters sits under it as part of the same step, hint on one line, stepper below) → 5 Add-ons, all visible. Endgame ready locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
 | Main · more information | How It Works (follows the method), reviews, FAQ, custom offer, SEO text behind "Read more" |
 | Right column | The buy block, laid out like the original: price with Cashback, start time, completion time, Add to cart, payment icons, money-back line. It is the page accent (brand border and glow). Below it, a calmer "Why players choose Overgear" card |
 
@@ -39,7 +39,7 @@ The right column is about 640px tall, so on a 1366×768 screen both cards stay i
 | Price | 32/36 | 26/30 |
 | Control height | 40 | 44 |
 
-Tags are 36px high on desktop and 28px on phones. Spacing: 20px between form groups on desktop, 36px between content sections. The right column is 404px wide.
+Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form groups on desktop (no divider lines in the form), 56px between content sections. The right column is 404px wide.
 
 ## Product hypotheses in the prototype
 

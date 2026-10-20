@@ -29,8 +29,8 @@
   --fs-h3:18px; --lh-h3:24px;
   --fs-price:40px; --lh-price:44px;
   --ctl:44px;                      /* control height */
-  --gap:20px;                      /* space between form groups */
-  --sec:36px;                      /* space above content sections */
+  --gap:28px;                      /* space between form groups */
+  --sec:56px;                      /* space above content sections */
   --sidebar:224px; --header:68px;
   color-scheme:dark;
 }
@@ -44,7 +44,7 @@
     --fs-h3:15px; --lh-h3:20px;
     --fs-price:26px; --lh-price:30px;
     --ctl:44px;
-    --gap:16px; --sec:28px; --header:56px;
+    --gap:22px; --sec:40px; --header:56px;
   }
 }
 
@@ -144,7 +144,7 @@ h1{font:800 var(--fs-h1)/var(--lh-h1) var(--font);letter-spacing:-.4px;margin-bo
 .chip img,.chip svg{width:18px;height:18px;object-fit:contain}
 .chip[data-tip]::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 8px);width:max-content;max-width:260px;padding:8px 10px;border-radius:8px;background:var(--n4);color:var(--n9);font:400 var(--fs-xs)/var(--lh-xs) var(--font);white-space:normal;opacity:0;pointer-events:none;transform:translateY(-4px);transition:.15s;z-index:5;text-align:left;box-shadow:var(--shadow-soft)}
 .chip:hover::after,.chip:focus-visible::after{opacity:1;transform:none}
-.wins{display:flex;flex-wrap:wrap;gap:8px 28px}
+.wins{display:flex;flex-wrap:wrap;gap:8px 18px}
 .wins li{display:flex;gap:8px;align-items:center;font-size:var(--fs-s);line-height:var(--lh-s);color:var(--n7)}
 .wins .ic{width:18px;height:18px;color:var(--success);stroke-width:2.4}
 .wins b{color:var(--n10);font-weight:600}
@@ -153,10 +153,8 @@ h1{font:800 var(--fs-h1)/var(--lh-h1) var(--font);letter-spacing:-.4px;margin-bo
 /* ---------- 2. Config form ---------- */
 .config{margin-top:24px;padding:22px 24px 24px;border-radius:12px;background:var(--n3);background:linear-gradient(180deg,#1e2242,#171b38);box-shadow:0 0 0 1px #ffffff12}
 .opts{display:flex;flex-direction:column;gap:var(--gap)}
-.fh{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:var(--fs-s);line-height:var(--lh-s);font-weight:600;color:var(--n9)}
-.fh::after{content:"";flex:1;height:1px;background:var(--n4);order:1}
+.fh{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:var(--fs-s);line-height:var(--lh-s);font-weight:600;color:var(--n9)}
 .fh.plain{font-weight:500;color:var(--n6);font-size:var(--fs-xs);line-height:var(--lh-xs)}
-.fh.plain::after{display:none}
 .fh .opt{order:0;font-weight:400;font-size:var(--fs-xs);color:var(--n6)}
 .rowline{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .rowline .fh{margin:0}
@@ -346,7 +344,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .rev .st.gold{color:var(--yellow)}
 .rev p{font-size:var(--fs-s);line-height:var(--lh-s);color:var(--n9)}
 .rev small{font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6)}
-.faq-sec h2.sec{margin-top:24px}
+.faq-sec h2.sec{margin-top:var(--sec)}
 .faq .acc{margin-bottom:12px}
 .faq .acc>button{padding:16px 18px}
 .faq .acc>button h5{font-size:var(--fs);line-height:var(--lh);font-weight:600}
@@ -608,3 +606,5 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 }
 @media (max-width:389px){.m-sum span{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+.subgroup{margin-top:18px}
