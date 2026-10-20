@@ -495,7 +495,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .wallet{height:48px;border-radius:var(--r-control);font:600 18px/1 var(--font);display:flex;align-items:center;justify-content:center;gap:4px}
 .wallet.apple{background:#fff;color:#000}
 .wallet.google{background:#000;color:#fff;box-shadow:0 0 0 1px #ffffff40}
-.dfoot>.btn.wide{width:calc(100% - 48px);margin:0 24px;min-height:56px;font-size:var(--fs)}
+.dfoot>.cta{width:calc(100% - 48px);margin:0 24px}
 .dnote{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--success)}
 .dnote .ic{width:16px;height:16px}
 
@@ -618,7 +618,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .dscroll{padding:0 16px 16px}
   .frow,.subtotal,.promo-toggle{padding-left:16px;padding-right:16px}
   .promo-body,.promo-msg,.wallets{padding-left:16px;padding-right:16px}
-  .dfoot>.btn.wide{width:calc(100% - 32px);margin:0 16px}
+  .dfoot>.cta{width:calc(100% - 32px);margin:0 16px}
   .litem{padding:12px;gap:12px}
   .xcard{grid-template-columns:56px 1fr auto}
   .xcard img{width:56px;height:56px}

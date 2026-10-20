@@ -600,7 +600,7 @@ function drawerHTML() {
         <button type="button" class="wallet apple" data-pay>&#63743; Pay</button>
         <button type="button" class="wallet google" data-pay><span>G</span> Pay</button>
       </div>
-      <button type="button" class="btn solid wide" data-pay>Secure checkout</button>
+      <button type="button" class="cta" data-pay>Secure checkout</button>
       <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% money-back guarantee</p>
     </div>` : '';
   const items = cart.length ? cart.map(itemHTML).join('') : '<p class="muted">Your cart is empty.</p>';
