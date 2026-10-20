@@ -90,11 +90,11 @@
 
       <section class="config" aria-label="Configure your boost">
         <form class="opts" id="opts" onsubmit="return false">
-          <div class="rowline region">
-            <div><div class="ct1">Region</div><small class="charnote">Your character's server</small></div>
-            <div class="seg flags" role="radiogroup" aria-label="Region">
-              <label><input type="radio" name="region" value="eu" checked><span><img src="assets/flags/eu.svg" alt="" width="22" height="15">Europe <b>EU</b></span></label>
-              <label><input type="radio" name="region" value="us"><span><img src="assets/flags/us.svg" alt="" width="22" height="15">Americas <b>US</b></span></label>
+          <div class="fgroup">
+            <div class="ct1">Region of your character</div>
+            <div class="seg flags" role="radiogroup" aria-label="Region of your character">
+              <label><input type="radio" name="region" value="eu" checked><span><img src="assets/flags/eu.svg" alt="" width="22" height="15">Europe</span></label>
+              <label><input type="radio" name="region" value="us"><span><img src="assets/flags/us.svg" alt="" width="22" height="15">America</span></label>
             </div>
           </div>
 
@@ -135,8 +135,8 @@
             <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
           </div>
 
-          <div class="rowline chars">
-            <div><div class="ct1">Characters</div><small class="charnote" id="charNote"></small></div>
+          <div class="fgroup">
+            <div class="ct1line"><span class="ct1">Characters</span><small class="charnote" id="charNote"></small></div>
             <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
           </div>
 

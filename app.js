@@ -19,6 +19,17 @@ const PRICING = {
     { id: 'stream',   label: 'Live stream',       price: 11.23, desc: 'Watch your booster play live · you get a link' },
   ],
 };
+/* "Pretty" prices: totals and add-on prices are rounded UP to the next .49 or .99.
+   Switch to 'whole' (next whole dollar) or 'off' (exact) to compare. */
+const PRETTY = 'charm';
+function pretty(n) {
+  if (PRETTY === 'off') return n;
+  const c = Math.round(n * 100) / 100;
+  if (PRETTY === 'whole') return Math.ceil(c);
+  const w = Math.floor(c);
+  return c - w <= 0.49 + 1e-9 ? w + 0.49 : w + 0.99;
+}
+const BUNDLE = ['gear292', 'campaign'];   // included in the Endgame ready package
 const GIFT_M10 = false;   // O10: set to true if the free M+10 key is still given with leveling orders
 const TRUST = { rating: '4.9', reviews: '36,206' };
 const CHAR_STEPS = [1, 2, 3, 5];
@@ -26,17 +37,14 @@ const CHAR_STEPS = [1, 2, 3, 5];
 /* Copy for the three methods. The "share / keep" lines are drafts: confirm them with ops before shipping. */
 const METHODS = {
   piloted: { name: 'Piloted', line: 'Booster plays for you. You share your login only.',
-    who: 'You want to be offline',
-    share: 'Battle.net login, used through a VPN in your region. Email access and authenticator stay with you.',
+    share: 'Your login, used through a VPN. Email and authenticator stay with you.',
     time: 'None — log in at the end', whoPlays: 'A verified booster' },
   self:    { name: 'Self-play', line: 'You stay in control. Nothing is shared.',
-    who: 'You want to stay in control',
-    share: 'Nothing. You stay on your own account.',
-    time: 'AFK route, you keep the game running', whoPlays: 'You, on an AFK route' },
+    share: 'Nothing — you stay on your own account, no login given.',
+    time: 'AFK route, game stays running', whoPlays: 'You, on an AFK route' },
   remote:  { name: 'Remote', line: 'Booster plays remotely. No login shared.',
-    who: "You don't want to share a login",
-    share: 'A remote session only. Account details are never given out.',
-    time: 'Be online to start the session', whoPlays: 'A booster, via remote access' },
+    share: 'A remote session only. Your login is never given out.',
+    time: 'Be online to start the session', whoPlays: 'A booster, remotely' },
 };
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -133,32 +141,30 @@ $('#seoMore').addEventListener('click', (e) => {
 /* ================= Order state & pricing ================= */
 const state = {
   region: 'eu', from: 80, to: 90, mode: 'pop',     // mode: pop | full | mine | custom
-  express: false, chars: 1, method: 'piloted', extras: new Set(),
+  pkg: 'basic', chars: 1, method: 'piloted', extras: new Set(),   // pkg: basic | express | endgame; extras = optional add-ons only
 };
 const cfgWith = (patch) => ({ ...state, extras: new Set(state.extras), ...patch });
 
+const isExpress = (c) => c.pkg !== 'basic';
+const allExtras = (c) => { const s = new Set(c.extras); if (c.pkg === 'endgame') BUNDLE.forEach((id) => s.add(id)); return s; };
+const extraDef = (id) => PRICING.extras.find((x) => x.id === id);
 function quote(c) {
   let base = 0, hours = 0;
   for (let l = c.from; l < c.to; l++) { base += PRICING.perLevel(l); hours += PRICING.hours(l); }
-  const mult = 1 + (c.express ? PRICING.express.pct : 0) + PRICING.method[c.method];
+  const mult = 1 + (isExpress(c) ? PRICING.express.pct : 0) + PRICING.method[c.method];
   const n = c.chars;
   const core = base * mult * n * (1 - PRICING.charDiscount[n]);
   let extras = 0;
-  c.extras.forEach((id) => { extras += PRICING.extras.find((x) => x.id === id).price; });
-  const bundle = bundleOn(c)
-    ? PRICING.bundleDiscount * (PRICING.extras.find((x) => x.id === 'gear292').price + PRICING.extras.find((x) => x.id === 'campaign').price) : 0;
-  if (c.express) hours *= PRICING.express.timeFactor;
-  return { total: core + extras - bundle, core, extras, bundle, hours, base };
+  allExtras(c).forEach((id) => { extras += extraDef(id).price; });
+  const bundle = c.pkg === 'endgame' ? PRICING.bundleDiscount * BUNDLE.reduce((s, id) => s + extraDef(id).price, 0) : 0;
+  if (isExpress(c)) hours *= PRICING.express.timeFactor;
+  const raw = core + extras - bundle;
+  return { total: pretty(raw), raw, core, extras, bundle, hours, base };
 }
-const bundleOn = (c) => c.express && c.to === 90 && c.extras.has('gear292') && c.extras.has('campaign');
-const pkgOf = (c) => {
-  if (bundleOn(c) && c.extras.size === 2) return 'endgame';
-  return c.extras.size === 0 ? (c.express ? 'express' : 'basic') : null;
-};
 const PKG = {
-  basic:   () => cfgWith({ express: false, extras: new Set() }),
-  express: () => cfgWith({ express: true, extras: new Set() }),
-  endgame: () => cfgWith({ to: 90, express: true, extras: new Set(['gear292', 'campaign']) }),
+  basic:   () => cfgWith({ pkg: 'basic' }),
+  express: () => cfgWith({ pkg: 'express' }),
+  endgame: () => cfgWith({ pkg: 'endgame', to: 90, extras: new Set([...state.extras].filter((id) => !BUNDLE.includes(id))) }),
 };
 const fmtLong = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} minutes` : `${Math.round(h)} hours`);
 const fmtH = (h) => (h < 1 ? `~${Math.max(1, Math.round(h * 60))} min` : `~${Math.round(h)} h`);
@@ -174,10 +180,10 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
     <span class="ml">${m.line}</span>
   </button>`).join('');
 
+const extraPrice = (x, locked) => locked ? 'Included' : x.was ? `<s>${money(pretty(x.was))}</s>${money(pretty(x.price))}` : '+' + money(pretty(x.price));
 $('#extras').innerHTML = PRICING.extras.map((x) => `
-  <label class="check xrow"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
-    <span class="xt"><b>${x.label}</b><small>${x.desc}</small></span>
-    <span class="p ${x.was ? 'hot' : ''}">${x.was ? `<s>${money(x.was)}</s>` : '+'}${money(x.price)}</span></label>`).join('');
+  <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
+    <span class="xt"><b>${x.label}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`).join('');
 
 /* ================= Render: state → DOM ================= */
 const HOW = {
@@ -212,26 +218,25 @@ function render() {
   el.rFrom.style.zIndex = from > 45 ? 3 : 1; el.rTo.style.zIndex = 2;
 
   // packages
-  const std = quote(cfgWith({ express: false, extras: new Set() })), exp = quote(cfgWith({ express: true, extras: new Set() }));
-  const cur = pkgOf(state);
+  const std = quote(cfgWith({ pkg: 'basic' })), exp = quote(cfgWith({ pkg: 'express' }));
   $$('#pkgs .pkg').forEach((b) => {
     const k = b.dataset.k, pq = quote(PKG[k]());
-    b.setAttribute('aria-checked', cur === k);
+    b.setAttribute('aria-checked', state.pkg === k);
     $('.pp', b).textContent = money(pq.total);
     if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
     if (k === 'express') $('small', b).textContent = `Ready ${fmtH(exp.hours)} · ${Math.round((1 - PRICING.express.timeFactor) * 100)}% faster`;
     if (k === 'endgame') {
       const sv = $('.save', b);
-      sv.hidden = !pq.bundle; sv.textContent = pq.bundle ? `Save ${money(pq.bundle)}` : '';
+      sv.hidden = !pq.bundle; sv.textContent = pq.bundle ? `Save $${Math.floor(pq.bundle)}` : '';
     }
   });
 
   // methods
   const piloted = quote(cfgWith({ method: 'piloted' }));
   $$('#methods .mc').forEach((b) => {
-    const m = b.dataset.m, d = quote(cfgWith({ method: m })).total - piloted.total;
+    const m = b.dataset.m, d = pretty(quote(cfgWith({ method: m })).raw - piloted.raw);
     b.setAttribute('aria-checked', state.method === m);
-    $('em', b).textContent = d > 0.005 ? '+' + money(d) : 'Included';
+    $('em', b).textContent = m === 'piloted' ? 'Included' : '+' + money(d);
   });
 
   // characters
@@ -241,10 +246,17 @@ function render() {
   const n = state.chars, single = quote(cfgWith({ chars: 1 })).core;
   $('#charNote').textContent = n === 1
     ? 'Add alts and save up to 20%'
-    : `${money(q.core / n)} each · you save ${money(single * n - q.core)}`;
+    : `${money(pretty(q.core / n))} each · you save $${Math.floor(single * n - q.core)}`;
 
-  // extras
-  $$('[data-extra]').forEach((c) => { c.checked = state.extras.has(c.dataset.extra); });
+  // extras: the ones inside "Endgame ready" are ticked and locked; the rest stay free to toggle
+  PRICING.extras.forEach((x) => {
+    const locked = state.pkg === 'endgame' && BUNDLE.includes(x.id);
+    const row = $(`[data-xrow="${x.id}"]`), inp = $('input', row);
+    inp.checked = locked || state.extras.has(x.id);
+    inp.disabled = locked;
+    row.classList.toggle('locked', locked);
+    $('.p', row).innerHTML = extraPrice(x, locked);
+  });
 
   // summary (O5)
   const eta = fmtH(q.hours);
@@ -265,6 +277,7 @@ function setRange(f, t, who) {
   f = clamp(Math.round(f), 1, 89); t = clamp(Math.round(t), 2, 90);
   if (who === 'from') f = Math.min(f, t - 1); else t = Math.max(t, f + 1);
   state.from = f; state.to = t;
+  if (state.pkg === 'endgame' && t !== 90) { BUNDLE.forEach((id) => state.extras.add(id)); state.pkg = 'express'; }
   if (state.mode === 'pop' || state.mode === 'full') state.mode = 'custom';
   render();
 }
@@ -302,11 +315,9 @@ $('#opts').addEventListener('click', (e) => {
     if (p === 'mine') { el.from.focus(); }
   } else if ((b = t('.pkg'))) {
     const c = PKG[b.dataset.k]();
-    Object.assign(state, { express: c.express, extras: c.extras, to: c.to });
+    Object.assign(state, { pkg: c.pkg, extras: c.extras, to: c.to });
     if (state.to === 90 && state.from === 80 && state.mode === 'custom') state.mode = 'pop';
     render();
-  } else if ((b = t('.sp'))) {
-    state.express = b.dataset.s === 'exp'; render();
   } else if ((b = t('.mc'))) {
     state.method = b.dataset.m; render();
   } else if (t('#cMinus') || t('#cPlus')) {
@@ -319,7 +330,7 @@ $('#opts').addEventListener('click', (e) => {
 $('#opts').addEventListener('change', (e) => {
   if (e.target.name === 'region') state.region = e.target.value;
   if (e.target.dataset.extra) {
-    e.target.checked ? state.extras.add(e.target.dataset.extra) : state.extras.delete(e.target.dataset.extra);
+    if (!e.target.disabled) e.target.checked ? state.extras.add(e.target.dataset.extra) : state.extras.delete(e.target.dataset.extra);
   }
   render();
 });
@@ -338,7 +349,7 @@ function sync() {
   const p = new URLSearchParams();
   p.set('from', state.from); p.set('to', state.to); p.set('mode', state.mode);
   p.set('region', state.region); p.set('chars', state.chars); p.set('method', state.method);
-  if (state.express) p.set('express', '1');
+  p.set('pkg', state.pkg);
   if (state.extras.size) p.set('extras', [...state.extras].join(','));
   const keep = new URLSearchParams(location.search).get('nudge');
   if (keep) p.set('nudge', keep);
@@ -349,10 +360,11 @@ function sync() {
   if (['eu', 'us'].includes(p.get('region'))) { state.region = p.get('region'); $(`input[name=region][value=${state.region}]`).checked = true; }
   if (METHODS[p.get('method')]) state.method = p.get('method');
   if (CHAR_STEPS.includes(+p.get('chars'))) state.chars = +p.get('chars');
-  state.express = p.get('express') === '1';
-  (p.get('extras') || '').split(',').forEach((id) => { if (PRICING.extras.some((x) => x.id === id)) state.extras.add(id); });
+  state.pkg = ['basic', 'express', 'endgame'].includes(p.get('pkg')) ? p.get('pkg') : p.get('express') === '1' ? 'express' : 'basic';
+  (p.get('extras') || '').split(',').forEach((id) => { if (PRICING.extras.some((x) => x.id === id) && !(state.pkg === 'endgame' && BUNDLE.includes(id))) state.extras.add(id); });
   const f = parseInt(p.get('from'), 10), t = parseInt(p.get('to'), 10);
   if (f && t) { state.from = clamp(f, 1, 89); state.to = clamp(t, state.from + 1, 90); }
+  if (state.pkg === 'endgame' && state.to !== 90) state.pkg = 'express';
   state.mode = ['pop', 'full', 'mine', 'custom'].includes(p.get('mode')) ? p.get('mode')
     : state.from === 80 && state.to === 90 ? 'pop' : state.from === 1 && state.to === 90 ? 'full' : 'custom';
   if (state.mode === 'pop' && !(state.from === 80 && state.to === 90)) state.mode = 'custom';
@@ -381,18 +393,18 @@ function closeSheet() {
 sheet.addEventListener('click', (e) => { if (e.target.closest('[data-close]')) closeSheet(); });
 
 function openCompare() {
-  const base = quote(cfgWith({ method: 'piloted' })).total;
-  const cell = (fn) => Object.keys(METHODS).map((id) => `<td>${fn(id, METHODS[id])}</td>`).join('');
-  openSheet('Compare methods', `
-    <div class="cmpwrap"><table class="cmp">
-      <thead><tr><th></th>${Object.values(METHODS).map((m) => `<th>${m.name}</th>`).join('')}</tr></thead>
-      <tbody>
-        <tr><th>Who plays</th>${cell((id, m) => m.whoPlays)}</tr>
-        <tr><th>You share</th>${cell((id, m) => m.share)}</tr>
-        <tr><th>Your time</th>${cell((id, m) => m.time)}</tr>
-        <tr><th>Price</th>${cell((id) => { const t = quote(cfgWith({ method: id })).total; return `<b>${money(t)}</b>${id === 'piloted' ? '' : `<small> +${money(t - base)}</small>`}`; })}</tr>
-        <tr><th></th>${cell((id) => `<button type="button" class="btn ${state.method === id ? 'solid' : 'ghost'}" data-pick="${id}">${state.method === id ? 'Selected' : 'Choose'}</button>`)}</tr>
-      </tbody></table></div>`, true);
+  const base = quote(cfgWith({ method: 'piloted' }));
+  const rows = [['Who plays', (id, m) => m.whoPlays], ['You share', (id, m) => m.share], ['Your time', (id, m) => m.time]];
+  openSheet('Compare methods', `<div class="cmpgrid">${Object.entries(METHODS).map(([id, m]) => {
+    const q = quote(cfgWith({ method: id }));
+    const sel = state.method === id;
+    return `<section class="cmpcol${sel ? ' sel' : ''}">
+      <h4>${m.name}</h4>
+      ${rows.map(([label, fn]) => `<div class="cr"><small>${label}</small><p>${fn(id, m)}</p></div>`).join('')}
+      <div class="cr"><small>Price</small><p><b>${money(q.total)}</b>${id === 'piloted' ? '' : ` <em>+${money(pretty(q.raw - base.raw))}</em>`}</p></div>
+      <button type="button" class="btn ${sel ? 'solid' : 'ghost'}" data-pick="${id}">${sel ? 'Selected' : 'Choose'}</button>
+    </section>`;
+  }).join('')}</div>`, true);
 }
 $('#sheetBody').addEventListener('click', (e) => {
   const b = e.target.closest('[data-pick]');
@@ -417,9 +429,9 @@ document.addEventListener('keydown', (e) => {
 
 /* ================= Wishlist, cart, drawer (D5, M6) ================= */
 const CROSS = [
-  { id: 'gearing', title: 'Gearing', line: 'M+, raid, tier set, or PvP gear', price: 53.87, img: 'gearing' },
-  { id: 'omnium', title: 'Omnium Folio', line: 'All 5 rune rows unlocked in about 4 hours', price: 5.38, img: 'omnium-folio' },
-  { id: 'm0', title: 'Mythic +0', line: '292 ilvl loot, ready for M+4', price: 6.72, img: 'mythic-0' },
+  { id: 'gearing', title: 'Gearing', line: 'M+, raid, tier set, or PvP gear', price: pretty(53.87), img: 'gearing' },
+  { id: 'omnium', title: 'Omnium Folio', line: 'All 5 rune rows unlocked in about 4 hours', price: pretty(5.38), img: 'omnium-folio' },
+  { id: 'm0', title: 'Mythic +0', line: '292 ilvl loot, ready for M+4', price: pretty(6.72), img: 'mythic-0' },
 ];
 let wish = store.get('og:wish', 0);
 let cart = store.get('og:cart3', []);
@@ -444,8 +456,8 @@ $('#toastCart').addEventListener('click', (e) => { e.preventDefault(); openDrawe
 
 function describe(c) {
   const q = quote(c), m = METHODS[c.method];
-  const parts = [`${c.from} → ${c.to}`, m.name, c.express ? 'Express' : 'Standard', `${c.chars} character${c.chars > 1 ? 's' : ''}`];
-  const ex = [...c.extras].map((id) => PRICING.extras.find((x) => x.id === id).label);
+  const parts = [`${c.from} → ${c.to}`, m.name, isExpress(c) ? 'Express' : 'Standard', `${c.chars} character${c.chars > 1 ? 's' : ''}`];
+  const ex = [...allExtras(c)].map((id) => extraDef(id).label);
   return { id: 'lvl-' + Date.now(), title: 'WoW Midnight Leveling', meta: parts.join(' · '), extras: ex, price: q.total, method: c.method, eta: fmtH(q.hours) };
 }
 function addToCart() {

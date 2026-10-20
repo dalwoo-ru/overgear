@@ -20,7 +20,7 @@ Desktop (≥1200px): main block on the left, a sticky right column.
 | Block | Contents, in reading order |
 |---|---|
 | Main · title | Breadcrumbs, H1, Trustpilot and orders line, three key USP tags (start in ~15 min, 1–90 in ~10 h / 6 h with Express, full AFK), the one-line promise, three short wins in one row |
-| Main · form | Region with flags first, then 1 Leveling range → 2 Package (Express shows its time and how much faster it is) → 3 Boost method (one short line per method; the table is in Compare methods) → Characters → 4 Add-ons, all visible |
+| Main · form | Everything is left-aligned. "Region of your character" (Europe, America, with flags) first, then 1 Leveling range → 2 Package (Express shows its time and how much faster it is) → 3 Boost method (one short line per method; the table is in Compare methods) → Characters (hint on the same line, stepper below) → 4 Add-ons, all visible. Endgame ready locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
 | Main · more information | How It Works (follows the method), reviews, FAQ, custom offer, SEO text behind "Read more" |
 | Right column | The buy block, laid out like the original: price with Cashback, start time, completion time, Add to cart, payment icons, money-back line. It is the page accent (brand border and glow). Below it, a calmer "Why players choose Overgear" card |
 
@@ -67,6 +67,8 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 20px between form gro
 | M7 | Lazy images and `content-visibility` on the SEO text and footer. Not done: LCP/INP measurement on a mid-range Android |
 
 ## Assumptions to replace later
+
+- **Pretty prices.** Totals, package prices, method deltas and add-on prices are rounded up to the next .49 or .99 (23.56 → 23.99, 141.00 → 141.49). `PRETTY` in `app.js` switches this to `'whole'` (next whole dollar) or `'off'`. Because each shown price is rounded on its own, a total can differ by up to $0.50 from the sum of the parts.
 
 - **Pricing and timing** (`PRICING` in `app.js`) are made up to match one data point of the saved page: 80→90, Piloted, 1 character = $23.56. Surcharges (Express +30%, Self-play +70%, Remote +5%) and add-on prices come from the page. Characters now use the labelled discounts (5 / 10 / 20%) on top of a per-character price instead of the site's "+90%…+320%" figures. Express cuts time by 40%.
 - **Copy to confirm with ops/legal:** what Piloted shares and keeps (login via VPN; email and authenticator stay with the client), the Self-play and Remote lines, the money-back text, and the FAQ answers (they were collapsed in the saved page).
