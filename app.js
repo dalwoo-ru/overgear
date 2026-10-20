@@ -42,7 +42,7 @@ const METHODS = {
   self:    { name: 'Self-play', line: 'You stay in control. Nothing is shared.',
     share: 'Nothing — you stay on your own account, no login given.',
     time: 'AFK route, game stays running', whoPlays: 'You, on an AFK route' },
-  remote:  { name: 'Remote', line: 'Booster plays remotely. No login shared.',
+  remote:  { name: 'Remote', line: 'Verified booster plays remotely. No login shared.',
     share: 'A remote session only. Your login is never given out.',
     time: 'Be online to start the session', whoPlays: 'A booster, remotely' },
 };
