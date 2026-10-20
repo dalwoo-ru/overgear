@@ -757,3 +757,11 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .pkgs{gap:10px}
   .range-box{margin-top:16px}
 }
+
+/* phones: the back link lines up with the title; the header hides on scroll down and returns on scroll up */
+@media (max-width:767px){
+  .back .ic{margin-left:-6px}
+  .header{transition:transform .25s ease}
+  .header.away{transform:translateY(-100%)}
+  body.nav-open .header{transform:none}
+}

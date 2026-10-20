@@ -704,3 +704,20 @@ $('#mChat').addEventListener('click', openChat);
 })();
 
 render();
+
+/* ================= Phones: hide the header while scrolling down, bring it back on scroll up ================= */
+(function () {
+  const header = $('.header');
+  let last = scrollY, ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = scrollY, d = y - last;
+      if (!isMobile() || y < 80 || document.body.classList.contains('lock')) header.classList.remove('away');
+      else if (d > 6) header.classList.add('away');
+      else if (d < -6) header.classList.remove('away');
+      last = y; ticking = false;
+    });
+  }, { passive: true });
+})();
