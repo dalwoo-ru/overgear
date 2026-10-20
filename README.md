@@ -79,11 +79,11 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 - **Express** is shown as time saved for the chosen range: "~6 h → ~3.5 h · 2.5 h faster".
 - **Top package** is now "Express + Gear" (Express boost plus 292 ilvl gear, 20% off, struck old price and a "-20%" tag). The Midnight campaign is no longer inside it.
-- **Two campaigns as a set.** The add-ons have one "Campaigns" group with Midnight, Ula'tek and "Both campaigns" (-15%). Choosing the set, or ticking both singles, turns the singles into the set and locks them ("In the set").
+- **Two campaigns as a set.** The add-ons have two groups, each with its two singles and a set at -15%: "Gear" (292 ilvl gear, Honor gear 331, "Both gear sets") and "Campaigns" (Midnight, Ula'tek, "Both campaigns"). Live stream stands alone. With the Express + Gear package the 292 gear is included and the gear set is unavailable (a chosen gear set becomes Honor gear alone). Choosing the set, or ticking both singles, turns the singles into the set and locks them ("In the set").
 - **Add-on order** by money: 292 gear, the set, Midnight campaign, Ula'tek, Honor gear, Live stream. Descriptions are one short line; "Ready for M+4" under 292 gear comes from the site's Mythic +0 card and needs confirming.
 - **Range:** presets are 80 → 90, My level → 90, 1 → 90, Custom. Custom shows quick end chips (1 → 80 · AFK in Azure Span, To 60, To 70, To 80) at the very bottom of the range box, after the slider. "My level" has no extra chips.
-- **Piloted:** one short line under the cards ("Don't want to share a login? Choose Remote · Read more"), the details are in a pop-up. Self-play says "AFK route included".
-- **Characters** are chips 1 · 2 · 3 · 5 with the discount and the price per character; with 2+ characters a one-line hint points to the custom offer.
+- **Piloted:** one positive line under the cards ("Why Piloted is safe: played by hand, your authenticator and email stay with you. Read more"). The pop-up "Why Piloted is safe" has the details and, at the end, buttons to switch to Self-play or Remote. Self-play says "AFK route included".
+- **Characters** are chips 1 · 2 · 3 · 4 · 5 (the 4 is back, -15%) with the discount and the price per character; with 2+ characters a one-line hint points to the custom offer.
 - **Cart:** an extra shows its own price with a remove button, a "Switch method" title with the other methods and their price difference on the line below, and a "?" hint next to Piloted. Cart items remember their configuration (storage key `og:cart5`).
 - Not taken, on purpose: analytics, test flags, deep-link parameters, removing Live stream, hiding add-ons.
 

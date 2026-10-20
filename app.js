@@ -8,15 +8,16 @@ const PRICING = {
   hours: (l) => (l < 80 ? 4 / 79 : 0.6),             // hours of work for one level step
   startMinutes: 15,
   express: { pct: 0.30, timeFactor: 0.6 },
-  charDiscount: { 1: 0, 2: 0.05, 3: 0.10, 5: 0.20 }, // the 4-character option is dropped (O8)
+  charDiscount: { 1: 0, 2: 0.05, 3: 0.10, 4: 0.15, 5: 0.20 },
   method: { piloted: 0, self: 0.70, remote: 0.05 },
   endgameDiscount: 0.20,                             // off (Express boost + 292 gear) inside "Express + Gear"
   extras: [
     { id: 'gear292',  label: '292 ilvl gear',     price: 53.87, desc: 'Ready for M+4 · needs level 90' },
-    { id: 'camp2',    label: 'Both campaigns',    price: 52.27, was: 61.49, tag: '-15%', desc: "Midnight and Ula'tek together" },
+    { id: 'honor',    label: 'Honor gear 331',    price: 20.19, desc: '331 ilvl PvP set · needs level 90' },
+    { id: 'gear2',    label: 'Both gear sets',    price: 62.95, was: 74.06, tag: '-15%', desc: 'PvE and PvP gear together' },
     { id: 'campaign', label: 'Midnight campaign', price: 36.81, was: 46.01, desc: 'Finished on the way' },
     { id: 'ulatek',   label: "Ula'tek campaign",  price: 24.68, desc: 'Needs level 90' },
-    { id: 'honor',    label: 'Honor gear 331',    price: 20.19, desc: '331 ilvl PvP set · needs level 90' },
+    { id: 'camp2',    label: 'Both campaigns',    price: 52.27, was: 61.49, tag: '-15%', desc: "Midnight and Ula'tek together" },
     { id: 'stream',   label: 'Live stream',       price: 11.23, desc: 'Watch your booster play live' },
   ],
 };
@@ -31,11 +32,16 @@ function pretty(n) {
   return c - w <= 0.49 + 1e-9 ? w + 0.49 : w + 0.99;
 }
 const BUNDLE = ['gear292'];                       // included in the Express + Gear package
-const SET = { camp2: ['ulatek', 'campaign'] };   // the two-campaign set replaces its singles
+const SET = { camp2: ['campaign', 'ulatek'], gear2: ['gear292', 'honor'] };   // a set replaces its singles
+const XGROUPS = [
+  { id: 'gear', title: 'Gear', ids: ['gear292', 'honor', 'gear2'] },
+  { id: 'camps', title: 'Campaigns', ids: ['campaign', 'ulatek', 'camp2'] },
+];
+const setOf = (id) => Object.keys(SET).find((k) => SET[k].includes(id));
 const PKG_NAME = { basic: 'Basic', express: 'Express', endgame: 'Express + Gear' };
 const GIFT_M10 = false;   // O10: set to true if the free M+10 key is still given with leveling orders
 const TRUST = { rating: '4.9', reviews: '36,206' };
-const CHAR_STEPS = [1, 2, 3, 5];
+const CHAR_STEPS = [1, 2, 3, 4, 5];
 
 /* Copy for the three methods. The "share / keep" lines are drafts: confirm them with ops before shipping. */
 const METHODS = {
@@ -169,7 +175,11 @@ function quote(c) {
 const PKG = {
   basic:   () => cfgWith({ pkg: 'basic' }),
   express: () => cfgWith({ pkg: 'express' }),
-  endgame: () => cfgWith({ pkg: 'endgame', to: 90, extras: new Set([...state.extras].filter((id) => !BUNDLE.includes(id))) }),
+  endgame: () => {
+    const ex = new Set([...state.extras].filter((id) => !BUNDLE.includes(id)));
+    if (ex.delete('gear2')) ex.add('honor');
+    return cfgWith({ pkg: 'endgame', to: 90, extras: ex });
+  },
 };
 const hrs = (h) => (h < 10 ? Math.round(h * 2) / 2 : Math.round(h));   // 3.6 → 3.5, 6 → 6, 10.4 → 10
 const fmtLong = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} minutes` : `${hrs(h)} hours`);
@@ -187,14 +197,15 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
     <span class="ml">${m.line}</span>
   </button>`).join('');
 
-const extraPrice = (x, locked) => locked ? (locked === 'set' ? 'In the set' : 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
+const extraPrice = (x, locked) => locked ? ({ set: 'In the set', na: '—' }[locked] || 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
 const xrow = (x) => `
   <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
     <span class="xt"><b>${x.label}${x.tag ? `<i class="xtag">${x.tag}</i>` : ''}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`;
-const CAMPS = ['campaign', 'ulatek', 'camp2'];
-$('#extras').innerHTML = PRICING.extras.filter((x) => !CAMPS.includes(x.id) || x.id === 'campaign').map((x) => x.id === 'campaign'
-  ? `<div class="xgroup" role="group" aria-label="Campaigns"><div class="xg-h">Campaigns <small>take one or both</small></div><div class="xg-rows">${CAMPS.map((id) => xrow(extraDef(id))).join('')}</div></div>`
-  : xrow(x)).join('');
+const grouped = XGROUPS.flatMap((g) => g.ids);
+$('#extras').innerHTML = [
+  ...XGROUPS.map((g) => `<div class="xgroup" role="group" aria-label="${g.title}"><div class="xg-h">${g.title} <small>take one or both</small></div><div class="xg-rows">${g.ids.map((id) => xrow(extraDef(id))).join('')}</div></div>`),
+  ...PRICING.extras.filter((x) => !grouped.includes(x.id)).map(xrow),
+].join('');
 
 
 /* ================= Render: state → DOM ================= */
@@ -270,9 +281,12 @@ function render() {
 
   // extras: the ones inside "Endgame ready" are ticked and locked; the rest stay free to toggle
   PRICING.extras.forEach((x) => {
-    const locked = state.pkg === 'endgame' && BUNDLE.includes(x.id) ? 'bundle' : state.extras.has('camp2') && SET.camp2.includes(x.id) ? 'set' : '';
+    const own = SET[x.id], parent = setOf(x.id);
+    const locked = state.pkg === 'endgame' && BUNDLE.includes(x.id) ? 'bundle'
+      : state.pkg === 'endgame' && own && own.some((s) => BUNDLE.includes(s)) ? 'na'
+      : parent && state.extras.has(parent) ? 'set' : '';
     const row = $(`[data-xrow="${x.id}"]`), inp = $('input', row);
-    inp.checked = !!locked || state.extras.has(x.id);
+    inp.checked = locked === 'na' ? false : (!!locked || state.extras.has(x.id));
     inp.disabled = !!locked;
     row.classList.toggle('locked', !!locked);
     $('.p', row).innerHTML = extraPrice(x, locked);
@@ -361,8 +375,8 @@ $('#opts').addEventListener('change', (e) => {
     if (!e.target.disabled) {
       const id = e.target.dataset.extra;
       e.target.checked ? state.extras.add(id) : state.extras.delete(id);
-      if (id === 'camp2' && e.target.checked) SET.camp2.forEach((s) => state.extras.delete(s));
-      if (SET.camp2.every((s) => state.extras.has(s))) { SET.camp2.forEach((s) => state.extras.delete(s)); state.extras.add('camp2'); }
+      if (SET[id] && e.target.checked) SET[id].forEach((s) => state.extras.delete(s));
+      Object.keys(SET).forEach((k) => { if (SET[k].every((s) => state.extras.has(s))) { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); } });
     }
   }
   render();
@@ -404,7 +418,8 @@ function sync() {
   const f = parseInt(p.get('from'), 10), t = parseInt(p.get('to'), 10);
   if (f && t) { state.from = clamp(f, 1, 89); state.to = clamp(t, state.from + 1, 90); }
   if (state.pkg === 'endgame' && state.to !== 90) state.pkg = 'express';
-  if (state.extras.has('camp2')) SET.camp2.forEach((s) => state.extras.delete(s));
+  Object.keys(SET).forEach((k) => { if (state.extras.has(k)) SET[k].forEach((s) => state.extras.delete(s)); });
+  if (state.pkg === 'endgame' && state.extras.delete('gear2')) state.extras.add('honor');
   state.mode = ['pop', 'full', 'mine', 'custom'].includes(p.get('mode')) ? p.get('mode')
     : state.from === 80 && state.to === 90 ? 'pop' : state.from === 1 && state.to === 90 ? 'full' : 'custom';
   if (state.mode === 'pop' && !(state.from === 80 && state.to === 90)) state.mode = 'custom';
@@ -452,7 +467,7 @@ $('#sheetBody').addEventListener('click', (e) => {
 });
 
 const SHEETS = {
-  piloted: ['What Piloted shares', `<ul class="bul"><li><b>Your login</b> is the only thing you share. It is used through a VPN in your region.</li><li>Your <b>authenticator</b> stays with you. You confirm the login when asked.</li><li>We never ask for access to your <b>email</b>.</li><li>A verified booster plays by hand. No bots.</li></ul><p>Prefer not to share a login?</p><button type="button" class="btn ghost" data-pick="remote">Choose Remote</button>`],
+  piloted: ['Why Piloted is safe', `<ul class="bul"><li>A <b>verified booster</b> plays by hand. No bots.</li><li>Your login is used through a <b>VPN in your region</b>.</li><li>Your <b>authenticator</b> stays with you. You confirm the login when asked.</li><li>We never ask for access to your <b>email</b>.</li></ul><p>Prefer another way? Switch the method:</p><div class="pickrow"><button type="button" class="btn ghost" data-pick="self">Self-play</button><button type="button" class="btn ghost" data-pick="remote">Remote</button></div>`],
   guarantee: ['100% money-back guarantee', '<p>If we cannot deliver your order, you get your money back. Disputes are handled by live support 24/7.</p><p class="muted">Prototype copy — replace with the real policy text.</p>'],
   reviews: [`Trustpilot ${TRUST.rating} · ${TRUST.reviews} reviews`, '<p>Overgear is rated Excellent on Trustpilot, based on verified customer reviews.</p><p class="muted">Prototype: this would link out to the Trustpilot page.</p>'],
 };
