@@ -149,6 +149,7 @@ function render() {
   el.price.textContent = money(q.total);
   el.eta.textContent = fmtTime(q.mins);
   el.add.disabled = false;
+  $('#mPrice').textContent = money(q.total);
   sync();
 }
 
@@ -222,6 +223,7 @@ function say(text, link = true) {
   toast.classList.add('show');
   clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 3500);
 }
+$('#mAdd').addEventListener('click', () => el.add.click());
 el.add.addEventListener('click', () => {
   cart += 1; store.set('og:cart', cart); counters(); bump('cartCnt');
   el.add.classList.add('done'); el.addLabel.textContent = 'Added to cart';
@@ -243,3 +245,18 @@ cookie.addEventListener('click', (e) => {
   if (b.dataset.c !== 'customize') store.set('og:cookie', b.dataset.c);
   cookie.hidden = true;
 });
+
+/* ---------- Mobile sticky buy bar: shown while the in-card price block is off screen ---------- */
+(function () {
+  const bar = $('#mBar'), buy = $('.buy'), order = $('.order');
+  if (!('IntersectionObserver' in window)) return;
+  let buyVisible = false, orderVisible = false;
+  const upd = () => {
+    const on = matchMedia('(max-width:767px)').matches && orderVisible && !buyVisible;
+    bar.hidden = false; bar.classList.toggle('show', on);
+    document.body.classList.toggle('has-mbar', on);
+  };
+  new IntersectionObserver((e) => { buyVisible = e[0].isIntersecting; upd(); }).observe(buy);
+  new IntersectionObserver((e) => { orderVisible = e[0].isIntersecting; upd(); }).observe(order);
+  addEventListener('resize', upd);
+})();

@@ -9,7 +9,7 @@ python3 -m http.server 8000   # then open http://localhost:8000/
 | File | Contents |
 |---|---|
 | `index.html` | The page: header, category sidebar, content, order card, footer |
-| `styles.css` | Live-site dark tokens (`--n1…n10`, `--brand*`) and layout, responsive down to 390px |
+| `styles.css` | Live-site dark tokens (`--n1…n10`, `--brand*`) and layout, responsive; breakpoints follow the site (tablet 768, desktop 1200). On mobile the order card moves under the title and a sticky "Add to cart" bar appears while the in-card price block is off screen |
 | `app.js` | Behaviour and the `PRICING` model |
 | `assets/` | Logo, images, payment icons and illustrations taken from the saved page, Geist font |
 
@@ -23,4 +23,4 @@ python3 -m http.server 8000   # then open http://localhost:8000/
 
 - **Pricing and timing model** (`PRICING` in `app.js`) is made up to match the one data point on the saved page: 80→90, Piloted, 1 character = $23.56, 6h 15m. The percentage surcharges (Express +30%, Self-play +70%, Remote +5%, 2–5 characters +90/180/255/320%) and the extra-option prices are taken from the page. How they combine (additive on the base price) and the per-level curve are guesses.
 - **FAQ answers and "Boost methods explained"** were collapsed in the saved page, so their text is written from the rest of the page copy.
-- Font is Geist (from baseui) instead of the site's TT Interphases.
+- Font files: TT Interphases Pro is downloaded from overgear.com into `assets/fonts/` (Latin subset only; Cyrillic would fall back to Arial).

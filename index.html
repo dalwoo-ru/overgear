@@ -26,6 +26,7 @@
   <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v6c0 4.200 3 7.400 7 9 4-1.600 7-4.800 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 2.900 6.900 7.100.6-5.400 4.700 1.700 7.300L12 17.800 5.700 21.500l1.700-7.300L2 9.500l7.100-.6L12 2Z"/></symbol>
   <symbol id="i-cart-plus" viewBox="0 0 24 24"><path d="M3 4h2.200l2 11h10.200l1.800-8H6.300"/><circle cx="9" cy="19.500" r="1.200"/><circle cx="17" cy="19.500" r="1.200"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 3.500V6a1 1 0 0 1 1-1Z" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-coin" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#2b2a1f" stroke="#e1b255" stroke-width="1.500"/><path d="M10 4.500 14.500 6.600v3.200c0 2.200-1.700 4-4.500 5.200-2.800-1.200-4.500-3-4.500-5.200V6.600L10 4.500Z" fill="#e1b255"/></symbol>
 </svg>
 
@@ -54,7 +55,9 @@
 
   <div class="page">
     <main class="main">
-      <nav aria-label="Breadcrumbs"><ol class="crumbs">
+      <div class="intro">
+      <nav aria-label="Breadcrumbs"><a class="back" href="#"><svg class="ic"><use href="#i-chev-l"/></svg>World of Warcraft: Midnight</a>
+      <ol class="crumbs">
         <li><a href="#">Home</a></li><li><svg class="ic"><use href="#i-chev-r"/></svg></li>
         <li><a href="#">World of Warcraft: Midnight</a></li><li><svg class="ic"><use href="#i-chev-r"/></svg></li>
         <li style="color:var(--n6)">Power Leveling</li>
@@ -75,6 +78,9 @@
         <button class="chip" data-tip="Pick Self-play and the whole route is AFK."><img src="assets/ill/chip-afk.svg" alt="">Full AFK on Self-Play</button>
       </div>
 
+      </div>
+
+      <div class="rest">
       <p class="lead">Buy Midnight Level Boost — <b>hit 90 inside a day</b> and walk straight into your first M+10.</p>
 
       <h6 class="sec">Your Wins</h6>
@@ -200,6 +206,7 @@
           <div class="acc big"><button aria-expanded="false"><h5>Can I communicate with my WoW Midnight Level booster?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Yes. Once the order starts you are connected to your booster in Discord, and our support team is available 24/7 in live chat.</p></div></div></div></div>
         </div>
       </article>
+      </div>
     </main>
 
     <section class="order" aria-label="Order">
@@ -304,6 +311,11 @@
   <p class="legal">Overgear is not endorsed by, directly affiliated with, maintained, or sponsored by Blizzard Entertainment, Bungie, Electronic Arts, Grinding Gear Games, Activision Publishing, Square Enix Co., Valve, Battlestate Games, Wargaming.net Limited, Amazon Technologies, Jagex Limited, Riot Games, Smilegate RPG, Digital Extremes. The views and opinions expressed by Overgear do not reflect those of anyone officially associated with producing or managing their game franchises. Copyrighted art submitted to or through Overgear remains the intellectual property of the respective copyright holder. Overgear does not engage in the sale of in-game items. Instead, our service focuses on enhancing players' in-game skills and occasionally gifting in-game items to users.</p>
   <div class="copy"><span>© Overgear 2018-2026. All rights reserved. Diagorou 4, Kermia Building, 3rd floor,<br>Nicosia, Cyprus. Reg. number: HE395043</span><span class="badges"><span>Mastercard<br>SecureCode</span><span>Verified by<br>VISA</span><span>PCI DSS</span></span></div>
 </div></footer>
+
+<div class="m-bar" id="mBar" hidden>
+  <button class="cta" id="mAdd"><svg class="ic"><use href="#i-cart-plus"/></svg><span>Add to cart – <span id="mPrice">$0.00</span></span></button>
+  <button class="chat" aria-label="Live chat"><svg class="ic"><use href="#i-chat"/></svg></button>
+</div>
 
 <div class="toast" id="toast" role="status"><svg class="ic"><use href="#i-check"/></svg><span id="toastText"></span><a href="#" id="toastCart">View cart</a></div>
 
