@@ -391,7 +391,8 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 
 /* ---------- Footer ---------- */
 .pay-strip{background:var(--n1);padding:28px 24px;border-top:1px solid #ffffff0a}
-.pay-strip div{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;opacity:.5;font:600 22px/1 var(--font);color:var(--n7)}
+.pay-strip div{max-width:1140px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px 28px;flex-wrap:wrap}
+.pay-strip img{height:26px;width:auto;max-width:96px;opacity:.55}
 .footer{background:var(--n1);padding:0 24px 40px;border-top:1px solid #ffffff12}
 .footer .wrap{max-width:1140px;margin:0 auto;padding-top:40px}
 .f-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
@@ -569,6 +570,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .mc{padding:10px 12px;min-height:var(--ctl)}
   .extras{grid-template-columns:1fr}
   .xrow{padding:12px}
+  .regionbar .seg{width:100%}
   .seg.flags{flex-wrap:nowrap}
   .seg.flags label{flex:1}
   .seg.flags span{padding:0 10px;gap:8px}
@@ -595,7 +597,8 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .fold>summary h6{margin:8px 0}
   .fold:not([open])>summary{border-bottom:1px solid #ffffff14;margin-bottom:8px}
   .pay-strip{padding:24px 16px}
-  .pay-strip div{font-size:20px;justify-content:center;gap:16px 24px}
+  .pay-strip div{justify-content:center;gap:16px 24px}
+  .pay-strip img{height:22px}
   .footer .wrap{padding-top:28px}
   .cols,.f-games .g{grid-template-columns:1fr;gap:0}
   .cols>div{margin-bottom:16px}
@@ -637,6 +640,16 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 .subgroup{margin-top:18px}
+.regionbar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px}
+.regionbar .ct1{margin:0}
+.regionbar .charnote{margin:0}
+.seg.sm span{min-height:36px;padding:0 14px}
+.mquote{margin:12px 0 0;padding:12px 14px;border-radius:var(--r-control);background:var(--p10);border:1px solid var(--p30)}
+.mquote .st{display:block;color:var(--yellow);letter-spacing:2px;font-size:var(--fs-xs);line-height:var(--lh-xs);margin-bottom:2px}
+.mquote blockquote{margin:0;font-size:var(--fs-s);line-height:var(--lh-s);color:var(--n9)}
+.mquote figcaption{margin-top:2px;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6)}
+.mcards:empty,.extras:empty{min-height:96px;border-radius:var(--r-control);background:linear-gradient(90deg,#0a0d2e,#14183f,#0a0d2e);background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
 
 /* bright discount tag (multi-character, total price) */
 .disc{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:var(--r-small);background:var(--success);color:#10240a;font:800 var(--fs-xs)/22px var(--font);letter-spacing:0;white-space:nowrap}

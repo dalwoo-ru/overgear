@@ -75,12 +75,24 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 | M5 | Add-on labels are short, no emoji, description on a second line |
 | M7 | Lazy images and `content-visibility` on the SEO text and footer. Not done: LCP/INP measurement on a mid-range Android |
 
+## Review fixes (second pass)
+
+- **Piloted answers its main fear.** The safety FAQ now covers all three methods: Piloted shares the Battle.net login only, through a VPN with an IP in your region, the authenticator stays with the client, and email access is not requested. The "Pilot was great…" review sits under the method cards.
+- **No $0.00 before the script.** The markup carries the default configuration (80→90 · Basic · Piloted · 1 character: $23.99, 6 hours, package prices), and the not-yet-rendered method and add-on lists show a shimmer placeholder.
+- **One meaning for "6 hours".** The first-screen chip follows the chosen range ("80→90 ~6 h · ~3.5 h with Express"; "1→90 ~10 h · ~6 h with Express" for the full range). Times below 10 h round to half an hour.
+- **FAQ follows the configurator** (region → range → package → method and characters → add-ons) and calls Express a package.
+- **Endgame ready.** The card says "Express, gear, Midnight campaign · save $N" (the Midnight campaign is the included one, Ula'tek is not), keeps the struck old price and the "-20%" tag, and its add-ons are locked as "Included". The default package stays Basic; preselecting Express is left as a test.
+- **One payment set** in the buy block, the footer and the cart: Stripe, Mastercard, Visa, American Express, Apple Pay, Google Pay, PayPal, Crypto. The header balance is now in $, like the prices.
+- **Region.** It does not change the price, so it is a compact switch above the steps, preselected from the time zone ("Detected from your location" until it is touched). Steps now start at the leveling range. To make it a numbered first step again, add the number back to `.regionbar`.
+- **Trust.** The first screen shows "4.9 · 36,206 reviews on Trustpilot" as a link; "Class Connoisseur" gave way to "Updates in Discord".
+- **Accessibility and mobile.** The breadcrumb separators are `aria-hidden`, the current crumb has `aria-current`. On phones the sticky bar waits until the cookie banner is answered, so the two never stack.
+
 ## Assumptions to replace later
 
 - **Pretty prices.** Totals, package prices, method deltas and add-on prices are rounded up to the next .49 or .99 (23.56 → 23.99, 141.00 → 141.49). `PRETTY` in `app.js` switches this to `'whole'` (next whole dollar) or `'off'`. Because each shown price is rounded on its own, a total can differ by up to $0.50 from the sum of the parts.
 
 - **Pricing and timing** (`PRICING` in `app.js`) are made up to match one data point of the saved page: 80→90, Piloted, 1 character = $23.56. Surcharges (Express +30%, Self-play +70%, Remote +5%) and add-on prices come from the page. Characters now use the labelled discounts (5 / 10 / 20%) on top of a per-character price instead of the site's "+90%…+320%" figures. Express cuts time by 40%.
-- **Copy to confirm with ops/legal:** what Piloted shares and keeps (login via VPN; email and authenticator stay with the client), the Self-play and Remote lines, the money-back text, and the FAQ answers (they were collapsed in the saved page).
+- **Copy to confirm with ops/legal:** which VPN is used and the claim that email access is never requested and the authenticator stays with the client (written into the FAQ and How It Works), what Piloted shares and keeps (login via VPN; email and authenticator stay with the client), the Self-play and Remote lines, the money-back text, and the FAQ answers (they were collapsed in the saved page).
 - Trustpilot count 36,206 is taken from the brief, not from the page.
 - The 4-character option is dropped from the stepper; the cart, checkout, chat and custom offer are stubs.
 - Font files: TT Interphases Pro is downloaded from overgear.com into `assets/fonts/` (Latin subset only; Cyrillic would fall back to Arial).

@@ -168,8 +168,9 @@ const PKG = {
   express: () => cfgWith({ pkg: 'express' }),
   endgame: () => cfgWith({ pkg: 'endgame', to: 90, extras: new Set([...state.extras].filter((id) => !BUNDLE.includes(id))) }),
 };
-const fmtLong = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} minutes` : `${Math.round(h)} hours`);
-const fmtH = (h) => (h < 1 ? `~${Math.max(1, Math.round(h * 60))} min` : `~${Math.round(h)} h`);
+const hrs = (h) => (h < 10 ? Math.round(h * 2) / 2 : Math.round(h));   // 3.6 → 3.5, 6 → 6, 10.4 → 10
+const fmtLong = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} minutes` : `${hrs(h)} hours`);
+const fmtH = (h) => (h < 1 ? `~${Math.max(1, Math.round(h * 60))} min` : `~${hrs(h)} h`);
 
 /* ================= Order form: build static parts ================= */
 const el = {
@@ -228,10 +229,14 @@ function render() {
     if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
     if (k === 'express') $('small', b).textContent = `Ready ${fmtH(exp.hours)} · ${Math.round((1 - PRICING.express.timeFactor) * 100)}% faster`;
     if (k === 'endgame') {
+      $('small', b).textContent = pq.bundle ? `Express, gear, Midnight campaign · save $${Math.floor(pq.wasBundle - pq.total)}` : 'Express, gear, Midnight campaign';
       const sv = $('.save', b);
       sv.hidden = !pq.bundle; sv.textContent = `-${Math.round(PRICING.endgameDiscount * 100)}%`;
     }
   });
+
+  // first-screen time chip follows the chosen range
+  $('#chipTimeText').textContent = `${from}→${to} ${fmtH(std.hours)} · ${fmtH(exp.hours)} with Express`;
 
   // methods
   const piloted = quote(cfgWith({ method: 'piloted' }));
@@ -334,7 +339,7 @@ $('#opts').addEventListener('click', (e) => {
   }
 });
 $('#opts').addEventListener('change', (e) => {
-  if (e.target.name === 'region') state.region = e.target.value;
+  if (e.target.name === 'region') { state.region = e.target.value; $('#regionNote').hidden = true; }
   if (e.target.dataset.extra) {
     if (!e.target.disabled) e.target.checked ? state.extras.add(e.target.dataset.extra) : state.extras.delete(e.target.dataset.extra);
   }
@@ -364,6 +369,13 @@ function sync() {
 (function restore() {
   const p = new URLSearchParams(location.search);
   if (['eu', 'us'].includes(p.get('region'))) { state.region = p.get('region'); $(`input[name=region][value=${state.region}]`).checked = true; }
+  else {
+    // the region does not change the price, so guess it from the time zone and show a compact switch
+    let tz = ''; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch {}
+    state.region = /^(America|US|Canada|Pacific\/Honolulu)/.test(tz) ? 'us' : 'eu';
+    $(`input[name=region][value=${state.region}]`).checked = true;
+    $('#regionNote').hidden = false;
+  }
   if (METHODS[p.get('method')]) state.method = p.get('method');
   if (CHAR_STEPS.includes(+p.get('chars'))) state.chars = +p.get('chars');
   state.pkg = ['basic', 'express', 'endgame'].includes(p.get('pkg')) ? p.get('pkg') : p.get('express') === '1' ? 'express' : 'basic';
@@ -574,13 +586,15 @@ cookie.addEventListener('click', (e) => {
   if (!('IntersectionObserver' in window)) return;
   let buyVisible = false;
   const upd = () => {
-    const on = isMobile() && !buyVisible;
+    const on = isMobile() && !buyVisible && cookie.hidden;
     bar.hidden = false; bar.classList.toggle('show', on);
     document.body.classList.toggle('has-mbar', on);
     document.documentElement.style.setProperty('--mbar-h', on ? bar.offsetHeight + 'px' : '0px');
   };
   new IntersectionObserver((e) => { buyVisible = e[0].isIntersecting; upd(); }).observe(buy);
   addEventListener('resize', upd);
+  cookie.addEventListener('click', () => setTimeout(upd, 0));
+  upd();
 })();
 
 render();

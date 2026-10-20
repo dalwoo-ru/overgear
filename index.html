@@ -40,7 +40,7 @@
     <button aria-label="Search"><svg class="ic"><use href="#i-search"/></svg></button>
   </form>
   <nav class="hactions" aria-label="Account">
-    <button class="hbtn hide-m"><b><span class="plus-badge"><svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8"/></svg></span>€0.00</b><span class="l">Balance</span></button>
+    <button class="hbtn hide-m"><b><span class="plus-badge"><svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8"/></svg></span>$0.00</b><span class="l">Balance</span></button>
     <button class="hbtn hide-m"><b><svg class="coin"><use href="#i-coin"/></svg>0.00</b><span class="l">OG Coins</span></button>
     <button class="hbtn hide-m"><b><svg class="ic"><use href="#i-bag"/></svg></b><span class="l">My Orders</span></button>
     <button class="hbtn hide-m"><b><svg class="ic"><use href="#i-heart"/></svg><span class="cnt" id="wishCnt" hidden>0</span></b><span class="l">Wishlist</span></button>
@@ -60,46 +60,47 @@
       <section class="intro">
         <nav aria-label="Breadcrumbs"><a class="back" href="#"><svg class="ic"><use href="#i-chev-l"/></svg>World of Warcraft: Midnight</a>
       <ol class="crumbs">
-        <li><a href="#">Home</a></li><li><svg class="ic"><use href="#i-chev-r"/></svg></li>
-        <li><a href="#">World of Warcraft: Midnight</a></li><li><svg class="ic"><use href="#i-chev-r"/></svg></li>
-        <li style="color:var(--n6)">Power Leveling</li>
+        <li><a href="#">Home</a></li><li aria-hidden="true"><svg class="ic"><use href="#i-chev-r"/></svg></li>
+        <li><a href="#">World of Warcraft: Midnight</a></li><li aria-hidden="true"><svg class="ic"><use href="#i-chev-r"/></svg></li>
+        <li style="color:var(--n6)" aria-current="page">Power Leveling</li>
       </ol></nav>
         <div class="title-row">
           <h1>WoW Midnight Level&nbsp;Boost</h1>
           <button class="heart" id="heart" aria-pressed="false" aria-label="Add to wishlist"><svg class="ic"><use href="#i-heart"/></svg></button>
         </div>
         <div class="trust">
-        <a class="tp" href="#" aria-label="Overgear on Trustpilot">Excellent <span>4.9 out of 5</span>
+        <a class="tp" href="https://www.trustpilot.com/review/overgear.com" target="_blank" rel="noopener" aria-label="Overgear on Trustpilot: 4.9 out of 5, 36,206 reviews">Excellent <span>4.9 · 36,206 reviews on</span>
           <i class="star"><svg viewBox="0 0 24 24"><use href="#i-star"/></svg></i><b>Trustpilot</b></a>
         <i class="sep"></i>
-        <span style="font-weight:500">546,555 World of Warcraft boosts completed</span>
+        <span style="font-weight:500">546,555 boosts completed</span>
       </div>
         
         <div class="chips">
         <button class="chip" data-tip="Average time until your booster starts."><svg class="ic"><use href="#i-clock"/></svg>Starts in ~15 min</button>
-        <button class="chip" data-tip="Full 1–90 takes about 10 hours; Express brings it to about 6."><img src="assets/ill/chip-24h.svg" alt="">1–90 in ~10 h · 6 h with Express</button>
+        <button class="chip" id="chipTime" data-tip="Time for the range you picked. Express is about 40% faster."><img src="assets/ill/chip-24h.svg" alt=""><span id="chipTimeText">80→90 ~6 h · ~3.5 h with Express</span></button>
         <button class="chip" data-tip="Pick Self-play and the whole route is AFK."><img src="assets/ill/chip-afk.svg" alt="">Full AFK on Self-Play</button>
       </div>
         <p class="lead">Hit 90 inside a day and be ready to push your first M+10. <span id="gift" hidden>🎁 Free M+10 key included.</span></p>
         <ul class="wins">
           <li><svg class="ic"><use href="#i-check"/></svg><span><b>Level 90</b> unlocked</span></li>
           <li><svg class="ic"><use href="#i-check"/></svg><span><b>Up to 5 alts</b> · save 20%</span></li>
-          <li><svg class="ic"><use href="#i-check"/></svg><span><a href="#">Class Connoisseur</a> achievement</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Updates</b> in Discord</span></li>
         </ul>
       </section>
 
       <section class="config" aria-label="Configure your boost">
         <form class="opts" id="opts" onsubmit="return false">
-          <div class="fgroup">
-            <div class="fh"><i class="n">1</i>Region of your character</div>
-            <div class="seg flags" role="radiogroup" aria-label="Region of your character">
+          <div class="regionbar">
+            <span class="ct1">Region of your character</span>
+            <div class="seg flags sm" role="radiogroup" aria-label="Region of your character">
               <label><input type="radio" name="region" value="eu" checked><span><img src="assets/flags/eu.svg" alt="" width="22" height="15">Europe</span></label>
               <label><input type="radio" name="region" value="us"><span><img src="assets/flags/us.svg" alt="" width="22" height="15">America</span></label>
             </div>
+            <small class="charnote" id="regionNote" hidden>Detected from your location</small>
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">2</i>Leveling range</div>
+            <div class="fh"><i class="n">1</i>Leveling range</div>
             <div class="presets" id="presets" role="radiogroup" aria-label="Leveling range">
             <button type="button" class="pre" role="radio" data-p="pop">80 → 90 <em>Popular</em></button>
             <button type="button" class="pre" role="radio" data-p="full">1 → 90</button>
@@ -122,17 +123,18 @@
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">3</i>Package</div>
+            <div class="fh"><i class="n">2</i>Package</div>
             <div class="pkgs" id="pkgs" role="radiogroup" aria-label="Package">
-            <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp"></span><small></small></button>
-            <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp"></span><small></small></button>
-            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Endgame ready</b><span class="pp"></span><small>Express + 292 gear + campaign</small><i class="save" hidden></i></button>
+            <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp">$23.99</span><small>Ready ~6 h</small></button>
+            <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp">$30.99</span><small>Ready ~3.5 h · 40% faster</small></button>
+            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Endgame ready</b><span class="pp">$97.49<s>$121.49</s></span><small>Express, gear, Midnight campaign · save $24</small><i class="save">-20%</i></button>
           </div>
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">4</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
+            <div class="fh"><i class="n">3</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
             <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
+            <figure class="mquote"><span class="st">★★★★★</span><blockquote>“Pilot was great, communication amazing also. Started quick and delivered on time”</blockquote><figcaption>Bonetarface · Piloted order</figcaption></figure>
             <div class="subgroup">
             <div class="ct1line"><span class="ct1">Characters</span><span class="disc" id="charTag" hidden></span><small class="charnote" id="charNote"></small></div>
             <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
@@ -140,7 +142,7 @@
           </div>
 
           <div class="fgroup">
-            <div class="fh"><i class="n">5</i>Add-ons <span class="opt">optional</span></div>
+            <div class="fh"><i class="n">4</i>Add-ons <span class="opt">optional</span></div>
             <div class="extras" id="extras"></div>
           </div>
         </form>
@@ -167,9 +169,9 @@
         <h2 class="sec">WoW Midnight Leveling Service FAQ</h2>
         <div class="faq" id="faq">
           <div class="acc big"><button aria-expanded="false"><h5>What is a WoW Midnight Leveling Boost?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>It is a service where experienced players level your character to 90 manually, so you can skip repeated questing and go straight to raids, Mythic+, Delves, and PvP.</p></div></div></div></div>
-          <div class="acc big"><button aria-expanded="false"><h5>Is it safe to buy WoW Midnight Power Leveling?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Yes. Every order is played manually by ID-checked boosters under our Zero-Ban Protocol: smart VPN routes, no bots, no cheats. With Self-play you stay in control of your own account, and with Remote the booster never receives your account details.</p></div></div></div></div>
-          <div class="acc big"><button aria-expanded="false"><h5>How to buy the WoW Midnight Leveling Carry?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Choose your region, set the leveling range, pick the number of characters and the boost method, add any options you need, and press Add to cart. After payment you fill in the character info and we confirm the start in Discord.</p></div></div></div></div>
-          <div class="acc big"><button aria-expanded="false"><h5>How long does it take to complete a WoW Midnight Level 80-90 boost?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>About 6 hours, plus roughly 15 minutes for the order to start. Add the Express start &amp; completion option to shorten it by around 40%. The exact time updates in the order card as you change the range and options.</p></div></div></div></div>
+          <div class="acc big"><button aria-expanded="false"><h5>Is it safe to buy WoW Midnight Power Leveling?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Every order is played by hand by ID-checked boosters: no bots, no cheats. What you share depends on the method:</p><p><b>Piloted</b> — a booster plays your character. You share your Battle.net login only. The login goes through a VPN with an IP in your region, your authenticator stays with you (you confirm the login when asked), and we never ask for access to your email.</p><p><b>Self-play</b> — you stay on your own account and share nothing.</p><p><b>Remote</b> — the booster plays through a remote session, and your login is never given out.</p><p>If we cannot deliver the order, you get your money back.</p></div></div></div></div>
+          <div class="acc big"><button aria-expanded="false"><h5>How to buy the WoW Midnight Leveling Carry?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Follow the configurator from top to bottom: choose the region of your character, set the leveling range, pick a package (Basic, Express, or Endgame ready), choose the boost method and the number of characters, then tick any add-ons you need. Press Add to cart and pay. After payment, fill in the character info and your booster contacts you in Discord, usually within 15 minutes.</p></div></div></div></div>
+          <div class="acc big"><button aria-expanded="false"><h5>How long does it take to complete a WoW Midnight Level 80-90 boost?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>About 6 hours for 80→90, or around 3.5 hours with the Express package, which is about 40% faster. A full 1→90 takes about 10 hours, around 6 with Express. Orders start in about 15 minutes, and the order card shows the time for the exact range you picked.</p></div></div></div></div>
           <div class="acc big"><button aria-expanded="false"><h5>Can I communicate with my WoW Midnight Level booster?</h5><svg class="ic"><use href="#i-chev"/></svg></button><div class="body"><div><div class="in"><p>Yes. Once the order starts you are connected to your booster in Discord, and our support team is available 24/7 in live chat.</p></div></div></div></div>
         </div>
       </section>
@@ -233,14 +235,14 @@
       <div class="side-in">
       <div class="buy">
         <div class="price-row">
-          <span class="price" id="price" aria-live="polite">$0.00</span>
+          <span class="price" id="price" aria-live="polite">$23.99</span>
           <s class="price-was" id="priceWas" hidden></s>
           <span class="disc" id="priceTag" hidden></span>
           <span class="cashback">Cashback 1% <svg class="coin"><use href="#i-coin"/></svg></span>
         </div>
         <div class="times">
           <p><svg class="ic"><use href="#i-clock"/></svg><b>15 minutes</b> average start time</p>
-          <p><svg class="ic"><use href="#i-clock"/></svg><b id="eta"></b> order completion</p>
+          <p><svg class="ic"><use href="#i-clock"/></svg><b id="eta">6 hours</b> order completion</p>
         </div>
         <button class="cta" id="add"><svg class="ic"><use href="#i-cart-plus"/></svg><span id="addLabel">Add to cart</span></button>
         <div class="pay" aria-label="Accepted payments">
@@ -263,7 +265,7 @@
   </div>
 </div>
 
-<div class="pay-strip"><div><span>mastercard</span><span>VISA</span><span>PayPal</span><span> Pay</span><span>G Pay</span><span>JCB</span><span>stripe</span><span>SEPA</span></div></div>
+<div class="pay-strip"><div aria-label="Accepted payments"><img src="assets/pay/stripe.svg" alt="Stripe"><img src="assets/pay/mastercard.svg" alt="Mastercard"><img src="assets/pay/visa.svg" alt="Visa"><img src="assets/pay/american-express.svg" alt="American Express"><img src="assets/pay/apple-pay.svg" alt="Apple Pay"><img src="assets/pay/google-pay.svg" alt="Google Pay"><img src="assets/pay/paypal.svg" alt="PayPal"><img src="assets/pay/crypto.svg" alt="Crypto"></div></div>
 
 <footer class="footer"><div class="wrap">
   <div class="f-top">
@@ -285,7 +287,7 @@
 <div class="m-bar" id="mBar" hidden>
   <div class="m-trust"><span class="s">★ 4.9</span> · 36,206 reviews · <a href="#" data-sheet="guarantee">100% money-back</a></div>
   <div class="m-row">
-    <div class="m-sum"><b id="mPrice">$0.00</b><span id="mEta"></span></div>
+    <div class="m-sum"><b id="mPrice">$23.99</b><span id="mEta">starts ~15 min · ready ~6 h</span></div>
     <button class="cta" id="mAdd"><svg class="ic"><use href="#i-cart-plus"/></svg><span>Add to cart</span></button>
     <button class="chat" id="mChat" aria-label="Live chat"><svg class="ic"><use href="#i-chat"/></svg></button>
   </div>
