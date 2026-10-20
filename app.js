@@ -10,7 +10,7 @@ const PRICING = {
   express: { pct: 0.30, timeFactor: 0.6 },
   charDiscount: { 1: 0, 2: 0.05, 3: 0.10, 4: 0.15, 5: 0.20 },
   method: { piloted: 0, self: 0.70, remote: 0.05 },
-  endgameDiscount: 0.20,                             // off (Express boost + 292 gear) inside "Express + Gear"
+  ultimateDiscount: 0.20,                            // off everything inside "Ultimate" (Express boost + every add-on)
   extras: [
     { id: 'gear292',  label: '292 ilvl gear',     price: 53.87, desc: 'Ready for M+4 · needs level 90' },
     { id: 'honor',    label: 'Honor gear 331',    price: 20.19, desc: '331 ilvl PvP set · needs level 90' },
@@ -31,14 +31,15 @@ function pretty(n) {
   const w = Math.floor(c);
   return c - w <= 0.49 + 1e-9 ? w + 0.49 : w + 0.99;
 }
-const BUNDLE = ['gear292'];                       // included in the Express + Gear package
+const BUNDLE = ['gear292', 'honor', 'campaign', 'ulatek', 'stream'];   // everything is included in Ultimate
+const NEED90 = ['gear292', 'honor', 'ulatek', 'gear2', 'camp2'];       // add-ons that only work at level 90
 const SET = { camp2: ['campaign', 'ulatek'], gear2: ['gear292', 'honor'] };   // a set replaces its singles
 const XGROUPS = [
-  { id: 'gear', title: 'Gear', ids: ['gear292', 'honor', 'gear2'] },
-  { id: 'camps', title: 'Campaigns', ids: ['campaign', 'ulatek', 'camp2'] },
+  { id: 'gear', title: 'Gear', set: 'gear2', ids: ['gear292', 'honor'] },
+  { id: 'camps', title: 'Campaigns', set: 'camp2', ids: ['campaign', 'ulatek'] },
 ];
 const setOf = (id) => Object.keys(SET).find((k) => SET[k].includes(id));
-const PKG_NAME = { basic: 'Basic', express: 'Express', endgame: 'Express + Gear' };
+const PKG_NAME = { basic: 'Basic', express: 'Express', ultimate: 'Ultimate' };
 const GIFT_M10 = false;   // O10: set to true if the free M+10 key is still given with leveling orders
 const TRUST = { rating: '4.9', reviews: '36,206' };
 const CHAR_STEPS = [1, 2, 3, 4, 5];
@@ -139,13 +140,13 @@ document.addEventListener('click', (e) => {
 
 /* ================= Order state & pricing ================= */
 const state = {
-  region: 'eu', from: 80, to: 90, mode: 'pop',     // mode: pop | full | mine | custom
-  pkg: 'basic', chars: 1, method: 'piloted', extras: new Set(),   // pkg: basic | express | endgame; extras = optional add-ons only
+  region: 'eu', from: 80, to: 90, mode: 'pop',     // mode: pop | full | custom
+  pkg: 'basic', chars: 1, method: 'piloted', extras: new Set(),   // pkg: basic | express | ultimate; extras = optional add-ons only
 };
 const cfgWith = (patch) => ({ ...state, extras: new Set(state.extras), ...patch });
 
 const isExpress = (c) => c.pkg !== 'basic';
-const allExtras = (c) => { const s = new Set(c.extras); if (c.pkg === 'endgame') BUNDLE.forEach((id) => s.add(id)); return s; };
+const allExtras = (c) => { const s = new Set(c.extras); if (c.pkg === 'ultimate') BUNDLE.forEach((id) => s.add(id)); return s; };
 const extraDef = (id) => PRICING.extras.find((x) => x.id === id);
 function quote(c) {
   let base = 0, hours = 0;
@@ -156,7 +157,7 @@ function quote(c) {
   let extras = 0;
   allExtras(c).forEach((id) => { extras += extraDef(id).price; });
   const bundleExtras = BUNDLE.reduce((s, id) => s + extraDef(id).price, 0);
-  const bundle = c.pkg === 'endgame' ? PRICING.endgameDiscount * (core + bundleExtras) : 0;
+  const bundle = c.pkg === 'ultimate' ? PRICING.ultimateDiscount * (core + bundleExtras) : 0;
   if (isExpress(c)) hours *= PRICING.express.timeFactor;
   const raw = core + extras - bundle;
   const charSave = base * mult * n - core;   // what the multi-character discount takes off
@@ -165,11 +166,7 @@ function quote(c) {
 const PKG = {
   basic:   () => cfgWith({ pkg: 'basic' }),
   express: () => cfgWith({ pkg: 'express' }),
-  endgame: () => {
-    const ex = new Set([...state.extras].filter((id) => !BUNDLE.includes(id)));
-    if (ex.delete('gear2')) ex.add('honor');
-    return cfgWith({ pkg: 'endgame', to: 90, extras: ex });
-  },
+  ultimate: () => cfgWith({ pkg: 'ultimate', to: 90, extras: new Set() }),
 };
 const hrs = (h) => (h < 10 ? Math.round(h * 2) / 2 : Math.round(h));   // 3.6 → 3.5, 6 → 6, 10.4 → 10
 const fmtLong = (h) => (h < 1 ? `${Math.max(1, Math.round(h * 60))} minutes` : `${hrs(h)} hours`);
@@ -187,14 +184,15 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
     <span class="ml">${m.line}</span>
   </button>`).join('');
 
-const extraPrice = (x, locked) => locked ? ({ set: 'In the set', na: '—' }[locked] || 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
+const extraPrice = (x, locked) => locked ? ({ need90: 'Needs level 90' }[locked] || 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
 const xrow = (x) => `
   <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
     <span class="xt"><b>${x.label}${x.tag ? `<i class="xtag">${x.tag}</i>` : ''}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`;
 const grouped = XGROUPS.flatMap((g) => g.ids);
+const pct = (id) => Math.round((1 - extraDef(id).price / extraDef(id).was) * 100);
 $('#extras').innerHTML = [
-  ...XGROUPS.map((g) => `<div class="xgroup" role="group" aria-label="${g.title}"><div class="xg-h">${g.title} <small>take one or both</small></div><div class="xg-rows">${g.ids.map((id) => xrow(extraDef(id))).join('')}</div></div>`),
-  ...PRICING.extras.filter((x) => !grouped.includes(x.id)).map(xrow),
+  ...XGROUPS.map((g) => `<div class="xgroup" role="group" aria-label="${g.title}"><div class="xg-h"><span>${g.title}<small>${pct(g.set)}% off when you take both</small></span><button type="button" class="setbtn" data-set="${g.set}" aria-pressed="false">Take both</button></div><div class="xg-rows">${g.ids.map((id) => xrow(extraDef(id))).join('')}</div></div>`),
+  ...PRICING.extras.filter((x) => !grouped.includes(x.id) && !SET[x.id]).map(xrow),
 ].join('');
 
 
@@ -235,12 +233,14 @@ function render() {
   $$('#pkgs .pkg').forEach((b) => {
     const k = b.dataset.k, pq = quote(PKG[k]());
     b.setAttribute('aria-checked', state.pkg === k);
-    $('.pp', b).innerHTML = k === 'endgame' && pq.bundle ? `${money(pq.total)}<s>${money(pq.wasBundle)}</s>` : money(pq.total);
+    $('.pp', b).innerHTML = k === 'ultimate' && pq.bundle ? `${money(pq.total)}<s>${money(pq.wasBundle)}</s>` : money(pq.total);
     if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
     if (k === 'express') $('small', b).textContent = `${fmtH(std.hours)} → ${fmtH(exp.hours)} · ${fmtSaved(std.hours - exp.hours)} faster`;
-    if (k === 'endgame') {
-      const sv = $('.save', b);
-      sv.hidden = !pq.bundle; sv.textContent = `-${Math.round(PRICING.endgameDiscount * 100)}%`;
+    if (k === 'ultimate') {
+      const sv = $('.save', b), no90 = state.to !== 90;
+      b.disabled = no90;
+      $('small', b).textContent = no90 ? 'Needs level 90' : 'Express and every add-on';
+      sv.hidden = !pq.bundle || no90; sv.textContent = `-${Math.round(PRICING.ultimateDiscount * 100)}%`;
     }
   });
 
@@ -258,28 +258,34 @@ function render() {
     $('em', b).textContent = m === 'piloted' ? '' : '+' + money(d);
   });
 
-  // characters: chips with the discount and the price per character
+  // characters: stepper, tag with the discount, short note
   const n = state.chars, single = quote(cfgWith({ chars: 1 })).core;
-  $$('#cchips .cc').forEach((b) => {
-    const k = +b.dataset.c, kq = quote(cfgWith({ chars: k }));
-    b.setAttribute('aria-checked', k === n);
-    $('small', b).textContent = money(pretty(kq.core / k)) + (k > 1 ? ' each' : '');
-  });
+  $('#cVal').textContent = n;
+  $('#cMinus').disabled = n === CHAR_STEPS[0];
+  $('#cPlus').disabled = n === CHAR_STEPS.at(-1);
   const ct = $('#charTag'); ct.hidden = n === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[n] * 100)}%`;
-  $('#charNote').textContent = n === 1 ? 'Add alts and save up to 20%' : `You save $${Math.floor(single * n - q.core)}`;
+  $('#charNote').textContent = n === 1 ? 'Add alts and save up to 20%' : `${money(pretty(q.core / n))} each · you save $${Math.floor(single * n - q.core)}`;
   $('#charHint').hidden = n === 1;
 
-  // extras: the ones inside "Endgame ready" are ticked and locked; the rest stay free to toggle
-  PRICING.extras.forEach((x) => {
-    const own = SET[x.id], parent = setOf(x.id);
-    const locked = state.pkg === 'endgame' && BUNDLE.includes(x.id) ? 'bundle'
-      : state.pkg === 'endgame' && own && own.some((s) => BUNDLE.includes(s)) ? 'na'
-      : parent && state.extras.has(parent) ? 'set' : '';
+  // extras: Ultimate includes everything; below level 90 the 90-only ones are blocked
+  const no90 = state.to !== 90;
+  PRICING.extras.filter((x) => !SET[x.id]).forEach((x) => {
+    const parent = setOf(x.id);
+    const inUlt = state.pkg === 'ultimate' && BUNDLE.includes(x.id);
+    const blocked = no90 && NEED90.includes(x.id);
+    const locked = inUlt ? 'bundle' : blocked ? 'need90' : '';
     const row = $(`[data-xrow="${x.id}"]`), inp = $('input', row);
-    inp.checked = locked === 'na' ? false : (!!locked || state.extras.has(x.id));
+    inp.checked = !blocked && (inUlt || state.extras.has(x.id) || !!(parent && state.extras.has(parent)));
     inp.disabled = !!locked;
     row.classList.toggle('locked', !!locked);
     $('.p', row).innerHTML = extraPrice(x, locked);
+  });
+  $$('.setbtn').forEach((b) => {
+    const k = b.dataset.set, on = state.extras.has(k) && !(state.pkg === 'ultimate');
+    const off = state.pkg === 'ultimate' || (no90 && NEED90.includes(k));
+    b.disabled = off;
+    b.setAttribute('aria-pressed', on);
+    b.textContent = state.pkg === 'ultimate' ? 'Included' : (no90 && NEED90.includes(k)) ? 'Needs level 90' : on ? '✓ Both added' : 'Take both';
   });
 
   // summary (O5)
@@ -303,7 +309,7 @@ function setRange(f, t, who) {
   f = clamp(Math.round(f), 1, 89); t = clamp(Math.round(t), 2, 90);
   if (who === 'from') f = Math.min(f, t - 1); else t = Math.max(t, f + 1);
   state.from = f; state.to = t;
-  if (state.pkg === 'endgame' && t !== 90) { BUNDLE.forEach((id) => state.extras.add(id)); state.pkg = 'express'; }
+  if (t !== 90) { NEED90.forEach((id) => state.extras.delete(id)); if (state.pkg === 'ultimate') state.pkg = 'express'; }
   if (state.mode === 'pop' || state.mode === 'full') state.mode = 'custom';
   render();
 }
@@ -335,10 +341,8 @@ $('#opts').addEventListener('click', (e) => {
     const p = b.dataset.p;
     if (p === 'pop') Object.assign(state, { mode: 'pop', from: 80, to: 90 });
     if (p === 'full') Object.assign(state, { mode: 'full', from: 1, to: 90 });
-    if (p === 'mine') Object.assign(state, { mode: 'mine', to: 90, from: Math.min(state.from, 89) });
     if (p === 'custom') state.mode = 'custom';
     render();
-    if (p === 'mine') { el.from.focus(); }
   } else if ((b = t('.pkg'))) {
     const c = PKG[b.dataset.k]();
     Object.assign(state, { pkg: c.pkg, extras: c.extras, to: c.to });
@@ -348,12 +352,16 @@ $('#opts').addEventListener('click', (e) => {
     state.method = b.dataset.m; render();
   } else if ((b = t('[data-pickm]'))) {
     state.method = b.dataset.pickm; render();
-  } else if ((b = t('.cc'))) {
-    state.chars = +b.dataset.c; render();
+  } else if (t('#cMinus') || t('#cPlus')) {
+    const i = CHAR_STEPS.indexOf(state.chars) + (t('#cPlus') ? 1 : -1);
+    state.chars = CHAR_STEPS[clamp(i, 0, CHAR_STEPS.length - 1)]; render();
+  } else if ((b = t('[data-set]'))) {
+    const k = b.dataset.set;
+    if (state.extras.has(k)) state.extras.delete(k); else { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); }
+    render();
   } else if ((b = t('[data-end]'))) {
-    const v = b.dataset.end;
-    if (v === 'afk') { state.from = 1; state.to = 80; state.mode = 'custom'; if (state.pkg === 'endgame') { state.pkg = 'express'; } render(); }
-    else setRange(Math.min(state.from, +v - 1), +v, 'to');
+    const v = +b.dataset.end;
+    setRange(Math.min(state.from, v - 1), v, 'to');
   } else if (t('#compare')) {
     openCompare();
   }
@@ -363,8 +371,12 @@ $('#opts').addEventListener('change', (e) => {
   if (e.target.dataset.extra) {
     if (!e.target.disabled) {
       const id = e.target.dataset.extra;
-      e.target.checked ? state.extras.add(id) : state.extras.delete(id);
-      if (SET[id] && e.target.checked) SET[id].forEach((s) => state.extras.delete(s));
+      const parent = setOf(id);
+      if (parent && state.extras.has(parent)) {
+        // unticking one of two from an active set: the set goes, the other one stays
+        state.extras.delete(parent);
+        SET[parent].filter((s) => s !== id).forEach((s) => state.extras.add(s));
+      } else e.target.checked ? state.extras.add(id) : state.extras.delete(id);
       Object.keys(SET).forEach((k) => { if (SET[k].every((s) => state.extras.has(s))) { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); } });
     }
   }
@@ -402,14 +414,12 @@ function sync() {
   }
   if (METHODS[p.get('method')]) state.method = p.get('method');
   if (CHAR_STEPS.includes(+p.get('chars'))) state.chars = +p.get('chars');
-  state.pkg = ['basic', 'express', 'endgame'].includes(p.get('pkg')) ? p.get('pkg') : p.get('express') === '1' ? 'express' : 'basic';
-  (p.get('extras') || '').split(',').forEach((id) => { if (PRICING.extras.some((x) => x.id === id) && !(state.pkg === 'endgame' && BUNDLE.includes(id))) state.extras.add(id); });
+  state.pkg = ['basic', 'express', 'ultimate'].includes(p.get('pkg')) ? p.get('pkg') : p.get('pkg') === 'endgame' ? 'ultimate' : p.get('express') === '1' ? 'express' : 'basic';
+  (p.get('extras') || '').split(',').forEach((id) => { if (PRICING.extras.some((x) => x.id === id) && !(state.pkg === 'ultimate')) state.extras.add(id); });
   const f = parseInt(p.get('from'), 10), t = parseInt(p.get('to'), 10);
   if (f && t) { state.from = clamp(f, 1, 89); state.to = clamp(t, state.from + 1, 90); }
-  if (state.pkg === 'endgame' && state.to !== 90) state.pkg = 'express';
-  Object.keys(SET).forEach((k) => { if (state.extras.has(k)) SET[k].forEach((s) => state.extras.delete(s)); });
-  if (state.pkg === 'endgame' && state.extras.delete('gear2')) state.extras.add('honor');
-  state.mode = ['pop', 'full', 'mine', 'custom'].includes(p.get('mode')) ? p.get('mode')
+  if (state.to !== 90) { NEED90.forEach((id) => state.extras.delete(id)); if (state.pkg === 'ultimate') state.pkg = 'express'; }
+  state.mode = ['pop', 'full', 'custom'].includes(p.get('mode')) ? p.get('mode')
     : state.from === 80 && state.to === 90 ? 'pop' : state.from === 1 && state.to === 90 ? 'full' : 'custom';
   if (state.mode === 'pop' && !(state.from === 80 && state.to === 90)) state.mode = 'custom';
   if (state.mode === 'full' && !(state.from === 1 && state.to === 90)) state.mode = 'custom';
@@ -480,11 +490,11 @@ const CROSS = [
   { id: 'm0', title: 'Mythic +0', line: '292 ilvl loot, ready for M+4', price: pretty(6.72), img: 'mythic-0' },
 ];
 let wish = store.get('og:wish', 0);
-let cart = store.get('og:cart5', []);
+let cart = store.get('og:cart6', []);
 let promo = null;                                  // { code, pct }
 const PROMOS = { WELCOME5: 0.05 };                 // demo code
 const heart = $('#heart');
-const saveCart = () => store.set('og:cart5', cart);
+const saveCart = () => store.set('og:cart6', cart);
 function counters() {
   const wc = $('#wishCnt'); wc.textContent = wish; wc.hidden = !wish;
   const cc = $('#cartCnt'); cc.textContent = cart.length; cc.hidden = !cart.length;
@@ -547,7 +557,7 @@ function itemHTML(i, idx) {
   let extras = '';
   if (c) {
     const lines = [];
-    if (c.pkg === 'endgame') BUNDLE.forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">Included</span></div>`));
+    if (c.pkg === 'ultimate') BUNDLE.forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">Included</span></div>`));
     [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price))}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
     if (lines.length) extras = `<div class="xlist">${lines.join('')}</div>`;
   } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;

@@ -40,7 +40,7 @@ for (const [label, viewport, opts] of [['desktop', { width: 1440, height: 900 },
   await page.goto(`${base}/`);
   await page.waitForTimeout(600);
   const states = [['default', async () => {}],
-    ['Endgame ready', async () => { await page.click('[data-k=endgame]'); }],
+    ['Ultimate', async () => { await page.click('[data-k=ultimate]'); }],
     ['compare sheet', async () => { await page.locator('#compare').scrollIntoViewIfNeeded(); await page.click('#compare'); await page.waitForTimeout(400); }],
     ['cart drawer', async () => { await page.keyboard.press('Escape'); await page.waitForTimeout(300); await page.locator('#add').scrollIntoViewIfNeeded(); await page.click('#add'); await page.waitForTimeout(500); }]];
   for (const [name, step] of states) {

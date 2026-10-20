@@ -197,7 +197,7 @@ h1{font:800 var(--fs-h1)/var(--lh-h1) var(--font);letter-spacing:-.4px;margin-bo
 .dual input:active::-webkit-slider-thumb{cursor:grabbing;box-shadow:0 0 0 6px var(--p30)}
 .dual input:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px var(--p40)}
 .dual-l{display:flex;justify-content:space-between;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6)}
-@media (max-width:767px),(pointer:coarse){.dual,.dual-l{display:none}}   /* touch: numeric fields + presets only */
+@media (pointer:coarse){.dual input::-webkit-slider-thumb{width:24px;height:24px;margin-top:-2px}.dual{height:28px}.dual .rail,.dual .fill{top:12px}.dual input::-webkit-slider-runnable-track{height:28px}}
 
 .pkgs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .pkg{position:relative;text-align:left;padding:12px 14px;border-radius:var(--r-control);background:#0a0d2e;border:1px solid transparent;display:flex;flex-direction:column;align-items:flex-start;gap:2px;transition:.15s}
@@ -837,3 +837,25 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 @media (max-width:767px){.cmpimg{aspect-ratio:16/10;object-position:50% 45%}}
 .cmpimg{aspect-ratio:11/10;object-position:50% 0}
 @media (max-width:767px){.cmpimg{aspect-ratio:16/10;object-position:50% 0}}
+
+/* add-on groups: the "take both" button sits at the right of the group title */
+.xg-h{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.xg-h small{display:block;margin:0;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--success)}
+.xg-rows{grid-template-columns:repeat(2,minmax(0,1fr))}
+.setbtn{flex:none;min-height:36px;padding:0 14px;border-radius:var(--r-control);border:1px solid var(--brand);background:var(--p10);font-size:var(--fs-s);font-weight:600;color:var(--n10);white-space:nowrap;transition:.15s}
+.setbtn:hover:not(:disabled){background:var(--p30);border-color:var(--brand-3)}
+.setbtn[aria-pressed=true]{background:var(--brand);border-color:var(--brand)}
+.setbtn:disabled{opacity:.5;cursor:not-allowed;border-color:var(--n5);background:transparent;color:var(--n8)}
+.pkg:disabled{opacity:.55;cursor:not-allowed}
+.pkg:disabled:hover{background:#0a0d2e}
+@media (max-width:1100px){.xg-rows{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:767px){
+  .xg-rows{grid-template-columns:1fr}
+  .xg-h{align-items:flex-start}
+  /* boost methods: fixed-size cards, the price sits at the right of the name, the row scrolls sideways */
+  .mcards{overflow-x:auto;margin-left:-16px;margin-right:-16px;padding:0 16px;gap:8px;scroll-snap-type:x proximity;scroll-padding-left:16px}
+  .mc{flex:none;width:156px;scroll-snap-align:start}
+  .mh{display:flex;flex-wrap:nowrap;align-items:baseline;justify-content:space-between;gap:6px}
+  .mh b{white-space:nowrap}
+  .mh em{white-space:nowrap}
+}

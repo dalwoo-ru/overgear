@@ -75,10 +75,19 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 | M5 | Add-on labels are short, no emoji, description on a second line |
 | M7 | Lazy images and `content-visibility` on the SEO text and footer. Not done: LCP/INP measurement on a mid-range Android |
 
+## Latest changes
+
+- **Range:** presets are 80 → 90, 1 → 90, Custom (no "My level", no "Popular" tag). Custom has the slider on every device (above the quick chips) and chips To 60 · To 70 · To 80 · To 90.
+- **Packages:** Basic, Express, **Ultimate** (Express and every add-on, 20% off, struck old price, "-20%" tag). The Express + Gear package is gone.
+- **Characters:** the − 1 + stepper is back (1–5), with the discount tag and a one-line note.
+- **Add-ons:** the "Both gear sets" / "Both campaigns" rows are gone. Each group (Gear, Campaigns) has "15% off when you take both" and a "Take both" button at the right of its title; unticking one of the two drops the set and keeps the other.
+- **Level below 90 (Custom):** the add-ons that need level 90 (292 gear, Honor gear, Ula'tek, and the two "take both" buttons) and the Ultimate package are blocked and say "Needs level 90"; going below 90 also clears them from the order.
+- **Phones, Boost method:** fixed-size cards (156px), the price at the right of the name, the row scrolls sideways.
+
 ## Changes picked from the data review (third pass)
 
 - **Express** is shown as time saved for the chosen range: "~6 h → ~3.5 h · 2.5 h faster".
-- **Top package** is now "Express + Gear" (Express boost plus 292 ilvl gear, 20% off, struck old price and a "-20%" tag). The Midnight campaign is no longer inside it.
+- **Top package** was "Express + Gear" here; it is now Ultimate (see Latest changes).
 - **Two campaigns as a set.** The add-ons have two groups, each with its two singles and a set at -15%: "Gear" (292 ilvl gear, Honor gear 331, "Both gear sets") and "Campaigns" (Midnight, Ula'tek, "Both campaigns"). Live stream stands alone. With the Express + Gear package the 292 gear is included and the gear set is unavailable (a chosen gear set becomes Honor gear alone). Choosing the set, or ticking both singles, turns the singles into the set and locks them ("In the set").
 - **Add-on order** by money: 292 gear, the set, Midnight campaign, Ula'tek, Honor gear, Live stream. Descriptions are one short line; "Ready for M+4" under 292 gear comes from the site's Mythic +0 card and needs confirming.
 - **Range:** presets are 80 → 90, My level → 90, 1 → 90, Custom. Custom shows quick end chips (1 → 80 · AFK in Azure Span, To 60, To 70, To 80) at the very bottom of the range box, after the slider. "My level" has no extra chips.
