@@ -198,6 +198,10 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
   </button>`).join('');
 
 const extraPrice = (x, locked) => locked ? ({ set: 'In the set', na: '—' }[locked] || 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
+{
+  const host = $('#methods');
+  host.append($('.mquote'), $('#mnote'));
+}
 const xrow = (x) => `
   <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
     <span class="xt"><b>${x.label}${x.tag ? `<i class="xtag">${x.tag}</i>` : ''}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`;
