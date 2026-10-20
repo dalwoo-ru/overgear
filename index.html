@@ -134,7 +134,7 @@
             <div class="fh"><i class="n">4</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
             <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
             <div class="subgroup">
-            <div class="ct1line"><span class="ct1">Characters</span><small class="charnote" id="charNote"></small></div>
+            <div class="ct1line"><span class="ct1">Characters</span><span class="disc" id="charTag" hidden></span><small class="charnote" id="charNote"></small></div>
             <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
             </div>
           </div>
@@ -235,6 +235,7 @@
         <div class="price-row">
           <span class="price" id="price" aria-live="polite">$0.00</span>
           <s class="price-was" id="priceWas" hidden></s>
+          <span class="disc" id="priceTag" hidden></span>
           <span class="cashback">Cashback 1% <svg class="coin"><use href="#i-coin"/></svg></span>
         </div>
         <div class="times">

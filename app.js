@@ -160,7 +160,8 @@ function quote(c) {
   const bundle = c.pkg === 'endgame' ? PRICING.endgameDiscount * (core + bundleExtras) : 0;
   if (isExpress(c)) hours *= PRICING.express.timeFactor;
   const raw = core + extras - bundle;
-  return { total: pretty(raw), was: pretty(raw + bundle), raw, core, extras, bundle, hours, base };
+  const charSave = base * mult * n - core;   // what the multi-character discount takes off
+  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave), charSave, raw, core, extras, bundle, hours, base };
 }
 const PKG = {
   basic:   () => cfgWith({ pkg: 'basic' }),
@@ -181,7 +182,7 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
     <span class="ml">${m.line}</span>
   </button>`).join('');
 
-const extraPrice = (x, locked) => locked ? 'Included' : x.was ? `<s>${money(pretty(x.was))}</s>${money(pretty(x.price))}` : '+' + money(pretty(x.price));
+const extraPrice = (x, locked) => locked ? 'Included' : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
 $('#extras').innerHTML = PRICING.extras.map((x) => `
   <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
     <span class="xt"><b>${x.label}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`).join('');
@@ -223,7 +224,7 @@ function render() {
   $$('#pkgs .pkg').forEach((b) => {
     const k = b.dataset.k, pq = quote(PKG[k]());
     b.setAttribute('aria-checked', state.pkg === k);
-    $('.pp', b).innerHTML = k === 'endgame' && pq.bundle ? `<s>${money(pq.was)}</s>${money(pq.total)}` : money(pq.total);
+    $('.pp', b).innerHTML = k === 'endgame' && pq.bundle ? `${money(pq.total)}<s>${money(pq.wasBundle)}</s>` : money(pq.total);
     if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
     if (k === 'express') $('small', b).textContent = `Ready ${fmtH(exp.hours)} · ${Math.round((1 - PRICING.express.timeFactor) * 100)}% faster`;
     if (k === 'endgame') {
@@ -245,6 +246,7 @@ function render() {
   $('#cMinus').disabled = state.chars === CHAR_STEPS[0];
   $('#cPlus').disabled = state.chars === CHAR_STEPS.at(-1);
   const n = state.chars, single = quote(cfgWith({ chars: 1 })).core;
+  const ct = $('#charTag'); ct.hidden = n === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[n] * 100)}%`;
   $('#charNote').textContent = n === 1
     ? 'Add alts and save up to 20%'
     : `${money(pretty(q.core / n))} each · you save $${Math.floor(single * n - q.core)}`;
@@ -262,7 +264,9 @@ function render() {
   // summary (O5)
   const eta = fmtH(q.hours);
   $('#price').textContent = money(q.total);
-  const pw = $('#priceWas'); pw.hidden = !q.bundle; pw.textContent = q.bundle ? money(q.was) : '';
+  const off = q.was > q.total ? Math.round((1 - q.total / q.was) * 100) : 0;
+  const pw = $('#priceWas'); pw.hidden = !off; pw.textContent = off ? money(q.was) : '';
+  const pt = $('#priceTag'); pt.hidden = !off; pt.textContent = off ? `-${off}%` : '';
   $('#eta').textContent = fmtLong(q.hours);
   $('#mPrice').textContent = money(q.total);
   $('#mEta').textContent = `starts ~15 min · ready ${eta}`;
