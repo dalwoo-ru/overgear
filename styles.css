@@ -793,3 +793,12 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 
 /* "Popular" tag: lower and fully rounded */
 .pre em{font-size:10px;line-height:14px;padding:0 6px;margin-left:0;border-radius:99px;letter-spacing:.2px}
+
+/* phones: the three methods fill the full width; step titles sit closer to their content */
+@media (max-width:767px){
+  .mcards{overflow:visible;margin-left:0;margin-right:0;padding:0;gap:8px}
+  .mc{flex:1 1 0;width:auto;min-width:0}
+  .fh{margin-bottom:8px}
+  .ct1line,.fgroup>.ct1{margin-bottom:8px}
+  .xg-h{margin-bottom:8px}
+}
