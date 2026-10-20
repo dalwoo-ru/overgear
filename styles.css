@@ -802,3 +802,9 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .ct1line,.fgroup>.ct1{margin-bottom:8px}
   .xg-h{margin-bottom:8px}
 }
+
+/* phones: the sticky bar is one blue with rounded top corners */
+@media (max-width:767px){
+  .m-bar{background:#0b0c33;border-top:0;border-radius:var(--r-surface) var(--r-surface) 0 0;box-shadow:0 -8px 24px #0006}
+  .m-trust{background:transparent;border-bottom:0;padding-top:10px}
+}
