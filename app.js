@@ -607,7 +607,9 @@ function drawerHTML() {
   return `<div class="dscroll">${items}${left.length ? `<h4 class="nx">You might also need</h4>${next}` : ''}</div>${foot}`;
 }
 function renderDrawer() {
+  const keep = $('.dscroll')?.scrollTop || 0;   // re-rendering must not jump the list back to the top
   $('#dBody').innerHTML = drawerHTML();
+  const sc = $('.dscroll'); if (sc) sc.scrollTop = keep;
   $('#dCount').textContent = `(${cart.length} Item${cart.length === 1 ? '' : 's'})`;
 }
 function openDrawer() {
