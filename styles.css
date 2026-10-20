@@ -504,7 +504,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .dnote{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--success)}
 .dnote .ic{width:16px;height:16px}
 
-/* ---------- Chat, toast, cookie ---------- */
+/* ---------- Chat and toast ---------- */
 .chat-fab{position:fixed;right:20px;bottom:20px;z-index:60;width:52px;height:52px;border-radius:50%;background:var(--brand-2);display:grid;place-items:center;box-shadow:0 0 24px #564fff66,var(--shadow-soft)}
 .chat-fab:hover{background:var(--brand-3)}
 .chat-fab .ic{width:24px;height:24px}
@@ -520,15 +520,6 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .toast.show{transform:none;opacity:1;pointer-events:auto}
 .toast .ic{width:20px;height:20px;color:var(--success)}
 .toast a{margin-left:6px;color:var(--brand-4);font-weight:600;white-space:nowrap}
-.cookie{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:80;width:min(880px,calc(100vw - 32px));padding:16px 20px;border-radius:var(--r-surface);background:var(--n3);box-shadow:0 8px 40px #000c,0 0 0 1px #ffffff14;display:flex;gap:20px;align-items:center}
-.cookie[hidden]{display:none}
-.cookie h4{font:700 var(--fs) / var(--lh) var(--font);margin:0 0 2px}
-.cookie p{font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n7)}
-.cookie p a{color:var(--brand-4);text-decoration:underline}
-.cookie .btns{display:flex;gap:8px;flex:none}
-.cookie .btn{min-height:36px;padding:0 14px;border-color:var(--n5)}
-.cookie .btn.solid{border-color:var(--brand)}
-.cookie .btn:hover{border-color:var(--brand-3)}
 
 .m-bar{display:none}
 
@@ -626,10 +617,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .cols,.f-games .g{grid-template-columns:1fr;gap:0}
   .cols>div{margin-bottom:16px}
   .f-top{margin-bottom:16px}
-  .cookie{flex-direction:column;align-items:stretch;bottom:8px;gap:10px;padding:14px}
-  .cookie .btns{flex-wrap:wrap}
-  .cookie .btn{flex:1}
-  .toast{right:12px;left:12px;max-width:none;top:68px}
+        .toast{right:12px;left:12px;max-width:none;top:68px}
   .sheet{align-items:flex-end}
   .sheet .panel,.sheet.wide .panel{width:100%;max-height:88vh;border-radius:var(--r-modal) var(--r-modal) 0 0;transform:translateY(100%);opacity:1;padding:6px 16px calc(16px + env(safe-area-inset-bottom))}
   .sheet.show .panel{transform:none}

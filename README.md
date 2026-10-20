@@ -97,7 +97,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 - **One payment set** in the buy block, the footer and the cart: Stripe, Mastercard, Visa, American Express, Apple Pay, Google Pay, PayPal, Crypto. The header balance is now in $, like the prices.
 - **Region.** It does not change the price, so it is a compact switch above the steps, preselected from the time zone, with no caption. Steps now start at the leveling range. To make it a numbered first step again, add the number back to `.regionbar`.
 - **Trust.** The first screen shows "4.9 · 36,206 reviews on Trustpilot" as a link; "Class Connoisseur" gave way to "Updates in Discord".
-- **Accessibility and mobile.** The breadcrumb separators are `aria-hidden`, the current crumb has `aria-current`. On phones the sticky bar waits until the cookie banner is answered, so the two never stack.
+- **Accessibility and mobile.** The breadcrumb separators are `aria-hidden`, the current crumb has `aria-current`. The cookie banner was removed from the prototype so it does not distract.
 
 ## Assumptions to replace later
 

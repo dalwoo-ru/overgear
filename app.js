@@ -684,30 +684,19 @@ $('#nudgeGo').addEventListener('click', openChat);
 $('#chatFab').addEventListener('click', openChat);
 $('#mChat').addEventListener('click', openChat);
 
-/* ================= Cookie banner ================= */
-const cookie = $('#cookie');
-if (store.get('og:cookie', false)) cookie.hidden = true;
-cookie.addEventListener('click', (e) => {
-  const b = e.target.closest('[data-c]');
-  if (!b) return;
-  if (b.dataset.c !== 'customize') store.set('og:cookie', b.dataset.c);
-  cookie.hidden = true;
-});
-
 /* ================= Mobile sticky buy bar (M1): shown while the in-card buy block is off screen ================= */
 (function () {
   const bar = $('#mBar'), buy = $('.buy');
   if (!('IntersectionObserver' in window)) return;
   let buyVisible = false;
   const upd = () => {
-    const on = isMobile() && !buyVisible && cookie.hidden;
+    const on = isMobile() && !buyVisible;
     bar.hidden = false; bar.classList.toggle('show', on);
     document.body.classList.toggle('has-mbar', on);
     document.documentElement.style.setProperty('--mbar-h', on ? bar.offsetHeight + 'px' : '0px');
   };
   new IntersectionObserver((e) => { buyVisible = e[0].isIntersecting; upd(); }).observe(buy);
   addEventListener('resize', upd);
-  cookie.addEventListener('click', () => setTimeout(upd, 0));
   upd();
 })();
 
