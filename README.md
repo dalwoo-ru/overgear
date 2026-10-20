@@ -65,7 +65,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 | O9 | "How It Works" text follows the chosen method and range |
 | O10 | `GIFT_M10` flag in `app.js`. Off: the copy says "be ready to push your first M+10". On: a free-key line appears |
 | D1 | Right column is sticky; the summary and Add to cart stay visible at 1366×768 and 1440×900 |
-| D2 | "Compare methods" opens a table (popover on desktop, bottom sheet on phones) with Choose buttons |
+| D2 | "Compare methods" shows your illustration (split into three, one picture per column, files `assets/img/method-*.jpg`) above each column and opens a table (popover on desktop, bottom sheet on phones) with Choose buttons |
 | D3 | Order: configurator, wins, how it works, reviews, FAQ, custom offer, the SEO text is shown in full (no "Read more") |
 | D4 | After 20 s idle in the configurator a chat nudge appears (once). Open `?nudge=1500` to see it sooner |
 | D5, M6 | The cart follows the site's mini cart: "Shopping Cart (N Item)", a line card with picture, "EU • 80 - 90 • 1 character • Piloted" (method in orange), Sold by OvergearSales, Start time, Delivery time, trash icon, then an expandable "Apply promo code" (demo code `WELCOME5`), Subtotal, "Cashback you will receive" with the amount in OG Coins, and "Secure checkout". Product additions on top of it: the package is part of the line, a struck old price with a discount tag, "You might also need" upsell right under the items (items already in the cart are hidden), Apple Pay and Google Pay above the checkout button, a money-back line, and the whole bottom block pinned. Add to cart just opens the cart |

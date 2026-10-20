@@ -443,6 +443,7 @@ function openCompare() {
     const q = quote(cfgWith({ method: id }));
     const sel = state.method === id;
     return `<section class="cmpcol">
+      <img class="cmpimg" src="assets/img/method-${id}.jpg" alt="${m.name}: who plays and what you share" loading="lazy" decoding="async">
       <h4>${m.name}</h4>
       ${rows.map(([label, fn]) => `<div class="cr"><small>${label}</small><p>${fn(id, m)}</p></div>`).join('')}
       <div class="cr"><small>Price</small><p><b>${money(q.total)}</b>${id === 'piloted' ? '' : ` <em>+${money(pretty(q.raw - base.raw))}</em>`}</p></div>
