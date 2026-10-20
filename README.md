@@ -20,11 +20,20 @@ Desktop (≥1200px): main block on the left, a sticky right column.
 | Block | Contents, in reading order |
 |---|---|
 | Main · title | Breadcrumbs, H1, Trustpilot and orders line, three key USP tags (start in ~15 min, 1–90 in ~10 h / 6 h with Express, full AFK), the one-line promise, three short wins in one row |
-| Main · form | Everything is left-aligned. 1 "Region of your character" (Europe, America, with flags), then 2 Leveling range → 3 Package (Express shows its time and how much faster it is) → 4 Boost method (one short line per method; the table is in Compare methods; Characters sits under it as part of the same step, hint on one line, stepper below) → 5 Add-ons, all visible. Endgame ready locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
+| Main · form | Everything is left-aligned. 1 "Region of your character" (Europe, America, with flags), then 2 Leveling range → 3 Package (Express shows its time and how much faster it is) → 4 Boost method (one short line per method; the table is in Compare methods; Characters sits under it as part of the same step, hint on one line, stepper below) → 5 Add-ons, all visible. Endgame ready (20% off boost + gear + campaign, old price struck through, "-20%" tag, also shown next to the main price) locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
 | Main · more information | How It Works (follows the method), reviews, FAQ, custom offer, SEO text behind "Read more" |
 | Right column | The buy block, laid out like the original: price with Cashback, start time, completion time, Add to cart, payment icons, money-back line. It is the page accent (brand border and glow). Below it, a calmer "Why players choose Overgear" card |
 
 The right column is about 640px tall, so on a 1366×768 screen both cards stay in view while the page scrolls. On tablets and phones the order is: title → form → order card → why us → more information, and a sticky bottom bar (price, ETA, Add to cart, chat, plus a trust strip) shows while the order card is off screen.
+
+## Radius system
+
+One ladder on the baseui scale, each nested level = outer − inset: modal 20 (sheet, drawer) · surface 16 (cards, panels) · control 10 (buttons, inputs, tiles) · small 6 (a button inside an input, badges, checkboxes) · tag 4. Pills and circles are skipped. The CSS variables are `--r-modal`, `--r-surface`, `--r-control`, `--r-small`, `--r-tag`.
+
+Two checks, both clean at the moment:
+
+- baseui's `tools/radius-check.js` (concentric corners). It only sees nested corners whose inset is smaller than the outer radius, so it reports nothing on this page, whose paddings are large.
+- `tools/radius-ladder.mjs` in this repo: every corner is on the scale and no child is rounder than its parent, on desktop and phone, with Endgame ready, the compare sheet and the cart drawer open. Run `node tools/radius-ladder.mjs http://localhost:8000` (needs Playwright).
 
 ## Type scale
 

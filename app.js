@@ -10,7 +10,7 @@ const PRICING = {
   express: { pct: 0.30, timeFactor: 0.6 },
   charDiscount: { 1: 0, 2: 0.05, 3: 0.10, 5: 0.20 }, // the 4-character option is dropped (O8)
   method: { piloted: 0, self: 0.70, remote: 0.05 },
-  bundleDiscount: 0.10,                              // gear 292 + campaign inside "Endgame ready"
+  endgameDiscount: 0.20,                             // off (boost + gear 292 + campaign) inside "Endgame ready"
   extras: [
     { id: 'ulatek',   label: "Ula'tek campaign",  price: 24.68, desc: "Campaign chain finished on your character · needs level 90" },
     { id: 'gear292',  label: '292 ilvl gear',     price: 53.87, desc: 'Full 292 ilvl set for M+ and Delves · needs level 90' },
@@ -156,10 +156,11 @@ function quote(c) {
   const core = base * mult * n * (1 - PRICING.charDiscount[n]);
   let extras = 0;
   allExtras(c).forEach((id) => { extras += extraDef(id).price; });
-  const bundle = c.pkg === 'endgame' ? PRICING.bundleDiscount * BUNDLE.reduce((s, id) => s + extraDef(id).price, 0) : 0;
+  const bundleExtras = BUNDLE.reduce((s, id) => s + extraDef(id).price, 0);
+  const bundle = c.pkg === 'endgame' ? PRICING.endgameDiscount * (core + bundleExtras) : 0;
   if (isExpress(c)) hours *= PRICING.express.timeFactor;
   const raw = core + extras - bundle;
-  return { total: pretty(raw), raw, core, extras, bundle, hours, base };
+  return { total: pretty(raw), was: pretty(raw + bundle), raw, core, extras, bundle, hours, base };
 }
 const PKG = {
   basic:   () => cfgWith({ pkg: 'basic' }),
@@ -222,12 +223,12 @@ function render() {
   $$('#pkgs .pkg').forEach((b) => {
     const k = b.dataset.k, pq = quote(PKG[k]());
     b.setAttribute('aria-checked', state.pkg === k);
-    $('.pp', b).textContent = money(pq.total);
+    $('.pp', b).innerHTML = k === 'endgame' && pq.bundle ? `<s>${money(pq.was)}</s>${money(pq.total)}` : money(pq.total);
     if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
     if (k === 'express') $('small', b).textContent = `Ready ${fmtH(exp.hours)} · ${Math.round((1 - PRICING.express.timeFactor) * 100)}% faster`;
     if (k === 'endgame') {
       const sv = $('.save', b);
-      sv.hidden = !pq.bundle; sv.textContent = pq.bundle ? `Save $${Math.floor(pq.bundle)}` : '';
+      sv.hidden = !pq.bundle; sv.textContent = `-${Math.round(PRICING.endgameDiscount * 100)}%`;
     }
   });
 
@@ -236,7 +237,7 @@ function render() {
   $$('#methods .mc').forEach((b) => {
     const m = b.dataset.m, d = pretty(quote(cfgWith({ method: m })).raw - piloted.raw);
     b.setAttribute('aria-checked', state.method === m);
-    $('em', b).textContent = m === 'piloted' ? 'Included' : '+' + money(d);
+    $('em', b).textContent = m === 'piloted' ? '' : '+' + money(d);
   });
 
   // characters
@@ -261,6 +262,7 @@ function render() {
   // summary (O5)
   const eta = fmtH(q.hours);
   $('#price').textContent = money(q.total);
+  const pw = $('#priceWas'); pw.hidden = !q.bundle; pw.textContent = q.bundle ? money(q.was) : '';
   $('#eta').textContent = fmtLong(q.hours);
   $('#mPrice').textContent = money(q.total);
   $('#mEta').textContent = `starts ~15 min · ready ${eta}`;
