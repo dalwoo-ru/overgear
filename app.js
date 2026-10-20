@@ -300,7 +300,6 @@ function render() {
   const pt = $('#priceTag'); pt.hidden = !off; pt.textContent = off ? `-${off}%` : '';
   $('#eta').textContent = fmtLong(q.hours);
   $('#mPrice').textContent = money(q.total);
-  $('#mEta').textContent = `starts ~15 min · ready ${eta}`;
   $('#gift').hidden = !GIFT_M10;
 
   // how it works (O9)

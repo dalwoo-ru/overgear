@@ -591,7 +591,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .stepper{width:140px}
   .wins{flex-direction:column;gap:6px}
   .range-box{max-width:none}
-  .xrow{padding:10px 0;min-height:48px}
+  .xrow{min-height:48px}
   .check,.xrow{cursor:pointer}
   .side{margin-top:8px}
   .buy{padding:18px 16px 16px}
@@ -643,14 +643,10 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .m-trust .s{color:var(--yellow);font-weight:600}
   .m-trust a{color:var(--success)}
   .m-row{display:flex;align-items:center;gap:10px;padding:8px 16px 10px}
-  .m-sum{display:flex;flex-direction:column;min-width:0}
-  .m-sum b{font:700 18px/22px var(--font);letter-spacing:-.3px}
-  .m-sum span{font-size:11px;line-height:14px;color:var(--n6);white-space:nowrap}
   .m-bar .cta{flex:1;min-width:0;height:44px}
   .m-bar .chat{width:44px;height:44px;border-radius:50%;background:var(--brand-2);display:grid;place-items:center;flex:none;box-shadow:0 0 20px #564fff66}
   .m-bar .chat .ic{width:20px;height:20px}
 }
-@media (max-width:389px){.m-sum span{display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 .subgroup{margin-top:18px}
@@ -720,3 +716,19 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .pickrow .btn{flex:1;min-width:120px}
 .xgroup+.xgroup{margin-top:0}
 .extras>.xrow{grid-column:1/-1}
+
+/* ---------- phones: edge-to-edge form, tags that hug and scroll sideways ---------- */
+@media (max-width:767px){
+  .config{margin-left:-16px;margin-right:-16px;border-radius:0;box-shadow:none;padding:16px}
+  .presets,.regionbar .seg,.chiprow{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;margin-left:-16px;margin-right:-16px;padding:0 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .presets::-webkit-scrollbar,.regionbar .seg::-webkit-scrollbar,.chiprow::-webkit-scrollbar{display:none}
+  .regionbar .seg{width:auto}
+  .regionbar .seg label,.pre,.lc{flex:none}
+  .regionbar{gap:0}
+  .m-bar .cta{gap:6px}
+}
+@media (max-width:767px){
+  .cc{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:4px}
+  .cc i{position:static;grid-column:2;justify-self:start;margin:0}
+  .cc small{grid-column:1/-1}
+}
