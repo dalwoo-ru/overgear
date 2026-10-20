@@ -136,16 +136,6 @@ document.addEventListener('click', (e) => {
   acc.classList.toggle('open', open);
   b.setAttribute('aria-expanded', open);
 });
-// M2: "Your Wins" and "How It Works" are folds on phones, always open on desktop
-if (isMobile()) $$('details.fold').forEach((d) => d.removeAttribute('open'));
-$$('details.fold > summary').forEach((s) => s.addEventListener('click', (e) => { if (!isMobile()) e.preventDefault(); }));
-// D3: SEO text collapsed behind "Read more"
-$('#seoMore').addEventListener('click', (e) => {
-  const seo = $('#seo'), open = seo.classList.toggle('collapsed') === false;
-  e.currentTarget.textContent = open ? 'Show less' : 'Read more';
-  e.currentTarget.setAttribute('aria-expanded', open);
-  if (!open) seo.scrollIntoView({ block: 'start' });
-});
 
 /* ================= Order state & pricing ================= */
 const state = {
