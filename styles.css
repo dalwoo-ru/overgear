@@ -833,3 +833,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .cmpimg{aspect-ratio:1/1}
 @media (min-width:768px){.sheet.wide .panel{max-height:min(90vh,780px)}}
 @media (max-width:767px){.cmpimg{aspect-ratio:16/10}}
+.cmpimg{aspect-ratio:5/4;object-position:50% 40%}
+@media (max-width:767px){.cmpimg{aspect-ratio:16/10;object-position:50% 45%}}
+.cmpimg{aspect-ratio:11/10;object-position:50% 0}
+@media (max-width:767px){.cmpimg{aspect-ratio:16/10;object-position:50% 0}}
