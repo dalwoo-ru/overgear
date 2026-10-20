@@ -76,15 +76,15 @@
       </div>
         
         <div class="chips">
-        <button class="chip" data-tip="Average time until your booster starts."><svg class="ic"><use href="#i-clock"/></svg>Starts in ~15 min</button>
-        <button class="chip" id="chipTime" data-tip="Time for the range you picked. Express is about 40% faster."><img src="assets/ill/chip-24h.svg" alt=""><span id="chipTimeText">80→90 ~6 h · ~3.5 h with Express</span></button>
+        <button class="chip" data-tip="The full 1–90 takes about 6 hours with the Express package."><img src="assets/ill/chip-24h.svg" alt="">90 lvl in 6 Hours</button>
+        <button class="chip" data-tip="Order up to 5 characters and save up to 20%."><img src="assets/ill/chip-alts.svg" alt="">Up to 20% Off Alts</button>
         <button class="chip" data-tip="Pick Self-play and the whole route is AFK."><img src="assets/ill/chip-afk.svg" alt="">Full AFK on Self-Play</button>
       </div>
         <p class="lead">Hit 90 inside a day and be ready to push your first M+10. <span id="gift" hidden>🎁 Free M+10 key included.</span></p>
         <ul class="wins">
-          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Level 90</b> unlocked</span></li>
-          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Up to 5 alts</b> · save 20%</span></li>
-          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Updates</b> in Discord</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Starts in ~15 min</b></span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span id="chipTimeText"><b>80→90 ~6 h</b> · ~3.5 h with Express</span></li>
+          <li><svg class="ic"><use href="#i-check"/></svg><span><b>Level 90</b> unlocked for raids, M+, Delves and PvP</span></li>
         </ul>
       </section>
 
@@ -96,7 +96,6 @@
               <label><input type="radio" name="region" value="eu" checked><span><img src="assets/flags/eu.svg" alt="" width="22" height="15">Europe</span></label>
               <label><input type="radio" name="region" value="us"><span><img src="assets/flags/us.svg" alt="" width="22" height="15">America</span></label>
             </div>
-            <small class="charnote" id="regionNote" hidden>Detected from your location</small>
           </div>
 
           <div class="fgroup">
@@ -127,7 +126,7 @@
             <div class="pkgs" id="pkgs" role="radiogroup" aria-label="Package">
             <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp">$23.99</span><small>Ready ~6 h</small></button>
             <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp">$30.99</span><small>Ready ~3.5 h · 40% faster</small></button>
-            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Endgame ready</b><span class="pp">$97.49<s>$121.49</s></span><small>Express, gear, Midnight campaign · save $24</small><i class="save">-20%</i></button>
+            <button type="button" class="pkg" role="radio" data-k="endgame"><b>Endgame ready</b><span class="pp">$97.49<s>$121.49</s></span><small>Express, gear, Midnight campaign</small><i class="save">-20%</i></button>
           </div>
           </div>
 

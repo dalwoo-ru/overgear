@@ -19,7 +19,7 @@ Desktop (≥1200px): main block on the left, a sticky right column.
 
 | Block | Contents, in reading order |
 |---|---|
-| Main · title | Breadcrumbs, H1, Trustpilot and orders line, three key USP tags (start in ~15 min, 1–90 in ~10 h / 6 h with Express, full AFK), the one-line promise, three short wins in one row |
+| Main · title | Breadcrumbs, H1, Trustpilot and orders line, the site's three USP tags word for word with its icons ("90 lvl in 6 Hours", "Up to 20% Off Alts", "Full AFK on Self-Play"), the one-line promise, then three extra USPs that do not repeat the tags: starts in ~15 min, the time for the chosen range ("80→90 ~6 h · ~3.5 h with Express"), level 90 unlocked for raids, M+, Delves and PvP |
 | Main · form | Everything is left-aligned. 1 "Region of your character" (Europe, America, with flags), then 2 Leveling range → 3 Package (Express shows its time and how much faster it is) → 4 Boost method (one short line per method; choosing 2, 3 or 5 characters shows a bright green "-5% / -10% / -20%" tag next to the label, and the buy block shows the new price, the struck old price and a total "-N%" tag; the table is in Compare methods; Characters sits under it as part of the same step, hint on one line, stepper below) → 5 Add-ons, all visible. Endgame ready (20% off boost + gear + campaign, "-20%" tag; the new price comes first, then the struck old one) locks its two add-ons (ticked, greyed, "Included"); other add-ons can be added on top and the package stays selected |
 | Main · more information | How It Works (follows the method), reviews, FAQ, custom offer, SEO text behind "Read more" |
 | Right column | The buy block, laid out like the original: price with Cashback, start time, completion time, Add to cart, payment icons, money-back line. It is the page accent (brand border and glow). Below it, a calmer "Why players choose Overgear" card |
@@ -77,13 +77,13 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 ## Review fixes (second pass)
 
-- **Piloted answers its main fear.** The safety FAQ now covers all three methods: Piloted shares the Battle.net login only, through a VPN with an IP in your region, the authenticator stays with the client, and email access is not requested. The "Pilot was great…" review sits under the method cards.
+- **Piloted answers its main fear.** The safety FAQ now covers all three methods: Piloted shares the Battle.net login only, through a VPN with an IP in your region, the authenticator stays with the client, and email access is not requested. The "Pilot was great…" review sits under the method cards and is shown only while Piloted is selected.
 - **No $0.00 before the script.** The markup carries the default configuration (80→90 · Basic · Piloted · 1 character: $23.99, 6 hours, package prices), and the not-yet-rendered method and add-on lists show a shimmer placeholder.
-- **One meaning for "6 hours".** The first-screen chip follows the chosen range ("80→90 ~6 h · ~3.5 h with Express"; "1→90 ~10 h · ~6 h with Express" for the full range). Times below 10 h round to half an hour.
+- **One meaning for "6 hours".** The range-bound time sits in the extra USP row ("80→90 ~6 h · ~3.5 h with Express"; "1→90 ~10 h · ~6 h with Express" for the full range). The tag "90 lvl in 6 Hours" is the site's own wording and means 1→90 with Express. Times below 10 h round to half an hour.
 - **FAQ follows the configurator** (region → range → package → method and characters → add-ons) and calls Express a package.
-- **Endgame ready.** The card says "Express, gear, Midnight campaign · save $N" (the Midnight campaign is the included one, Ula'tek is not), keeps the struck old price and the "-20%" tag, and its add-ons are locked as "Included". The default package stays Basic; preselecting Express is left as a test.
+- **Endgame ready.** The card says "Express, gear, Midnight campaign" (the Midnight campaign is the included one, Ula'tek is not), keeps the struck old price and the "-20%" tag, and its add-ons are locked as "Included". The default package stays Basic; preselecting Express is left as a test.
 - **One payment set** in the buy block, the footer and the cart: Stripe, Mastercard, Visa, American Express, Apple Pay, Google Pay, PayPal, Crypto. The header balance is now in $, like the prices.
-- **Region.** It does not change the price, so it is a compact switch above the steps, preselected from the time zone ("Detected from your location" until it is touched). Steps now start at the leveling range. To make it a numbered first step again, add the number back to `.regionbar`.
+- **Region.** It does not change the price, so it is a compact switch above the steps, preselected from the time zone, with no caption. Steps now start at the leveling range. To make it a numbered first step again, add the number back to `.regionbar`.
 - **Trust.** The first screen shows "4.9 · 36,206 reviews on Trustpilot" as a link; "Class Connoisseur" gave way to "Updates in Discord".
 - **Accessibility and mobile.** The breadcrumb separators are `aria-hidden`, the current crumb has `aria-current`. On phones the sticky bar waits until the cookie banner is answered, so the two never stack.
 
