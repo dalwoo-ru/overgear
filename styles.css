@@ -972,3 +972,10 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 /* "Popular" on Express: calmer than the green discount tag */
 .pkg .poptag{position:absolute;top:-11px;right:10px;font-style:normal;padding:0 10px;border-radius:var(--r-small);background:#2f3567;box-shadow:0 0 0 1px #ffffff26 inset;color:var(--n9);font:600 12px/22px var(--font);letter-spacing:0}
 @media (max-width:767px){.pkg .poptag{right:8px}}
+
+/* the Piloted note is one clickable block with a chevron on the right */
+button.mnote{width:100%;text-align:left;font:inherit;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6);cursor:pointer;align-items:center;transition:.15s}
+button.mnote:hover{background:#ffffff12;color:var(--n8)}
+button.mnote span{flex:1;min-width:0}
+button.mnote .ic:first-child{margin-top:3px;align-self:flex-start}
+button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
