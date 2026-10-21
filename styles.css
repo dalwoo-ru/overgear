@@ -968,3 +968,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 /* package icons: white, a little closer to the title */
 .pkg b{gap:4px}
 .pkg .pi,.pkg[data-k=express] .pi,.pkg[data-k=ultimate] .pi,.pkg[aria-checked=true] .pi{color:#fff}
+
+/* "Popular" on Express: calmer than the green discount tag */
+.pkg .poptag{position:absolute;top:-11px;right:10px;font-style:normal;padding:0 10px;border-radius:var(--r-small);background:#2f3567;box-shadow:0 0 0 1px #ffffff26 inset;color:var(--n9);font:600 12px/22px var(--font);letter-spacing:0}
+@media (max-width:767px){.pkg .poptag{right:8px}}
