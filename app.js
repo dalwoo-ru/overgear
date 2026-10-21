@@ -333,7 +333,6 @@ function render() {
   const ct = $('#charTag'); ct.hidden = N === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[N] * 100)}%`;
   $('#charNote').textContent = N === 1 ? 'Add alts and save up to 20%' : `${N} characters · you save $${Math.floor(q.charSave)}`;
   $('#addChar').disabled = N >= MAX_CHARS;
-  $('#sameLbl').textContent = N === 1 ? 'Character 1 uses the settings above. Add more characters, each with its own settings.' : 'Character 1 uses the settings above.';
   renderOthers();
 
   // extras: Ultimate includes everything; below level 90 the 90-only ones are blocked
