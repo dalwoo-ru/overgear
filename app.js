@@ -352,7 +352,7 @@ function render() {
   $('#charNote').textContent = N === 1 ? 'Add alts and save up to 20%' : `${N} characters · you save $${Math.floor(q.charSave)}`;
   const nx = state.pkg === 'ultimate' ? 0 : state.extras.size, xt = $('#xTag');
   xt.hidden = nx < 2; xt.textContent = `-${Math.round(PRICING.extraDiscount[Math.min(5, nx)] * 100)}%`;
-  $('#xNote').textContent = nx < 2 ? 'Optional · add more, save up to 20%' : `${nx} add-ons · you save $${Math.floor(q.extrasSave)}`;
+  $('#xNote').textContent = nx < 2 ? 'Add more, save up to 20%' : `${nx} add-ons · you save $${Math.floor(q.extrasSave)}`;
   $('#addChar').disabled = N >= MAX_CHARS;
   $('#addHint').innerHTML = N >= MAX_CHARS ? 'Maximum 5' : `<i class="xtag">Save ${Math.round(PRICING.charDiscount[N + 1] * 100)}%</i>`;
   renderOthers();
