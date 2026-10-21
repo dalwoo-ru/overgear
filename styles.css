@@ -909,3 +909,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 /* Piloted note: shield closer to the text, a very light backing */
 .mnote{gap:5px;padding:10px 12px;border-radius:var(--r-control);background:#ffffff0a}
 .mnote .ic{width:16px;height:16px;margin-top:1px}
+
+.mnote .tlink{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.mnote .tlink:hover{color:var(--n10)}
+.closebtn{margin-top:18px}
