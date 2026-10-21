@@ -256,7 +256,8 @@ $('#others').addEventListener('change', (e) => {
   if (t.dataset.oto !== undefined) commitOtherLevel(+t.dataset.oto, 'to', parseInt(t.value, 10));
 });
 $('#others').addEventListener('input', (e) => { if (e.target.dataset.ofrom !== undefined || e.target.dataset.oto !== undefined) e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2); });
-$('#addChar').addEventListener('click', () => {
+$('#addChar').addEventListener('click', (e) => {
+  if (e.target.closest('.q')) return;   // the ? hint only explains
   if (tierN() >= MAX_CHARS) return;
   state.others.push({ from: state.from, to: state.to, pkg: state.pkg, method: state.method, extras: expandSets([...state.extras]) });
   render();
@@ -330,6 +331,7 @@ function render() {
   const ct = $('#charTag'); ct.hidden = N === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[N] * 100)}%`;
   $('#charNote').textContent = N === 1 ? 'Add alts and save up to 20%' : `${N} characters · you save $${Math.floor(q.charSave)}`;
   $('#addChar').disabled = N >= MAX_CHARS;
+  $('#addHint').innerHTML = N >= MAX_CHARS ? 'Maximum 5' : `<i class="xtag">Save ${Math.round(PRICING.charDiscount[N + 1] * 100)}%</i>`;
   renderOthers();
 
   // extras: Ultimate includes everything; below level 90 the 90-only ones are blocked

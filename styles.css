@@ -1129,3 +1129,12 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
   .wins{flex-wrap:nowrap;gap:8px 16px}
   .wins li{white-space:nowrap;gap:6px}
 }
+
+/* Add character: a row like the add-ons, with a + box instead of a checkbox */
+.addrow{width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;margin-top:0}
+.addrow .box svg{opacity:1;stroke:var(--n8);stroke-width:2.4}
+.addrow:hover:not(:disabled){background:var(--n4)}
+.addrow:hover:not(:disabled) .box{border-color:var(--brand-3)}
+.addrow:hover:not(:disabled) .box svg{stroke:#fff}
+.addrow:disabled{opacity:.55;cursor:not-allowed}
+.addrow .xtag{margin:0}
