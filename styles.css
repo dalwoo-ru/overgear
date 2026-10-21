@@ -950,3 +950,9 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .cmpcol .cr b{font-size:16px}
   .cmpcol .btn{padding:0 6px;font-size:12px}
 }
+
+@media (max-width:767px){
+  .mc{width:calc((100vw - 32px) / 2.8);padding:10px 10px}
+  .mh{flex-wrap:wrap;gap:0 6px}
+  .opts{gap:24px}
+}
