@@ -1016,3 +1016,8 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
   .rangetop .presets{flex:0 1 auto;min-width:0;gap:6px}
   .rangetop .pre{padding-left:10px;padding-right:10px;white-space:nowrap}
 }
+
+/* flag buttons are as tall as the level chips; the row sits close to the title again */
+.seg.flags.icons span{min-height:36px;height:36px}
+.rangetop{align-items:flex-end;margin-top:-22px}
+@media (max-width:767px){.rangetop{margin-top:-20px}}
