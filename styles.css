@@ -1123,3 +1123,9 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .xrow .xt .q{margin-right:auto}
 .xrow .xt .p{margin-left:auto}
 .xrow .xt .q+.p{margin-left:0}
+
+/* desktop: the three wins fit on one line */
+@media (min-width:1360px){
+  .wins{flex-wrap:nowrap;gap:8px 16px}
+  .wins li{white-space:nowrap;gap:6px}
+}
