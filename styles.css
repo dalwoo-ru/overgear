@@ -1021,3 +1021,36 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .seg.flags.icons span{min-height:36px;height:36px}
 .rangetop{align-items:flex-end;margin-top:-22px}
 @media (max-width:767px){.rangetop{margin-top:-20px}}
+
+/* ---------- step 5: characters ---------- */
+.fh .opt{margin-left:4px}
+.fh #charTag{order:0}
+.charrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.samelbl{font-size:var(--fs-s);line-height:var(--lh-s);color:var(--n7)}
+.others{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.others:empty{display:none}
+.ochar{padding:14px;border-radius:var(--r-control);background:#0a0d2e;border:1px solid #ffffff12}
+.oh{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.oh b{font-size:var(--fs-s);line-height:var(--lh-s)}
+.oh .op{font-size:var(--fs-s);font-weight:700;color:var(--n9);font-variant-numeric:tabular-nums}
+.orm{margin-left:auto;font-size:var(--fs-xs);color:var(--n6);text-decoration:underline;text-underline-offset:2px;min-height:32px;padding:0 4px}
+.orm:hover{color:#fff}
+.orow{display:grid;grid-template-columns:64px minmax(0,1fr);gap:8px;align-items:center;padding:6px 0;border-top:1px solid #ffffff0d}
+.orow:first-of-type{border-top:0}
+.olbl{font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6)}
+.ochips{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.ochips .lc{min-height:32px;padding:0 10px;font-size:var(--fs-xs);background:#1e2242}
+.ochips .lc:hover:not(:disabled){background:var(--n4)}
+.ochips .lc[aria-pressed=true]{background:var(--p30);border-color:var(--brand)}
+.ochips .lc:disabled{opacity:.4;cursor:not-allowed}
+.onum input{width:52px;height:32px;border:1px solid transparent;border-radius:var(--r-small);background:#1e2242;padding:0 8px;text-align:center;font-size:var(--fs-s);outline:none}
+.onum input:focus{border-color:var(--brand)}
+.oarr{color:var(--n6)}
+.addchar{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:12px;min-height:var(--ctl);padding:0 14px;border-radius:var(--r-control);border:1px dashed var(--n5);background:transparent;font-size:var(--fs-s);font-weight:500;color:var(--n8);transition:.15s}
+.addchar .ic{width:18px;height:18px}
+.addchar:hover:not(:disabled){border-color:var(--brand-3);background:var(--p10);color:#fff}
+.addchar:disabled{opacity:.45;cursor:not-allowed}
+@media (max-width:767px){
+  .orow{grid-template-columns:1fr;gap:4px}
+  .ochar{padding:12px}
+}

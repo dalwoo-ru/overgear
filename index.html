@@ -140,16 +140,18 @@
             <div class="fh"><i class="n">3</i>Boost method <button type="button" class="link" id="compare">Compare methods</button></div>
             <div class="mcards" id="methods" role="radiogroup" aria-label="Boost method"></div>
             <button type="button" class="mnote" id="mnote" data-sheet="piloted"><svg class="ic"><use href="#i-shield"/></svg><span>Piloted is 100% safe: played by hand, your authenticator and email stay with you.</span><svg class="ic chev"><use href="#i-chev-r"/></svg></button>
-            <div class="subgroup">
-            <div class="ct1line"><span class="ct1">Characters</span><span class="disc" id="charTag" hidden></span><small class="charnote" id="charNote"></small></div>
-            <div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div>
-            <p class="hint" id="charHint" hidden>One range for all characters. Different levels? <a href="#customOffer">Ask for a custom offer</a>.</p>
-            </div>
           </div>
 
           <div class="fgroup">
             <div class="fh"><i class="n">4</i>Add-ons <span class="opt">optional</span></div>
             <div class="extras" id="extras"></div>
+          </div>
+
+          <div class="fgroup" id="charsGroup">
+            <div class="fh"><i class="n">5</i>Characters <span class="disc" id="charTag" hidden></span><span class="opt" id="charNote">Add alts and save up to 20%</span></div>
+            <div class="charrow"><div class="stepper"><button type="button" id="cMinus" aria-label="Fewer characters">−</button><output id="cVal" aria-live="polite">1</output><button type="button" id="cPlus" aria-label="More characters">+</button></div><span class="samelbl" id="sameLbl">Character 1</span></div>
+            <div class="others" id="others"></div>
+            <button type="button" class="addchar" id="addChar"><svg class="ic"><use href="#i-plus"/></svg>Add another character with different settings</button>
           </div>
         </form>
       </section>

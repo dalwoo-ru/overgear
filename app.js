@@ -142,8 +142,15 @@ document.addEventListener('click', (e) => {
 const state = {
   region: 'eu', from: 80, to: 90, mode: 'pop',     // mode: pop | full | custom
   pkg: 'basic', chars: 1, method: 'piloted', extras: new Set(),   // pkg: basic | express | ultimate; extras = optional add-ons only
+  others: [],   // characters with their own settings: { from, to, pkg, method, extras:Set }
 };
-const cfgWith = (patch) => ({ ...state, extras: new Set(state.extras), ...patch });
+const MAX_CHARS = 5;
+const tierN = () => state.chars + state.others.length;
+const cfgWith = (patch) => {
+  const o = { ...state, extras: new Set(state.extras), ...patch };
+  o.tier = 'tier' in patch ? patch.tier : 'chars' in patch ? patch.chars : tierN();
+  return o;
+};
 
 const isExpress = (c) => c.pkg !== 'basic';
 const allExtras = (c) => { const s = new Set(c.extras); if (c.pkg === 'ultimate') BUNDLE.forEach((id) => s.add(id)); return s; };
@@ -153,7 +160,7 @@ function quote(c) {
   for (let l = c.from; l < c.to; l++) { base += PRICING.perLevel(l); hours += PRICING.hours(l); }
   const mult = 1 + (isExpress(c) ? PRICING.express.pct : 0) + PRICING.method[c.method];
   const n = c.chars;
-  const core = base * mult * n * (1 - PRICING.charDiscount[n]);
+  const core = base * mult * n * (1 - PRICING.charDiscount[c.tier ?? n]);
   let extras = 0;
   allExtras(c).forEach((id) => { extras += extraDef(id).price; });
   const bundleExtras = BUNDLE.reduce((s, id) => s + extraDef(id).price, 0);
@@ -162,6 +169,14 @@ function quote(c) {
   const raw = core + extras - bundle;
   const charSave = base * mult * n - core;   // what the multi-character discount takes off
   return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave), charSave, raw, core, extras, bundle, hours, base };
+}
+/* the whole order: the main character (x chars copies) plus the characters with their own settings */
+function grandOf(c) {
+  const N = c.chars + (c.others || []).length;
+  const parts = [quote({ ...c, tier: N }), ...(c.others || []).map((o) => quote({ ...o, region: c.region, chars: 1, tier: N }))];
+  const sum = (f) => parts.reduce((s, p) => s + f(p), 0);
+  const raw = sum((p) => p.raw), bundle = sum((p) => p.bundle), charSave = sum((p) => p.charSave);
+  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave), raw, bundle, charSave, hours: Math.max(...parts.map((p) => p.hours)), core: parts[0].core, n: N };
 }
 const PKG = {
   basic:   () => cfgWith({ pkg: 'basic' }),
@@ -196,6 +211,62 @@ $('#extras').innerHTML = [
 ].join('');
 
 
+/* ================= Characters with their own settings ================= */
+const expandSets = (ids) => { const s = new Set(); ids.forEach((id) => (SET[id] ? SET[id].forEach((x) => s.add(x)) : s.add(id))); return s; };
+const OSINGLES = PRICING.extras.filter((x) => !SET[x.id]);
+function renderOthers() {
+  const host = $('#others');
+  const keepFocus = document.activeElement?.id;
+  host.innerHTML = state.others.map((o, i) => {
+    const no90 = o.to !== 90, ult = o.pkg === 'ultimate';
+    const oq = quote({ ...o, region: state.region, chars: 1, tier: tierN() });
+    const chip = (attr, label, on, dis) => `<button type="button" class="lc" ${attr} aria-pressed="${on}"${dis ? ' disabled' : ''}>${label}</button>`;
+    return `<div class="ochar" data-o="${i}">
+      <div class="oh"><b>Character ${state.chars + i + 1}</b><span class="op">${money(oq.total)}</span><button type="button" class="orm" data-orm="${i}" aria-label="Remove character ${state.chars + i + 1}">Remove</button></div>
+      <div class="orow"><span class="olbl">Range</span><div class="ochips">
+        ${chip(`data-oset="${i}:range:80-90"`, '80 → 90', o.from === 80 && o.to === 90)}${chip(`data-oset="${i}:range:1-90"`, '1 → 90', o.from === 1 && o.to === 90)}
+        <label class="onum"><span class="sr">From level</span><input data-ofrom="${i}" inputmode="numeric" pattern="[0-9]*" value="${o.from}" autocomplete="off"></label><span class="oarr">→</span><label class="onum"><span class="sr">To level</span><input data-oto="${i}" inputmode="numeric" pattern="[0-9]*" value="${o.to}" autocomplete="off"></label>
+      </div></div>
+      <div class="orow"><span class="olbl">Package</span><div class="ochips">${['basic', 'express', 'ultimate'].map((k) => chip(`data-oset="${i}:pkg:${k}"`, PKG_NAME[k], o.pkg === k, k === 'ultimate' && no90)).join('')}</div></div>
+      <div class="orow"><span class="olbl">Method</span><div class="ochips">${Object.keys(METHODS).map((m) => chip(`data-oset="${i}:method:${m}"`, METHODS[m].name, o.method === m)).join('')}</div></div>
+      <div class="orow"><span class="olbl">Add-ons</span><div class="ochips">${OSINGLES.map((x) => { const blocked = ult || (no90 && NEED90.includes(x.id)); return chip(`data-oset="${i}:extra:${x.id}"`, `${x.label}`, ult || o.extras.has(x.id), blocked); }).join('')}</div></div>
+    </div>`;
+  }).join('');
+  if (keepFocus && $(`#${keepFocus}`)) $(`#${keepFocus}`).focus();
+}
+function setOther(i, field, val) {
+  const o = state.others[i]; if (!o) return;
+  if (field === 'range') { const [f, t] = val.split('-').map(Number); o.from = f; o.to = t; }
+  if (field === 'pkg') { o.pkg = val; if (val === 'ultimate') { o.to = 90; o.extras = new Set(); } }
+  if (field === 'method') o.method = val;
+  if (field === 'extra') { if (o.extras.has(val)) o.extras.delete(val); else o.extras.add(val); }
+  if (o.to !== 90) { NEED90.forEach((id) => o.extras.delete(id)); if (o.pkg === 'ultimate') o.pkg = 'express'; }
+  render();
+}
+function commitOtherLevel(i, which, v) {
+  const o = state.others[i]; if (!o || Number.isNaN(v)) return render();
+  if (which === 'from') { o.from = clamp(v, 1, o.to - 1); } else { o.to = clamp(v, o.from + 1, 90); }
+  if (o.to !== 90) { NEED90.forEach((id) => o.extras.delete(id)); if (o.pkg === 'ultimate') o.pkg = 'express'; }
+  render();
+}
+$('#others').addEventListener('click', (e) => {
+  const s = e.target.closest('[data-oset]'), r = e.target.closest('[data-orm]');
+  if (s) { const [i, f, ...v] = s.dataset.oset.split(':'); setOther(+i, f, v.join(':')); }
+  if (r) { state.others.splice(+r.dataset.orm, 1); render(); }
+});
+$('#others').addEventListener('change', (e) => {
+  const t = e.target;
+  if (t.dataset.ofrom !== undefined) commitOtherLevel(+t.dataset.ofrom, 'from', parseInt(t.value, 10));
+  if (t.dataset.oto !== undefined) commitOtherLevel(+t.dataset.oto, 'to', parseInt(t.value, 10));
+});
+$('#others').addEventListener('input', (e) => { if (e.target.dataset.ofrom !== undefined || e.target.dataset.oto !== undefined) e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2); });
+$('#addChar').addEventListener('click', () => {
+  if (tierN() >= MAX_CHARS) return;
+  state.others.push({ from: state.from, to: state.to, pkg: state.pkg, method: state.method, extras: expandSets([...state.extras]) });
+  render();
+  $('#others .ochar:last-child')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+});
+
 /* ================= Render: state → DOM ================= */
 const HOW = {
   piloted: (f, t) => [
@@ -214,7 +285,7 @@ const HOW = {
 
 function render() {
   const { from, to } = state;
-  const q = quote(state);
+  const q = grandOf(state);
 
   // range
   const mode = state.mode;
@@ -258,14 +329,16 @@ function render() {
     $('em', b).textContent = m === 'piloted' ? '' : '+' + money(d);
   });
 
-  // characters: stepper, tag with the discount, short note
-  const n = state.chars, single = quote(cfgWith({ chars: 1 })).core;
-  $('#cVal').textContent = n;
-  $('#cMinus').disabled = n === CHAR_STEPS[0];
-  $('#cPlus').disabled = n === CHAR_STEPS.at(-1);
-  const ct = $('#charTag'); ct.hidden = n === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[n] * 100)}%`;
-  $('#charNote').textContent = n === 1 ? 'Add alts and save up to 20%' : `${money(pretty(q.core / n))} each · you save $${Math.floor(single * n - q.core)}`;
-  $('#charHint').hidden = n === 1;
+  // characters: copies with the same settings, plus separate forms for the others
+  const N = tierN();
+  $('#cVal').textContent = state.chars;
+  $('#cMinus').disabled = state.chars === 1;
+  $('#cPlus').disabled = N >= MAX_CHARS;
+  const ct = $('#charTag'); ct.hidden = N === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[N] * 100)}%`;
+  $('#charNote').textContent = N === 1 ? 'Add alts and save up to 20%' : `${N} characters · you save $${Math.floor(q.charSave)}`;
+  $('#addChar').disabled = N >= MAX_CHARS;
+  $('#sameLbl').textContent = state.chars === 1 ? 'Character 1' : `Characters 1–${state.chars}, same settings`;
+  renderOthers();
 
   // extras: Ultimate includes everything; below level 90 the 90-only ones are blocked
   const no90 = state.to !== 90;
@@ -353,8 +426,9 @@ $('#opts').addEventListener('click', (e) => {
   } else if ((b = t('[data-pickm]'))) {
     state.method = b.dataset.pickm; render();
   } else if (t('#cMinus') || t('#cPlus')) {
-    const i = CHAR_STEPS.indexOf(state.chars) + (t('#cPlus') ? 1 : -1);
-    state.chars = CHAR_STEPS[clamp(i, 0, CHAR_STEPS.length - 1)]; render();
+    const nxt = state.chars + (t('#cPlus') ? 1 : -1);
+    if (nxt >= 1 && nxt + state.others.length <= MAX_CHARS) state.chars = nxt;
+    render();
   } else if ((b = t('[data-set]'))) {
     const k = b.dataset.set;
     if (state.extras.has(k)) state.extras.delete(k); else { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); }
@@ -399,6 +473,7 @@ function sync() {
   p.set('region', state.region); p.set('chars', state.chars); p.set('method', state.method);
   p.set('pkg', state.pkg);
   if (state.extras.size) p.set('extras', [...state.extras].join(','));
+  if (state.others.length) p.set('o', state.others.map((o) => [o.from, o.to, o.pkg, o.method, [...o.extras].join('+')].join('-')).join('~'));
   const keep = new URLSearchParams(location.search).get('nudge');
   if (keep) p.set('nudge', keep);
   try { history.replaceState(null, '', '?' + p); } catch {}
@@ -419,6 +494,14 @@ function sync() {
   const f = parseInt(p.get('from'), 10), t = parseInt(p.get('to'), 10);
   if (f && t) { state.from = clamp(f, 1, 89); state.to = clamp(t, state.from + 1, 90); }
   if (state.to !== 90) { NEED90.forEach((id) => state.extras.delete(id)); if (state.pkg === 'ultimate') state.pkg = 'express'; }
+  (p.get('o') || '').split('~').filter(Boolean).slice(0, MAX_CHARS - state.chars).forEach((s) => {
+    const [f, t, pk, m, ex] = s.split('-');
+    const from = clamp(+f || 1, 1, 89), to = clamp(+t || 90, from + 1, 90);
+    const o = { from, to, pkg: ['basic', 'express', 'ultimate'].includes(pk) ? pk : 'basic', method: METHODS[m] ? m : 'piloted', extras: new Set((ex || '').split('+').filter((id) => OSINGLES.some((x) => x.id === id))) };
+    if (to !== 90) { NEED90.forEach((id) => o.extras.delete(id)); if (o.pkg === 'ultimate') o.pkg = 'express'; }
+    if (o.pkg === 'ultimate') o.extras = new Set();
+    state.others.push(o);
+  });
   state.mode = ['pop', 'full', 'custom'].includes(p.get('mode')) ? p.get('mode')
     : state.from === 80 && state.to === 90 ? 'pop' : state.from === 1 && state.to === 90 ? 'full' : 'custom';
   if (state.mode === 'pop' && !(state.from === 80 && state.to === 90)) state.mode = 'custom';
@@ -490,11 +573,11 @@ const CROSS = [
   { id: 'm0', title: 'Mythic +0', line: '292 ilvl loot, ready for M+4', price: pretty(6.72), img: 'mythic-0' },
 ];
 let wish = store.get('og:wish', 0);
-let cart = store.get('og:cart6', []);
+let cart = store.get('og:cart7', []);
 let promo = null;                                  // { code, pct }
 const PROMOS = { WELCOME5: 0.05 };                 // demo code
 const heart = $('#heart');
-const saveCart = () => store.set('og:cart6', cart);
+const saveCart = () => store.set('og:cart7', cart);
 function counters() {
   const wc = $('#wishCnt'); wc.textContent = wish; wc.hidden = !wish;
   const cc = $('#cartCnt'); cc.textContent = cart.length; cc.hidden = !cart.length;
@@ -512,18 +595,19 @@ function say(text, link = false) {
 }
 $('#toastCart').addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
 
-const cfgOf = (cfg) => ({ ...cfg, extras: new Set(cfg.extras) });
+const cfgOf = (cfg) => ({ ...cfg, extras: new Set(cfg.extras), others: (cfg.others || []).map((o) => ({ ...o, extras: new Set(o.extras) })) });
 function refreshItem(i) {
-  const c = cfgOf(i.cfg), q = quote(c);
+  const c = cfgOf(i.cfg), q = grandOf(c), N = c.chars + c.others.length;
   Object.assign(i, {
     price: q.total, was: q.was, delivery: fmtLong(q.hours), method: METHODS[c.method].name,
-    parts: [c.region.toUpperCase(), `${c.from} - ${c.to}`, `${c.chars} character${c.chars > 1 ? 's' : ''}`, c.pkg === 'basic' ? '' : PKG_NAME[c.pkg]].filter(Boolean),
+    others: c.others.map((o, k) => `Character ${c.chars + k + 1}: ${o.from} - ${o.to} · ${METHODS[o.method].name} · ${PKG_NAME[o.pkg]}`),
+    parts: [c.region.toUpperCase(), `${c.from} - ${c.to}`, `${N} character${N > 1 ? 's' : ''}`, c.pkg === 'basic' ? '' : PKG_NAME[c.pkg]].filter(Boolean),
   });
 }
 function describe(c) {
   const i = {
     id: 'lvl-' + Date.now(), img: 'hero', title: 'Power Leveling', sold: 'OvergearSales', start: '15 minutes',
-    cfg: { region: c.region, from: c.from, to: c.to, pkg: c.pkg, chars: c.chars, method: c.method, extras: [...c.extras] },
+    cfg: { region: c.region, from: c.from, to: c.to, pkg: c.pkg, chars: c.chars, method: c.method, extras: [...c.extras], others: c.others.map((o) => ({ ...o, extras: [...o.extras] })) },
   };
   refreshItem(i);
   return i;
@@ -563,9 +647,9 @@ function itemHTML(i, idx) {
   } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;
   let sw = '';
   if (c) {
-    const cur = quote(c).raw;
+    const cur = grandOf(c).raw;
     sw = `<div class="mswitch"><span>Switch method</span><div class="msw-row">${Object.keys(METHODS).filter((m) => m !== c.method).map((m) => {
-      const d = pretty(Math.abs(quote({ ...c, method: m }).raw - cur)), sign = quote({ ...c, method: m }).raw >= cur ? '+' : '−';
+      const d = pretty(Math.abs(grandOf({ ...c, method: m }).raw - cur)), sign = grandOf({ ...c, method: m }).raw >= cur ? '+' : '−';
       return `<button type="button" class="msw" data-msw="${idx}:${m}">${METHODS[m].name} ${sign}${money(d)}</button>`;
     }).join('')}</div></div>`;
   }
@@ -575,6 +659,7 @@ function itemHTML(i, idx) {
       <div class="li-main">
         <b class="lt">${i.title}</b>
         <div class="lmeta">${meta}</div>
+        ${(i.others || []).map((t) => `<div class="lmeta">${t}</div>`).join('')}
         ${extras}
         ${i.sold ? row('i-user', 'Sold by ', i.sold) : ''}
         ${i.start ? row('i-timer', 'Start time: ', i.start) : ''}
