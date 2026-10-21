@@ -1112,3 +1112,14 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .takeall:disabled .ckc{opacity:1}
 .takeall.quiet:disabled{opacity:1;color:var(--n8);background:#ffffff08}
 .takeall.quiet:disabled .xtag{display:none}
+
+/* add-ons: one compact flat list, emoji + name + ? + price; details live behind the ? */
+.extras{grid-template-columns:1fr;gap:8px}
+.xrow{align-items:center;padding:10px 14px;min-height:44px}
+.xrow .box{margin-top:0}
+.xrow .xt{flex-wrap:nowrap;align-items:center;gap:0 8px}
+.xrow .xt b{display:inline-flex;align-items:center;gap:8px;min-width:0}
+.xrow .xt .em{font-style:normal;font-size:1.15em;line-height:1}
+.xrow .xt .q{margin-right:auto}
+.xrow .xt .p{margin-left:auto}
+.xrow .xt .q+.p{margin-left:0}

@@ -12,13 +12,11 @@ const PRICING = {
   method: { piloted: 0, self: 0.70, remote: 0.05 },
   ultimateDiscount: 0.20,                            // off everything inside "Ultimate" (Express boost + every add-on)
   extras: [
-    { id: 'gear292',  label: '292 ilvl gear',     price: 53.87, desc: 'Ready for M+4 · needs level 90' },
-    { id: 'honor',    label: 'Honor gear 331',    price: 20.19, desc: '331 ilvl PvP set · needs level 90' },
-    { id: 'gear2',    label: 'Both gear sets',    price: 62.95, was: 74.06, tag: '-15%', desc: 'PvE and PvP gear together' },
-    { id: 'campaign', label: 'Midnight campaign', price: 36.81, was: 46.01, desc: 'Finished on the way' },
-    { id: 'ulatek',   label: "Ula'tek campaign",  price: 24.68, desc: 'Needs level 90' },
-    { id: 'camp2',    label: 'Both campaigns',    price: 52.27, was: 61.49, tag: '-15%', desc: "Midnight and Ula'tek together" },
-    { id: 'stream',   label: 'Live stream',       price: 11.23, desc: 'Watch your booster play live' },
+    { id: 'gear292',  emoji: '⚔️', label: '292 ilvl gear',     price: 53.87, desc: 'Item level 292 gear, ready for M+4. Needs level 90.' },
+    { id: 'honor',    emoji: '🛡️', label: 'Honor gear 331',    price: 20.19, desc: '331 ilvl PvP set. Needs level 90.' },
+    { id: 'campaign', emoji: '📜', label: 'Midnight campaign', price: 36.81, was: 46.01, desc: 'The Midnight leveling campaign is finished on the way, so you unlock its rewards.' },
+    { id: 'ulatek',   emoji: '🐍', label: "Ula'tek campaign",  price: 24.68, desc: "The Curse of Ula'tek campaign is finished for you. Needs level 90." },
+    { id: 'stream',   emoji: '🔴', label: 'Live stream',       price: 11.23, desc: 'Watch your booster play live. Great for peace of mind.' },
   ],
 };
 /* "Pretty" prices: totals and add-on prices are rounded UP to the next .49 or .99.
@@ -32,12 +30,9 @@ function pretty(n) {
   return c - w <= 0.49 + 1e-9 ? w + 0.49 : w + 0.99;
 }
 const BUNDLE = ['gear292', 'honor', 'campaign', 'ulatek', 'stream'];   // everything is included in Ultimate
-const NEED90 = ['gear292', 'honor', 'ulatek', 'gear2', 'camp2'];       // add-ons that only work at level 90
-const SET = { camp2: ['campaign', 'ulatek'], gear2: ['gear292', 'honor'] };   // a set replaces its singles
-const XGROUPS = [
-  { id: 'gear', title: 'Gear', set: 'gear2', ids: ['gear292', 'honor'] },
-  { id: 'camps', title: 'Campaigns', set: 'camp2', ids: ['campaign', 'ulatek'] },
-];
+const NEED90 = ['gear292', 'honor', 'ulatek'];       // add-ons that only work at level 90
+const SET = {};   // no combo sets any more: every add-on is picked on its own
+const XGROUPS = [];
 const setOf = (id) => Object.keys(SET).find((k) => SET[k].includes(id));
 const PKG_NAME = { basic: 'Basic', express: 'Express', ultimate: 'Ultimate' };
 const GIFT_M10 = false;   // O10: set to true if the free M+10 key is still given with leveling orders
@@ -204,7 +199,7 @@ $('#methods').innerHTML = Object.entries(METHODS).map(([id, m]) => `
 const extraPrice = (x, locked) => locked ? ({ need90: 'Needs level 90' }[locked] || 'Included') : x.was ? `${money(pretty(x.price))}<s>${money(pretty(x.was))}</s>` : '+' + money(pretty(x.price));
 const xrow = (x) => `
   <label class="check xrow" data-xrow="${x.id}"><input type="checkbox" data-extra="${x.id}"><span class="box"><svg viewBox="0 0 16 16"><use href="#i-check"/></svg></span>
-    <span class="xt"><b>${x.label}${x.tag ? `<i class="xtag">${x.tag}</i>` : ''}</b><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span><small>${x.desc}</small></span></label>`;
+    <span class="xt"><b><i class="em" aria-hidden="true">${x.emoji}</i>${x.label}</b><i class="q" tabindex="0" role="button" data-tip="${x.desc}" aria-label="About ${x.label}">?</i><span class="p ${x.was ? 'hot' : ''}">${extraPrice(x, false)}</span></span></label>`;
 const grouped = XGROUPS.flatMap((g) => g.ids);
 const pct = (id) => Math.round((1 - extraDef(id).price / extraDef(id).was) * 100);
 $('#extras').innerHTML = [
@@ -577,7 +572,8 @@ document.addEventListener('click', (e) => {
   if (a) { e.preventDefault(); openSheet(...SHEETS[a.dataset.sheet]); return; }
   // M4: on touch screens the "?" hints open a sheet instead of a hover tooltip
   const q = e.target.closest('.q');
-  if (q && noHover()) openSheet('Details', `<p>${q.dataset.tip}</p>`);
+  if (q && q.closest('label')) e.preventDefault();   // the hint sits inside a checkbox row: do not tick it
+  if (q && noHover()) openSheet(q.getAttribute('aria-label') || 'Details', `<p>${q.dataset.tip}</p>`);
 });
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
@@ -613,7 +609,8 @@ function say(text, link = false) {
 }
 $('#toastCart').addEventListener('click', (e) => { e.preventDefault(); openDrawer(); });
 
-const cfgOf = (cfg) => ({ ...cfg, extras: new Set(cfg.extras), others: (cfg.others || []).map((o) => ({ ...o, extras: new Set(o.extras) })) });
+// old carts may hold the removed combo ids, so unknown add-ons are dropped
+const cfgOf = (cfg) => ({ ...cfg, extras: new Set(cfg.extras.filter((id) => extraDef(id))), others: (cfg.others || []).map((o) => ({ ...o, extras: new Set(o.extras) })) });
 function refreshItem(i) {
   const c = cfgOf(i.cfg), q = grandOf(c), N = c.chars + c.others.length;
   Object.assign(i, {

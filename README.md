@@ -77,7 +77,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 ## Latest changes
 
-- **Add-ons:** the groups (Gear, Campaigns) show only their title; the "Take both" buttons and discount notes are gone. Each group has its own quiet **Take all** button (outlined, no fill) under its two items, with the group's "-15%" badge. It ticks both items; once both are taken it is disabled ("✓ Added") and only unticking by hand brings it back. Ticking both items of a group still turns them into the discounted set.
+- **Add-ons:** one flat, compact list (no combos, no Take all). Each row has the site's emoji, the name, a **?** (hover tooltip, bottom sheet on touch) with the description, and the price on the right.
 - **Captions** next to step titles ("Optional", "Add alts and save up to 20%") start with a capital letter and sit 2px closer to the title.
 - **Cart:** the "Switch method" row is gone. The "?" beside the method opens a pop-up for that method (for Piloted the "Piloted is 100% safe" explainer) with buttons to switch to the other methods and their price difference.
 
