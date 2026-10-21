@@ -957,3 +957,10 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .mh{flex-wrap:wrap;gap:0 6px}
   .opts{gap:24px}
 }
+
+/* package icons */
+.pkg b{display:flex;align-items:center;gap:6px}
+.pkg .pi{width:16px;height:16px;color:var(--brand-4);stroke-width:1.8}
+.pkg[data-k=express] .pi{color:var(--yellow-ink,#ffc83d)}
+.pkg[data-k=ultimate] .pi{color:var(--gold)}
+.pkg[aria-checked=true] .pi{color:#fff}

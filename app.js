@@ -235,7 +235,7 @@ function render() {
     b.setAttribute('aria-checked', state.pkg === k);
     $('.pp', b).innerHTML = k === 'ultimate' && pq.bundle ? `${money(pq.total)}<s>${money(pq.wasBundle)}</s>` : money(pq.total);
     if (k === 'basic') $('small', b).textContent = `Ready ${fmtH(std.hours)}`;
-    if (k === 'express') $('small', b).textContent = `${fmtH(std.hours)} → ${fmtH(exp.hours)} · ${fmtSaved(std.hours - exp.hours)} faster`;
+    if (k === 'express') $('small', b).textContent = `Ready ${fmtH(exp.hours)}`;
     if (k === 'ultimate') {
       const sv = $('.save', b), no90 = state.to !== 90;
       b.disabled = no90;

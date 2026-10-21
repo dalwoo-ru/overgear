@@ -31,6 +31,9 @@
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12h10l1-12M9 7V4h6v3"/></symbol>
   <symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7.500"/><path d="M12 13V9.500M10 3h4M18.500 6.500l1.200-1.200"/></symbol>
+  <symbol id="i-level" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 13 4-4 4 4M12 9v7"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 13.500h6L10 21l8-10.500h-6L13 3Z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 24 24"><path d="m3.500 8 4.500 4 4-6.500 4 6.500 4.500-4-1.500 10h-14L3.500 8Z"/><path d="M6.500 20.500h11"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
   <symbol id="i-coin" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="#2b2a1f" stroke="#e1b255" stroke-width="1.500"/><path d="M10 4.500 14.500 6.600v3.200c0 2.200-1.700 4-4.500 5.200-2.800-1.200-4.500-3-4.500-5.200V6.600L10 4.500Z" fill="#e1b255"/></symbol>
 </svg>
@@ -128,9 +131,9 @@
           <div class="fgroup">
             <div class="fh"><i class="n">2</i>Package</div>
             <div class="pkgs" id="pkgs" role="radiogroup" aria-label="Package">
-            <button type="button" class="pkg" role="radio" data-k="basic"><b>Basic</b><span class="pp">$23.99</span><small>Ready ~6 h</small></button>
-            <button type="button" class="pkg" role="radio" data-k="express"><b>Express</b><span class="pp">$30.99</span><small>~6 h → ~3.5 h · 2.5 h faster</small></button>
-            <button type="button" class="pkg" role="radio" data-k="ultimate"><b>Ultimate</b><span class="pp">$141.99<s>$177.49</s></span><small>Express and every add-on</small><i class="save">-20%</i></button>
+            <button type="button" class="pkg" role="radio" data-k="basic"><b><svg class="ic pi"><use href="#i-level"/></svg>Basic</b><span class="pp">$23.99</span><small>Ready ~6 h</small></button>
+            <button type="button" class="pkg" role="radio" data-k="express"><b><svg class="ic pi"><use href="#i-bolt"/></svg>Express</b><span class="pp">$30.99</span><small>Ready ~3.5 h</small></button>
+            <button type="button" class="pkg" role="radio" data-k="ultimate"><b><svg class="ic pi"><use href="#i-crown"/></svg>Ultimate</b><span class="pp">$141.99<s>$177.49</s></span><small>Express and every add-on</small><i class="save">-20%</i></button>
           </div>
           </div>
 
