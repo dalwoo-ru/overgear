@@ -878,3 +878,10 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .title-row{margin-top:40px}
   .chips{margin-bottom:28px}
 }
+
+@media (max-width:767px){
+  .back{margin-top:8px}
+  .intro .heart{top:2px}
+  .title-row{margin-top:48px}
+  .chips{margin-bottom:20px}
+}
