@@ -629,7 +629,8 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .m-bar[hidden]{display:flex;visibility:hidden}
   .m-bar.show{transform:none;visibility:visible}
   .m-trust{padding:4px 16px;text-align:center;font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n7);background:#0b0c33;border-bottom:1px solid #ffffff0d}
-  .m-trust .s{color:var(--gold);font-weight:600}
+  .m-trust .s{color:var(--n10);font-weight:600}
+  .m-trust .gs{font-style:normal;color:var(--gold)}
   .m-trust a{color:var(--success)}
   .m-row{display:flex;align-items:center;gap:10px;padding:8px 16px 10px}
   .m-bar .cta{flex:1;min-width:0;height:44px}
