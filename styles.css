@@ -870,3 +870,11 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .intro .heart{position:absolute;top:-4px;right:0;width:36px;height:36px;z-index:2}
   .back{padding-right:48px}
 }
+
+@media (max-width:767px){
+  .intro::before{top:-8px;height:216px}
+  .back{margin-top:20px}
+  .intro .heart{top:14px}
+  .title-row{margin-top:40px}
+  .chips{margin-bottom:28px}
+}
