@@ -984,3 +984,28 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .seg.flags span,.seg.sm span,.seg span,.pre,.lc,.lc.wide{padding-left:12px;padding-right:12px}
 .seg.flags span{gap:8px}
 @media (min-width:768px){.pkg,.mc,.xrow{padding-left:14px;padding-right:14px}}
+
+/* region: two flag buttons with a small caption, at the right of the level presets */
+.rangetop{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.regionbox{display:flex;flex-direction:column;gap:4px;flex:none}
+.rg-cap{font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6)}
+.seg.flags.icons{flex-wrap:nowrap;gap:6px}
+.seg.flags.icons label{flex:none}
+.seg.flags.icons span{min-width:44px;padding:0 10px;gap:0;justify-content:center}
+@media (max-width:767px){
+  .rangetop{display:flex;flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:20px;margin-left:-16px;margin-right:-16px;padding:0 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .rangetop::-webkit-scrollbar{display:none}
+  .rangetop .presets{overflow:visible;margin:0;padding:0;flex:none}
+  .regionbox{flex:none}
+  .seg.flags.icons{overflow:visible;margin:0;padding:0;width:auto}
+}
+/* pull the row up so the presets keep their usual distance from the title; the region caption sits beside the title */
+.rangetop{margin-top:-22px}
+.fgroup>.fh+.rangetop{position:relative}
+@media (max-width:767px){
+  .rangetop{gap:10px}
+  .rangetop .presets{gap:6px}
+  .rangetop .pre{padding-left:10px;padding-right:10px}
+  .seg.flags.icons span{min-width:40px;padding:0 8px}
+  .seg.flags.icons{gap:4px}
+}

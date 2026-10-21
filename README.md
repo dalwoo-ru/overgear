@@ -79,6 +79,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 - **Phones:** the pinned bottom bar (price in the button) is always visible. The buy block keeps its Add to cart button, but outlined and quiet, so two buttons on screen do not compete. Desktop is unchanged.
 
+- **Region:** two flag-only buttons (no text) with a small "Region" caption above, at the right of the range presets on desktop; on phones they sit in the same row after the presets, separated by a gap (the row scrolls sideways if it ever gets too narrow).
 - **Range:** presets are 80 → 90, 1 → 90, Custom (no "My level", no "Popular" tag). Custom has the slider on every device (above the quick chips) and chips To 60 · To 70 · To 80 · To 90.
 - **Packages:** Basic, Express, **Ultimate** (Express and every add-on, 20% off, struck old price, "-20%" tag). The Express + Gear package is gone.
 - **Characters:** the − 1 + stepper is back (1–5), with the discount tag and a one-line note.
