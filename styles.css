@@ -929,3 +929,12 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .buy #add.done{background:#2e7d32;border-color:#2e7d32}
   .times{margin-bottom:20px}
 }
+
+/* the guarantee line reads the same in the buy block, the pinned bar and the cart */
+.dnote{font-size:var(--fs-s);line-height:var(--lh-s)}
+.dnote .ic{width:20px;height:20px}
+@media (max-width:767px){
+  .m-trust{display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--fs-s);line-height:var(--lh-s)}
+  .m-trust .guar{margin-top:0;gap:6px;font-size:var(--fs-s)}
+  .m-trust .guar .ic{width:18px;height:18px}
+}

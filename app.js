@@ -468,7 +468,7 @@ $('#sheetBody').addEventListener('click', (e) => {
 
 const SHEETS = {
   piloted: ['Why Piloted is safe', `<ul class="bul"><li>A <b>verified booster</b> plays by hand. No bots.</li><li>Your login is used through a <b>VPN in your region</b>.</li><li>Your <b>authenticator</b> stays with you. You confirm the login when asked.</li><li>We never ask for access to your <b>email</b>.</li></ul><p>Prefer another way? Switch the method:</p><div class="pickrow"><button type="button" class="btn ghost" data-pick="self">Self-play</button><button type="button" class="btn ghost" data-pick="remote">Remote</button></div><button type="button" class="btn solid wide closebtn" data-close>Close</button>`],
-  guarantee: ['100% money-back guarantee', '<p>If we cannot deliver your order, you get your money back. Disputes are handled by live support 24/7.</p><p class="muted">Prototype copy — replace with the real policy text.</p>'],
+  guarantee: ['100% Money-Back Guarantee', '<p>If we cannot deliver your order, you get your money back. Disputes are handled by live support 24/7.</p><p class="muted">Prototype copy — replace with the real policy text.</p>'],
   reviews: [`Trustpilot ${TRUST.rating} · ${TRUST.reviews} reviews`, '<p>Overgear is rated Excellent on Trustpilot, based on verified customer reviews.</p><p class="muted">Prototype: this would link out to the Trustpilot page.</p>'],
 };
 document.addEventListener('click', (e) => {
@@ -612,7 +612,7 @@ function drawerHTML() {
         <button type="button" class="wallet google" data-pay><span>G</span> Pay</button>
       </div>
       <button type="button" class="cta" data-pay>Secure checkout</button>
-      <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% money-back guarantee</p>
+      <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% Money-Back Guarantee</p>
     </div>` : '';
   const items = cart.length ? cart.map(itemHTML).join('') : '<p class="muted">Your cart is empty.</p>';
   return `<div class="dscroll">${items}${left.length ? `<h4 class="nx">You might also need</h4>${next}` : ''}</div>${foot}`;
