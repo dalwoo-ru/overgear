@@ -964,3 +964,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 .pkg[data-k=express] .pi{color:var(--yellow-ink,#ffc83d)}
 .pkg[data-k=ultimate] .pi{color:var(--gold)}
 .pkg[aria-checked=true] .pi{color:#fff}
+
+/* package icons: white, a little closer to the title */
+.pkg b{gap:4px}
+.pkg .pi,.pkg[data-k=express] .pi,.pkg[data-k=ultimate] .pi,.pkg[aria-checked=true] .pi{color:#fff}
