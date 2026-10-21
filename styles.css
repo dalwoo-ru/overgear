@@ -1061,7 +1061,7 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 
 /* the heart sits in the top-right corner, opposite the breadcrumbs, on every screen */
 @media (min-width:768px){
-  .intro .heart{position:absolute;top:-8px;right:0;width:40px;height:40px;z-index:2}
+  .intro .heart{position:absolute;top:8px;right:0;width:40px;height:40px;z-index:2}
 }
 
 /* captions next to titles: 2px closer */
