@@ -1009,3 +1009,10 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
   .seg.flags.icons span{min-width:40px;padding:0 8px}
   .seg.flags.icons{gap:4px}
 }
+
+/* phones: the region is pinned to the right edge again, the presets take what is left */
+@media (max-width:767px){
+  .rangetop{overflow:visible;justify-content:space-between;margin-left:0;margin-right:0;padding:0;gap:8px}
+  .rangetop .presets{flex:0 1 auto;min-width:0;gap:6px}
+  .rangetop .pre{padding-left:10px;padding-right:10px;white-space:nowrap}
+}
