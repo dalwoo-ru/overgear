@@ -1101,5 +1101,4 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 
 /* the three required steps sit on their own raised panel, flush with the card edges; the optional part follows below */
 .req{padding:var(--cp-t) var(--cp-x) var(--cp-x);background:#1b1f3f;display:flex;flex-direction:column;gap:var(--gap);border-radius:var(--r-modal);box-shadow:0 14px 22px -12px #02030fcc,inset 0 1px 0 #ffffff0d;position:relative;z-index:1}
-.optp{display:flex;flex-direction:column;gap:var(--gap);padding:var(--cp-x) 12px var(--cp-b)}
-@media (max-width:767px){.optp{padding-left:8px;padding-right:8px}}
+.optp{display:flex;flex-direction:column;gap:var(--gap);margin-top:calc(var(--gap) * -1);padding:20px var(--cp-x) var(--cp-b)}
