@@ -77,6 +77,10 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 ## Latest changes
 
+- **Add-ons:** the groups (Gear, Campaigns) show only their title; the "Take both" buttons and discount notes are gone. One **Take all** button sits under all the offers with a "-15%" badge (the discount for taking both items of a group). It ticks every available add-on; when everything is taken it is disabled ("✓ All added") and only unticking by hand brings it back. Ticking both items of a group still turns them into the discounted set.
+- **Captions** next to step titles ("Optional", "Add alts and save up to 20%") start with a capital letter and sit 2px closer to the title.
+- **Cart:** the "Switch method" row is gone. The "?" beside the method opens a pop-up for that method (for Piloted the "Piloted is 100% safe" explainer) with buttons to switch to the other methods and their price difference.
+
 - **Characters is step 5** (after Add-ons) and has two ways to add characters, up to 5 in total: there is no 1–5 switch any more: the "Add character" button creates a separate mini form for Character 2, 3… (range, package, method, add-ons). It starts as a copy of the main settings (including the range) and has its own price and Remove. The discount (-5 / -10 / -15 / -20%) follows the total number of characters and is applied to every one of them; the buy block shows the grand total and the longest time. The cart line lists the extra characters, and the share link keeps them (`o=` parameter). Cart storage key is now `og:cart7`.
 
 - **Phones:** the pinned bottom bar (price in the button) is always visible. The buy block keeps its Add to cart button, but outlined and quiet, so two buttons on screen do not compete. Desktop is unchanged.

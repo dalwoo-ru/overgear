@@ -1068,3 +1068,26 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 @media (min-width:768px){
   .intro .heart{position:absolute;top:-8px;right:0;width:40px;height:40px;z-index:2}
 }
+
+/* captions next to titles: 2px closer */
+.fh .opt,.fh #charNote{margin-left:-2px}
+.link{margin-left:2px}
+.fh .opt{text-transform:none}
+
+/* add-on groups have only a title now */
+.xg-h small,.setbtn{display:none}
+.xg-h{margin-bottom:10px}
+
+/* one Take all button under all the offers */
+.takeall{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:12px;min-height:48px;padding:0 16px;border-radius:var(--r-control);border:1px solid var(--brand);background:var(--p10);font-size:var(--fs);font-weight:600;color:#fff;transition:.15s}
+.takeall:hover:not(:disabled){background:var(--p30);border-color:var(--brand-3)}
+.takeall:disabled{opacity:.55;cursor:not-allowed;border-color:var(--n5);background:transparent;color:var(--n8)}
+.takeall .xtag{margin:0}
+.takeall:disabled .xtag{display:none}
+
+/* cart: the ? beside the method opens the method pop-up */
+.qb{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:6px;border-radius:50%;background:var(--n4);color:var(--n8);font:600 11px/1 var(--font);vertical-align:middle;position:relative}
+.qb::before{content:"";position:absolute;inset:-10px}
+.qb:hover{background:var(--n5);color:#fff}
+.sheet{z-index:110}
+.pickrow .btn em{font-style:normal;margin-left:6px;color:var(--brand-4);font-weight:600}

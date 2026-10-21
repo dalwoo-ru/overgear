@@ -206,7 +206,7 @@ const xrow = (x) => `
 const grouped = XGROUPS.flatMap((g) => g.ids);
 const pct = (id) => Math.round((1 - extraDef(id).price / extraDef(id).was) * 100);
 $('#extras').innerHTML = [
-  ...XGROUPS.map((g) => `<div class="xgroup" role="group" aria-label="${g.title}"><div class="xg-h"><span>${g.title}<small>${pct(g.set)}% off when you take both</small></span><button type="button" class="setbtn" data-set="${g.set}" aria-pressed="false">Take both</button></div><div class="xg-rows">${g.ids.map((id) => xrow(extraDef(id))).join('')}</div></div>`),
+  ...XGROUPS.map((g) => `<div class="xgroup" role="group" aria-label="${g.title}"><div class="xg-h"><span>${g.title}</span></div><div class="xg-rows">${g.ids.map((id) => xrow(extraDef(id))).join('')}</div></div>`),
   ...PRICING.extras.filter((x) => !grouped.includes(x.id) && !SET[x.id]).map(xrow),
 ].join('');
 
@@ -348,13 +348,13 @@ function render() {
     row.classList.toggle('locked', !!locked);
     $('.p', row).innerHTML = extraPrice(x, locked);
   });
-  $$('.setbtn').forEach((b) => {
-    const k = b.dataset.set, on = state.extras.has(k) && !(state.pkg === 'ultimate');
-    const off = state.pkg === 'ultimate' || (no90 && NEED90.includes(k));
-    b.disabled = off;
-    b.setAttribute('aria-pressed', on);
-    b.textContent = state.pkg === 'ultimate' ? 'Included' : (no90 && NEED90.includes(k)) ? 'Needs level 90' : on ? '✓ Both added' : 'Take both';
-  });
+  // "Take all": ticks every add-on that is available; once everything is taken it stays disabled, only unticking by hand brings it back
+  const avail = PRICING.extras.filter((x) => !SET[x.id] && !(no90 && NEED90.includes(x.id)));
+  const taken = (x) => state.extras.has(x.id) || !!(setOf(x.id) && state.extras.has(setOf(x.id)));
+  const allTaken = state.pkg === 'ultimate' || avail.every(taken);
+  const ta = $('#takeAll');
+  ta.disabled = allTaken;
+  $('span', ta).textContent = state.pkg === 'ultimate' ? 'All included' : allTaken ? '✓ All added' : 'Take all';
 
   // summary (O5)
   const eta = fmtH(q.hours);
@@ -420,9 +420,10 @@ $('#opts').addEventListener('click', (e) => {
     state.method = b.dataset.m; render();
   } else if ((b = t('[data-pickm]'))) {
     state.method = b.dataset.pickm; render();
-  } else if ((b = t('[data-set]'))) {
-    const k = b.dataset.set;
-    if (state.extras.has(k)) state.extras.delete(k); else { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); }
+  } else if (t('#takeAll')) {
+    const no90 = state.to !== 90;
+    PRICING.extras.filter((x) => !SET[x.id] && !(no90 && NEED90.includes(x.id))).forEach((x) => state.extras.add(x.id));
+    Object.keys(SET).forEach((k) => { if (SET[k].every((s) => state.extras.has(s))) { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); } });
     render();
   } else if ((b = t('[data-end]'))) {
     const v = +b.dataset.end;
@@ -513,7 +514,7 @@ function openSheet(title, html, wide) {
 }
 function closeSheet() {
   sheet.classList.remove('show');
-  document.body.classList.remove('lock');
+  if (drawer.hidden) document.body.classList.remove('lock');
   setTimeout(() => { sheet.hidden = true; }, 200);
   lastFocus?.focus?.();
 }
@@ -539,6 +540,26 @@ $('#sheetBody').addEventListener('click', (e) => {
   if (b) { state.method = b.dataset.pick; render(); closeSheet(); }
 });
 
+const METHOD_POINTS = {
+  piloted: ['A <b>verified booster</b> plays by hand. No bots.', 'Your login is used through a <b>VPN in your region</b>.', 'Your <b>authenticator</b> stays with you. You confirm the login when asked.', 'We never ask for access to your <b>email</b>.'],
+  self: ['You stay on <b>your own account</b> and share nothing.', 'AFK route included: the game keeps running while the route is played.'],
+  remote: ['A <b>verified booster</b> plays through a remote session.', 'Your login is <b>never given out</b>.', 'Be online to start the session.'],
+};
+function openMethodSheet(idx) {
+  const it = cart[idx]; if (!it?.cfg) return;
+  const c = cfgOf(it.cfg), cur = grandOf(c).raw, m = c.method;
+  const title = m === 'piloted' ? 'Piloted is 100% safe' : METHODS[m].name;
+  const others = Object.keys(METHODS).filter((k) => k !== m).map((k) => {
+    const r = grandOf({ ...c, method: k }).raw, d = pretty(Math.abs(r - cur));
+    return `<button type="button" class="btn ghost" data-cartpick="${idx}:${k}">${METHODS[k].name} <em>${r >= cur ? '+' : '−'}${money(d)}</em></button>`;
+  }).join('');
+  openSheet(title, `<ul class="bul">${METHOD_POINTS[m].map((t) => `<li>${t}</li>`).join('')}</ul><p>Prefer another way? Switch the method:</p><div class="pickrow">${others}</div><button type="button" class="btn solid wide closebtn" data-close>Close</button>`);
+}
+$('#sheetBody').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-cartpick]'); if (!b) return;
+  const [n, m] = b.dataset.cartpick.split(':'), it = cart[+n];
+  it.cfg.method = m; refreshItem(it); saveCart(); renderDrawer(); closeSheet();
+});
 const SHEETS = {
   piloted: ['Piloted is 100% safe', `<ul class="bul"><li>A <b>verified booster</b> plays by hand. No bots.</li><li>Your login is used through a <b>VPN in your region</b>.</li><li>Your <b>authenticator</b> stays with you. You confirm the login when asked.</li><li>We never ask for access to your <b>email</b>.</li></ul><p>Prefer another way? Switch the method:</p><div class="pickrow"><button type="button" class="btn ghost" data-pick="self">Self-play</button><button type="button" class="btn ghost" data-pick="remote">Remote</button></div><button type="button" class="btn solid wide closebtn" data-close>Close</button>`],
   guarantee: ['100% Money-Back Guarantee', '<p>If we cannot deliver your order, you get your money back. Disputes are handled by live support 24/7.</p><p class="muted">Prototype copy — replace with the real policy text.</p>'],
@@ -625,7 +646,7 @@ const TIP_PILOTED = 'You share your login only. Email and authenticator stay wit
 function itemHTML(i, idx) {
   const off = i.was > i.price ? Math.round((1 - i.price / i.was) * 100) : 0;
   const c = i.cfg ? cfgOf(i.cfg) : null;
-  const mth = `<span class="mt">${i.method}</span>${c && c.method === 'piloted' ? `<i class="q" tabindex="0" data-tip="${TIP_PILOTED}">?</i>` : ''}`;
+  const mth = `<span class="mt">${i.method}</span>${c ? `<button type="button" class="qb" data-msheet="${idx}" aria-label="About the ${i.method} method and how to change it">?</button>` : ''}`;
   const meta = i.parts ? [...i.parts.map((p) => `<span>${p}</span>`), mth].join('<span class="dot"> • </span>') : `<span>${i.line || ''}</span>`;
   const row = (icon, label, val) => `<div class="lrow"><svg class="ic"><use href="#${icon}"/></svg><span><b>${label}</b>${val}</span></div>`;
   let extras = '';
@@ -635,14 +656,6 @@ function itemHTML(i, idx) {
     [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price))}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
     if (lines.length) extras = `<div class="xlist">${lines.join('')}</div>`;
   } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;
-  let sw = '';
-  if (c) {
-    const cur = grandOf(c).raw;
-    sw = `<div class="mswitch"><span>Switch method</span><div class="msw-row">${Object.keys(METHODS).filter((m) => m !== c.method).map((m) => {
-      const d = pretty(Math.abs(grandOf({ ...c, method: m }).raw - cur)), sign = grandOf({ ...c, method: m }).raw >= cur ? '+' : '−';
-      return `<button type="button" class="msw" data-msw="${idx}:${m}">${METHODS[m].name} ${sign}${money(d)}</button>`;
-    }).join('')}</div></div>`;
-  }
   return `
     <div class="litem">
       <img src="assets/img/${i.img || 'hero'}.avif" alt="" width="64" height="64">
@@ -654,7 +667,6 @@ function itemHTML(i, idx) {
         ${i.sold ? row('i-user', 'Sold by ', i.sold) : ''}
         ${i.start ? row('i-timer', 'Start time: ', i.start) : ''}
         ${i.delivery ? row('i-clock', 'Delivery time: ', i.delivery) : ''}
-        ${sw}
       </div>
       <div class="lr">
         <span class="lp"><b>${money(i.price)}</b>${off ? `<s>${money(i.was)}</s>` : ''}</span>
@@ -721,8 +733,8 @@ drawer.addEventListener('click', (e) => {
   if (e.target.closest('[data-close]')) return closeDrawer();
   const xrm = e.target.closest('[data-xrm]');
   if (xrm) { const [n, id] = xrm.dataset.xrm.split(':'), it = cart[+n]; it.cfg.extras = it.cfg.extras.filter((x) => x !== id); refreshItem(it); saveCart(); return renderDrawer(); }
-  const msw = e.target.closest('[data-msw]');
-  if (msw) { const [n, m] = msw.dataset.msw.split(':'), it = cart[+n]; it.cfg.method = m; refreshItem(it); saveCart(); return renderDrawer(); }
+  const ms = e.target.closest('[data-msheet]');
+  if (ms) return openMethodSheet(+ms.dataset.msheet);
   const rm = e.target.closest('[data-rm]');
   if (rm) { cart.splice(+rm.dataset.rm, 1); saveCart(); counters(); return renderDrawer(); }
   const add = e.target.closest('[data-add]');
