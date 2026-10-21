@@ -686,18 +686,15 @@ $('#nudgeGo').addEventListener('click', openChat);
 $('#chatFab').addEventListener('click', openChat);
 $('#mChat').addEventListener('click', openChat);
 
-/* ================= Mobile sticky buy bar (M1): shown while the in-card buy block is off screen ================= */
+/* ================= Mobile sticky buy bar: always on, the in-page button is hidden on phones ================= */
 (function () {
-  const bar = $('#mBar'), buy = $('.buy');
-  if (!('IntersectionObserver' in window)) return;
-  let buyVisible = false;
+  const bar = $('#mBar');
   const upd = () => {
-    const on = isMobile() && !buyVisible;
+    const on = isMobile();
     bar.hidden = false; bar.classList.toggle('show', on);
     document.body.classList.toggle('has-mbar', on);
     document.documentElement.style.setProperty('--mbar-h', on ? bar.offsetHeight + 'px' : '0px');
   };
-  new IntersectionObserver((e) => { buyVisible = e[0].isIntersecting; upd(); }).observe(buy);
   addEventListener('resize', upd);
   upd();
 })();
