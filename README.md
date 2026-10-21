@@ -77,7 +77,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 ## Latest changes
 
-- **Characters is step 5** (after Add-ons) and has two ways to add characters, up to 5 in total: the − 1 + stepper adds copies with the same settings as the form above, and "Add another character with different settings" opens a separate mini form for Character 2, 3… (range, package, method, add-ons; it starts as a copy of the main settings and has its own price and Remove). The discount (-5 / -10 / -15 / -20%) follows the total number of characters and is applied to every one of them; the buy block shows the grand total and the longest time. The cart line lists the extra characters, and the share link keeps them (`o=` parameter). Cart storage key is now `og:cart7`.
+- **Characters is step 5** (after Add-ons) and has two ways to add characters, up to 5 in total: there is no 1–5 switch any more: the "Add character" button creates a separate mini form for Character 2, 3… (range, package, method, add-ons). It starts as a copy of the main settings (including the range) and has its own price and Remove. The discount (-5 / -10 / -15 / -20%) follows the total number of characters and is applied to every one of them; the buy block shows the grand total and the longest time. The cart line lists the extra characters, and the share link keeps them (`o=` parameter). Cart storage key is now `og:cart7`.
 
 - **Phones:** the pinned bottom bar (price in the button) is always visible. The buy block keeps its Add to cart button, but outlined and quiet, so two buttons on screen do not compete. Desktop is unchanged.
 

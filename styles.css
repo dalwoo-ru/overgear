@@ -1058,3 +1058,8 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .onum{display:inline-flex;align-items:center;gap:6px}
 .onum .ol{font-size:var(--fs-xs);color:var(--n6)}
 .onum input{width:64px}
+
+/* clearer add button */
+.addchar{border-style:solid;min-height:48px;font-size:var(--fs);font-weight:600;color:#fff;margin-top:12px}
+.addchar .ic{width:20px;height:20px}
+.samelbl{margin:0}

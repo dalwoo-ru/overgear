@@ -261,7 +261,7 @@ $('#others').addEventListener('change', (e) => {
 $('#others').addEventListener('input', (e) => { if (e.target.dataset.ofrom !== undefined || e.target.dataset.oto !== undefined) e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2); });
 $('#addChar').addEventListener('click', () => {
   if (tierN() >= MAX_CHARS) return;
-  state.others.push({ from: 80, to: 90, pkg: state.pkg === 'ultimate' ? 'ultimate' : state.pkg, method: state.method, extras: expandSets([...state.extras]) });
+  state.others.push({ from: state.from, to: state.to, pkg: state.pkg, method: state.method, extras: expandSets([...state.extras]) });
   render();
   $('#others .ochar:last-child')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 });
@@ -330,13 +330,10 @@ function render() {
 
   // characters: copies with the same settings, plus separate forms for the others
   const N = tierN();
-  $('#cVal').textContent = state.chars;
-  $('#cMinus').disabled = state.chars === 1;
-  $('#cPlus').disabled = N >= MAX_CHARS;
   const ct = $('#charTag'); ct.hidden = N === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[N] * 100)}%`;
   $('#charNote').textContent = N === 1 ? 'Add alts and save up to 20%' : `${N} characters · you save $${Math.floor(q.charSave)}`;
   $('#addChar').disabled = N >= MAX_CHARS;
-  $('#sameLbl').textContent = state.chars === 1 ? 'Character 1' : `Characters 1–${state.chars}, same settings`;
+  $('#sameLbl').textContent = N === 1 ? 'Character 1 uses the settings above. Add more characters, each with its own settings.' : 'Character 1 uses the settings above.';
   renderOthers();
 
   // extras: Ultimate includes everything; below level 90 the 90-only ones are blocked
@@ -424,10 +421,6 @@ $('#opts').addEventListener('click', (e) => {
     state.method = b.dataset.m; render();
   } else if ((b = t('[data-pickm]'))) {
     state.method = b.dataset.pickm; render();
-  } else if (t('#cMinus') || t('#cPlus')) {
-    const nxt = state.chars + (t('#cPlus') ? 1 : -1);
-    if (nxt >= 1 && nxt + state.others.length <= MAX_CHARS) state.chars = nxt;
-    render();
   } else if ((b = t('[data-set]'))) {
     const k = b.dataset.set;
     if (state.extras.has(k)) state.extras.delete(k); else { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); }
@@ -469,7 +462,7 @@ $$('[role=radiogroup]').forEach((g) => g.addEventListener('keydown', (e) => {
 function sync() {
   const p = new URLSearchParams();
   p.set('from', state.from); p.set('to', state.to); p.set('mode', state.mode);
-  p.set('region', state.region); p.set('chars', state.chars); p.set('method', state.method);
+  p.set('region', state.region); p.set('chars', 1); p.set('method', state.method);
   p.set('pkg', state.pkg);
   if (state.extras.size) p.set('extras', [...state.extras].join(','));
   if (state.others.length) p.set('o', state.others.map((o) => [o.from, o.to, o.pkg, o.method, [...o.extras].join('+')].join('-')).join('~'));
@@ -487,7 +480,6 @@ function sync() {
     $(`input[name=region][value=${state.region}]`).checked = true;
   }
   if (METHODS[p.get('method')]) state.method = p.get('method');
-  if (CHAR_STEPS.includes(+p.get('chars'))) state.chars = +p.get('chars');
   state.pkg = ['basic', 'express', 'ultimate'].includes(p.get('pkg')) ? p.get('pkg') : p.get('pkg') === 'endgame' ? 'ultimate' : p.get('express') === '1' ? 'express' : 'basic';
   (p.get('extras') || '').split(',').forEach((id) => { if (PRICING.extras.some((x) => x.id === id) && !(state.pkg === 'ultimate')) state.extras.add(id); });
   const f = parseInt(p.get('from'), 10), t = parseInt(p.get('to'), 10);
