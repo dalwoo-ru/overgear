@@ -206,7 +206,7 @@ const xrow = (x) => `
 const grouped = XGROUPS.flatMap((g) => g.ids);
 const pct = (id) => Math.round((1 - extraDef(id).price / extraDef(id).was) * 100);
 $('#extras').innerHTML = [
-  ...XGROUPS.map((g) => `<div class="xgroup" role="group" aria-label="${g.title}"><div class="xg-h"><span>${g.title}</span></div><div class="xg-rows">${g.ids.map((id) => xrow(extraDef(id))).join('')}</div></div>`),
+  ...XGROUPS.map((g) => `<div class="xgroup" role="group" aria-label="${g.title}"><div class="xg-h"><span>${g.title}</span></div><div class="xg-rows">${g.ids.map((id) => xrow(extraDef(id))).join('')}</div><button type="button" class="takeall quiet" data-takeall="${g.id}"><span>Take all</span><i class="xtag">-${pct(g.set)}%</i></button></div>`),
   ...PRICING.extras.filter((x) => !grouped.includes(x.id) && !SET[x.id]).map(xrow),
 ].join('');
 
@@ -348,13 +348,14 @@ function render() {
     row.classList.toggle('locked', !!locked);
     $('.p', row).innerHTML = extraPrice(x, locked);
   });
-  // "Take all": ticks every add-on that is available; once everything is taken it stays disabled, only unticking by hand brings it back
-  const avail = PRICING.extras.filter((x) => !SET[x.id] && !(no90 && NEED90.includes(x.id)));
-  const taken = (x) => state.extras.has(x.id) || !!(setOf(x.id) && state.extras.has(setOf(x.id)));
-  const allTaken = state.pkg === 'ultimate' || avail.every(taken);
-  const ta = $('#takeAll');
-  ta.disabled = allTaken;
-  $('span', ta).textContent = state.pkg === 'ultimate' ? 'All included' : allTaken ? '✓ All added' : 'Take all';
+  // "Take all" in each group: ticks both items; once both are taken it stays disabled, only unticking by hand brings it back
+  XGROUPS.forEach((g) => {
+    const btn = $(`[data-takeall="${g.id}"]`);
+    const blocked = no90 && g.ids.some((id) => NEED90.includes(id));
+    const both = state.pkg === 'ultimate' || g.ids.every((id) => state.extras.has(id) || state.extras.has(g.set));
+    btn.disabled = both || blocked;
+    $('span', btn).textContent = state.pkg === 'ultimate' ? 'Included' : both ? '✓ Added' : blocked ? 'Needs level 90' : 'Take all';
+  });
 
   // summary (O5)
   const eta = fmtH(q.hours);
@@ -420,9 +421,9 @@ $('#opts').addEventListener('click', (e) => {
     state.method = b.dataset.m; render();
   } else if ((b = t('[data-pickm]'))) {
     state.method = b.dataset.pickm; render();
-  } else if (t('#takeAll')) {
-    const no90 = state.to !== 90;
-    PRICING.extras.filter((x) => !SET[x.id] && !(no90 && NEED90.includes(x.id))).forEach((x) => state.extras.add(x.id));
+  } else if ((b = t('[data-takeall]'))) {
+    const g = XGROUPS.find((x) => x.id === b.dataset.takeall);
+    g.ids.forEach((id) => state.extras.add(id));
     Object.keys(SET).forEach((k) => { if (SET[k].every((s) => state.extras.has(s))) { SET[k].forEach((s) => state.extras.delete(s)); state.extras.add(k); } });
     render();
   } else if ((b = t('[data-end]'))) {

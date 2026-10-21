@@ -1091,3 +1091,11 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .qb:hover{background:var(--n5);color:#fff}
 .sheet{z-index:110}
 .pickrow .btn em{font-style:normal;margin-left:6px;color:var(--brand-4);font-weight:600}
+
+/* Take all inside each group: quiet, no fill */
+.takeall.quiet{width:auto;min-height:36px;margin:10px 0 0 auto;padding:0 12px;gap:8px;font-size:var(--fs-s);font-weight:500;background:transparent;border:1px solid var(--n5);color:var(--n8)}
+.takeall.quiet:hover:not(:disabled){background:#ffffff0f;border-color:var(--n6);color:#fff}
+.takeall.quiet:disabled{opacity:.5;border-color:#ffffff1f;background:transparent;color:var(--n7)}
+.takeall.quiet .xtag{margin:0}
+.xgroup{display:flex;flex-direction:column}
+@media (max-width:767px){.takeall.quiet{width:100%;margin-left:0;justify-content:center}}
