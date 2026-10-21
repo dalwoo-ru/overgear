@@ -920,3 +920,12 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .times{margin-bottom:0}
   .pay{margin-top:16px}
 }
+
+/* phones: the button in the buy block is back, but quiet (outlined) so it does not compete with the pinned bar */
+@media (max-width:767px){
+  .buy #add{display:flex;background:var(--p10);box-shadow:none;border:1px solid var(--brand)}
+  .buy #add:hover:not(:disabled){background:var(--p30);box-shadow:none}
+  .buy #add:active:not(:disabled){background:var(--p30)}
+  .buy #add.done{background:#2e7d32;border-color:#2e7d32}
+  .times{margin-bottom:20px}
+}

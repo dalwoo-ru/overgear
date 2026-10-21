@@ -77,7 +77,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 ## Latest changes
 
-- **Phones:** the buy block has no button; the pinned bottom bar (price in the button) is always visible and is the only way to add to the cart. Desktop is unchanged.
+- **Phones:** the pinned bottom bar (price in the button) is always visible. The buy block keeps its Add to cart button, but outlined and quiet, so two buttons on screen do not compete. Desktop is unchanged.
 
 - **Range:** presets are 80 → 90, 1 → 90, Custom (no "My level", no "Popular" tag). Custom has the slider on every device (above the quick chips) and chips To 60 · To 70 · To 80 · To 90.
 - **Packages:** Basic, Express, **Ultimate** (Express and every add-on, 20% off, struck old price, "-20%" tag). The Express + Gear package is gone.
