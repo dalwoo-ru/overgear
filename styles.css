@@ -938,3 +938,15 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .m-trust .guar{margin-top:0;gap:6px;font-size:var(--fs-s)}
   .m-trust .guar .ic{width:18px;height:18px}
 }
+
+/* phones: Compare methods scrolls sideways, about two and a half columns on 360px; pictures are shown whole */
+@media (max-width:767px){
+  .cmpgrid{grid-template-columns:repeat(3,calc((100vw - 32px) / 2.5));grid-template-rows:auto auto repeat(4,auto) auto;gap:0 8px;overflow-x:auto;margin:0 -16px;padding:0 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scroll-padding-left:16px}
+  .cmpgrid::-webkit-scrollbar{display:none}
+  .cmpcol{grid-template-rows:subgrid;grid-row:span 7;padding:10px;scroll-snap-align:start;min-width:0}
+  .cmpimg{aspect-ratio:auto;height:auto;object-fit:contain;margin-bottom:10px}
+  .cmpcol h4{font-size:var(--fs)}
+  .cmpcol .cr p{font-size:12px;line-height:16px}
+  .cmpcol .cr b{font-size:16px}
+  .cmpcol .btn{padding:0 6px;font-size:12px}
+}
