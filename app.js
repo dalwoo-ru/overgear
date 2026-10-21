@@ -224,8 +224,7 @@ function renderOthers() {
     return `<div class="ochar" data-o="${i}">
       <div class="oh"><b>Character ${state.chars + i + 1}</b><span class="op">${money(oq.total)}</span><button type="button" class="orm" data-orm="${i}" aria-label="Remove character ${state.chars + i + 1}">Remove</button></div>
       <div class="orow"><span class="olbl">Range</span><div class="ochips">
-        ${chip(`data-oset="${i}:range:80-90"`, '80 → 90', o.from === 80 && o.to === 90)}${chip(`data-oset="${i}:range:1-90"`, '1 → 90', o.from === 1 && o.to === 90)}
-        <label class="onum"><span class="sr">From level</span><input data-ofrom="${i}" inputmode="numeric" pattern="[0-9]*" value="${o.from}" autocomplete="off"></label><span class="oarr">→</span><label class="onum"><span class="sr">To level</span><input data-oto="${i}" inputmode="numeric" pattern="[0-9]*" value="${o.to}" autocomplete="off"></label>
+        <label class="onum"><span class="ol">From</span><input data-ofrom="${i}" inputmode="numeric" pattern="[0-9]*" value="${o.from}" autocomplete="off"></label><span class="oarr">→</span><label class="onum"><span class="ol">To</span><input data-oto="${i}" inputmode="numeric" pattern="[0-9]*" value="${o.to}" autocomplete="off"></label>
       </div></div>
       <div class="orow"><span class="olbl">Package</span><div class="ochips">${['basic', 'express', 'ultimate'].map((k) => chip(`data-oset="${i}:pkg:${k}"`, PKG_NAME[k], o.pkg === k, k === 'ultimate' && no90)).join('')}</div></div>
       <div class="orow"><span class="olbl">Method</span><div class="ochips">${Object.keys(METHODS).map((m) => chip(`data-oset="${i}:method:${m}"`, METHODS[m].name, o.method === m)).join('')}</div></div>
@@ -262,7 +261,7 @@ $('#others').addEventListener('change', (e) => {
 $('#others').addEventListener('input', (e) => { if (e.target.dataset.ofrom !== undefined || e.target.dataset.oto !== undefined) e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2); });
 $('#addChar').addEventListener('click', () => {
   if (tierN() >= MAX_CHARS) return;
-  state.others.push({ from: state.from, to: state.to, pkg: state.pkg, method: state.method, extras: expandSets([...state.extras]) });
+  state.others.push({ from: 80, to: 90, pkg: state.pkg === 'ultimate' ? 'ultimate' : state.pkg, method: state.method, extras: expandSets([...state.extras]) });
   render();
   $('#others .ochar:last-child')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 });

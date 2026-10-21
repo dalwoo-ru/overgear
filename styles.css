@@ -1054,3 +1054,7 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
   .orow{grid-template-columns:1fr;gap:4px}
   .ochar{padding:12px}
 }
+
+.onum{display:inline-flex;align-items:center;gap:6px}
+.onum .ol{font-size:var(--fs-xs);color:var(--n6)}
+.onum input{width:64px}
