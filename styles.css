@@ -1148,3 +1148,16 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .also-all{display:inline-block;margin-top:14px;font-size:var(--fs-s);color:var(--n9);text-decoration:underline}
 .also-all:hover{color:#fff}
 @media (max-width:767px){.also{flex-basis:78%}}
+
+/* cart card: add the add-ons that are not in the order yet */
+.xadd{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 2px}
+.xadd>span{font-size:var(--fs-xs);line-height:var(--lh-xs);color:var(--n6);margin-right:2px}
+.xchip{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 10px;border-radius:var(--r-control);border:1px solid #ffffff17;background:transparent;color:var(--n8);font-size:var(--fs-xs);line-height:var(--lh-xs);transition:.15s}
+.xchip i{font-style:normal}
+.xchip b{font-weight:600;color:var(--n9)}
+.xchip:hover{background:#ffffff0f;border-color:#ffffff2e;color:#fff}
+.xadd{display:block}
+.xadd>span{display:block;margin:0 0 4px}
+.xadd .xrow2{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-right:-4px}
+.xadd .xrow2::-webkit-scrollbar{display:none}
+.xchip{flex:none;white-space:nowrap}

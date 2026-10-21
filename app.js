@@ -678,6 +678,10 @@ function itemHTML(i, idx) {
     if (c.pkg === 'ultimate') BUNDLE.forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">Included</span></div>`));
     [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price * kx))}${(kx < 1 || extraDef(id).was) ? `<s>${money(pretty(kx < 1 ? extraDef(id).price : extraDef(id).was))}</s>` : ''}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
     if (lines.length) extras = `<div class="xlist">${lines.join('')}</div>`;
+    // add-ons that can still be put into this order, one tap each
+    const blocked = (id) => c.pkg === 'ultimate' || (c.to !== 90 && NEED90.includes(id));
+    const free = PRICING.extras.filter((x) => !c.extras.has(x.id) && !blocked(x.id));
+    if (free.length) extras += `<div class="xadd"><span>Add to this order</span><div class="xrow2">${free.map((x) => `<button type="button" class="xchip" data-xadd="${idx}:${x.id}" aria-label="Add ${x.label}"><i aria-hidden="true">${x.emoji}</i>${x.label}<b>+${money(pretty(x.price))}</b></button>`).join('')}</div></div>`;
   } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;
   return `
     <div class="litem">
@@ -747,6 +751,8 @@ drawer.addEventListener('submit', (e) => {
 });
 drawer.addEventListener('click', (e) => {
   if (e.target.closest('[data-close]')) return closeDrawer();
+  const xadd = e.target.closest('[data-xadd]');
+  if (xadd) { const [n, id] = xadd.dataset.xadd.split(':'), it = cart[+n]; if (!it.cfg.extras.includes(id)) it.cfg.extras.push(id); refreshItem(it); saveCart(); return renderDrawer(); }
   const xrm = e.target.closest('[data-xrm]');
   if (xrm) { const [n, id] = xrm.dataset.xrm.split(':'), it = cart[+n]; it.cfg.extras = it.cfg.extras.filter((x) => x !== id); refreshItem(it); saveCart(); return renderDrawer(); }
   const ms = e.target.closest('[data-msheet]');
