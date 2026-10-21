@@ -1063,3 +1063,8 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .addchar{border-style:solid;min-height:48px;font-size:var(--fs);font-weight:600;color:#fff;margin-top:12px}
 .addchar .ic{width:20px;height:20px}
 .samelbl{margin:0}
+
+/* the heart sits in the top-right corner, opposite the breadcrumbs, on every screen */
+@media (min-width:768px){
+  .intro .heart{position:absolute;top:-8px;right:0;width:40px;height:40px;z-index:2}
+}
