@@ -162,21 +162,23 @@ function quote(c) {
   const n = c.chars;
   const core = base * mult * n * (1 - PRICING.charDiscount[c.tier ?? n]);
   let extras = 0;
+  let extrasSave = 0;   // set discounts (-15%) of the extras the buyer ticked
   allExtras(c).forEach((id) => { extras += extraDef(id).price; });
+  c.extras.forEach((id) => { const x = extraDef(id); if (x.was) extrasSave += x.was - x.price; });
   const bundleExtras = BUNDLE.reduce((s, id) => s + extraDef(id).price, 0);
   const bundle = c.pkg === 'ultimate' ? PRICING.ultimateDiscount * (core + bundleExtras) : 0;
   if (isExpress(c)) hours *= PRICING.express.timeFactor;
   const raw = core + extras - bundle;
   const charSave = base * mult * n - core;   // what the multi-character discount takes off
-  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave), charSave, raw, core, extras, bundle, hours, base };
+  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave + extrasSave), charSave, extrasSave, raw, core, extras, bundle, hours, base };
 }
 /* the whole order: the main character (x chars copies) plus the characters with their own settings */
 function grandOf(c) {
   const N = c.chars + (c.others || []).length;
   const parts = [quote({ ...c, tier: N }), ...(c.others || []).map((o) => quote({ ...o, region: c.region, chars: 1, tier: N }))];
   const sum = (f) => parts.reduce((s, p) => s + f(p), 0);
-  const raw = sum((p) => p.raw), bundle = sum((p) => p.bundle), charSave = sum((p) => p.charSave);
-  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave), raw, bundle, charSave, hours: Math.max(...parts.map((p) => p.hours)), core: parts[0].core, n: N };
+  const raw = sum((p) => p.raw), bundle = sum((p) => p.bundle), charSave = sum((p) => p.charSave), extrasSave = sum((p) => p.extrasSave);
+  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave + extrasSave), raw, bundle, charSave, hours: Math.max(...parts.map((p) => p.hours)), core: parts[0].core, n: N };
 }
 const PKG = {
   basic:   () => cfgWith({ pkg: 'basic' }),
@@ -346,7 +348,10 @@ function render() {
     inp.checked = !blocked && (inUlt || state.extras.has(x.id) || !!(parent && state.extras.has(parent)));
     inp.disabled = !!locked;
     row.classList.toggle('locked', !!locked);
-    $('.p', row).innerHTML = extraPrice(x, locked);
+    const inSet = !locked && parent && state.extras.has(parent);
+    const sd = parent && extraDef(parent), k = sd ? sd.price / sd.was : 1;
+    $('.p', row).innerHTML = inSet ? `+${money(pretty(x.price * k))}<s>${money(pretty(x.price))}</s>` : extraPrice(x, locked);
+    $('.p', row).classList.toggle('hot', !!inSet || !!x.was);
   });
   // "Take all" in each group: ticks both items; once both are taken it stays disabled, only unticking by hand brings it back
   XGROUPS.forEach((g) => {
@@ -654,7 +659,7 @@ function itemHTML(i, idx) {
   if (c) {
     const lines = [];
     if (c.pkg === 'ultimate') BUNDLE.forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">Included</span></div>`));
-    [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price))}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
+    [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price))}${extraDef(id).was ? `<s>${money(pretty(extraDef(id).was))}</s>` : ''}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
     if (lines.length) extras = `<div class="xlist">${lines.join('')}</div>`;
   } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;
   return `
