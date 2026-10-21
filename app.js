@@ -359,7 +359,8 @@ function render() {
     const blocked = no90 && g.ids.some((id) => NEED90.includes(id));
     const both = state.pkg === 'ultimate' || g.ids.every((id) => state.extras.has(id) || state.extras.has(g.set));
     btn.disabled = both || blocked;
-    $('span', btn).textContent = state.pkg === 'ultimate' ? 'Included' : both ? '✓ Added' : blocked ? 'Needs level 90' : 'Take all';
+    const CK = '<svg class="ckc" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="currentColor" opacity=".18"/><path d="M6 10.4l2.8 2.8L14.2 7.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    $('span', btn).innerHTML = state.pkg === 'ultimate' ? CK + 'Included' : both ? CK + 'Added' : blocked ? 'Needs level 90' : 'Take all';
   });
 
   // summary (O5)
