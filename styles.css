@@ -1161,3 +1161,7 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .xadd .xrow2{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-right:-4px}
 .xadd .xrow2::-webkit-scrollbar{display:none}
 .xchip{flex:none;white-space:nowrap}
+
+/* cart: the add-on chips sit under the whole card, wrapping (no sideways scroll) */
+.litem>.xadd{grid-column:1/-1;margin:2px 0 0;padding-top:12px;border-top:1px solid #ffffff12}
+.xadd .xrow2{flex-wrap:wrap;overflow:visible;margin-right:0}

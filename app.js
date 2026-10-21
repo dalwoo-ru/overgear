@@ -672,7 +672,7 @@ function itemHTML(i, idx) {
   const mth = `<span class="mt">${i.method}</span>${c ? `<button type="button" class="qb" data-msheet="${idx}" aria-label="About the ${i.method} method and how to change it">?</button>` : ''}`;
   const meta = i.parts ? [...i.parts.map((p) => `<span>${p}</span>`), mth].join('<span class="dot"> • </span>') : `<span>${i.line || ''}</span>`;
   const row = (icon, label, val) => `<div class="lrow"><svg class="ic"><use href="#${icon}"/></svg><span><b>${label}</b>${val}</span></div>`;
-  let extras = '';
+  let extras = '', addRow = '';
   if (c) {
     const lines = [], kx = extraK(c);
     if (c.pkg === 'ultimate') BUNDLE.forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">Included</span></div>`));
@@ -681,7 +681,7 @@ function itemHTML(i, idx) {
     // add-ons that can still be put into this order, one tap each
     const blocked = (id) => c.pkg === 'ultimate' || (c.to !== 90 && NEED90.includes(id));
     const free = PRICING.extras.filter((x) => !c.extras.has(x.id) && !blocked(x.id));
-    if (free.length) extras += `<div class="xadd"><span>Add to this order</span><div class="xrow2">${free.map((x) => `<button type="button" class="xchip" data-xadd="${idx}:${x.id}" aria-label="Add ${x.label}"><i aria-hidden="true">${x.emoji}</i>${x.label}<b>+${money(pretty(x.price))}</b></button>`).join('')}</div></div>`;
+    if (free.length) addRow = `<div class="xadd"><span>Add to this order</span><div class="xrow2">${free.map((x) => `<button type="button" class="xchip" data-xadd="${idx}:${x.id}" aria-label="Add ${x.label}"><i aria-hidden="true">${x.emoji}</i>${x.label}<b>+${money(pretty(x.price))}</b></button>`).join('')}</div></div>`;
   } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;
   return `
     <div class="litem">
@@ -700,6 +700,7 @@ function itemHTML(i, idx) {
         ${off ? `<span class="disc">-${off}%</span>` : ''}
         <button type="button" class="rm" data-rm="${idx}" aria-label="Remove item"><svg class="ic"><use href="#i-trash"/></svg></button>
       </div>
+      ${addRow}
     </div>`;
 }
 function drawerHTML() {
