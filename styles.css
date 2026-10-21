@@ -979,3 +979,8 @@ button.mnote:hover{background:#ffffff12;color:var(--n8)}
 button.mnote span{flex:1;min-width:0}
 button.mnote .ic:first-child{margin-top:3px;align-self:flex-start}
 button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
+
+/* chips (region, range presets, quick levels) use the same side padding as the cards */
+.seg.flags span,.seg.sm span,.seg span,.pre,.lc,.lc.wide{padding-left:12px;padding-right:12px}
+.seg.flags span{gap:8px}
+@media (min-width:768px){.pkg,.mc,.xrow{padding-left:14px;padding-right:14px}}
