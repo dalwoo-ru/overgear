@@ -859,3 +859,14 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .mh b{white-space:nowrap}
   .mh em{white-space:nowrap}
 }
+
+/* USP chips: a see-through page-coloured fill so they stay readable over the picture */
+.chip{background:#050622b3;backdrop-filter:blur(2px)}
+.chip:hover{background:#1b1f4acc}
+
+@media (max-width:767px){
+  /* the title sits lower so the character's face stays visible; the heart moves to the corner opposite the back link */
+  .title-row{margin-top:72px}
+  .intro .heart{position:absolute;top:-4px;right:0;width:36px;height:36px;z-index:2}
+  .back{padding-right:48px}
+}
