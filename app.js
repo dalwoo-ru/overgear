@@ -248,7 +248,7 @@ function render() {
   $('#chipTimeText').innerHTML = `<b>${from}→${to} ${fmtH(std.hours)}</b> · ${fmtH(exp.hours)} with Express`;
 
   // the Piloted review is shown only while Piloted is chosen
-  $('.mquote').hidden = $('#mnote').hidden = state.method !== 'piloted';
+  $('#mnote').hidden = state.method !== 'piloted';
 
   // methods
   const piloted = quote(cfgWith({ method: 'piloted' }));

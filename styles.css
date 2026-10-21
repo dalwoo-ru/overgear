@@ -900,3 +900,8 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
   .chips{margin-bottom:12px}
   .opts{gap:28px}
 }
+
+/* the Piloted note: a shield in the text colour on the left */
+.mnote{display:flex;align-items:flex-start;gap:8px}
+.mnote[hidden]{display:none}
+.mnote .ic{width:18px;height:18px;margin-top:0;color:var(--n6);stroke-width:1.8}
