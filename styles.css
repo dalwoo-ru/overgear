@@ -157,7 +157,7 @@ h1{font:800 var(--fs-h1)/var(--lh-h1) var(--font);letter-spacing:-.4px;margin-bo
 .wins a{text-decoration:underline;color:var(--n9)}
 
 /* ---------- 2. Config form ---------- */
-.config{position:relative;z-index:1;margin-top:24px;--cp-t:22px;--cp-x:24px;--cp-b:24px;padding:0;border-radius:var(--r-surface);background:var(--n3);background:linear-gradient(180deg,#1e2242,#171b38);box-shadow:0 0 0 1px #ffffff12}
+.config{position:relative;z-index:1;margin-top:24px;--cp-t:22px;--cp-x:24px;--cp-b:24px;padding:0;border-radius:var(--r-modal);background:var(--n3);background:#12152d;box-shadow:0 0 0 1px #ffffff12}
 .opts{display:flex;flex-direction:column;gap:var(--gap)}
 .fh{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:var(--fs-s);line-height:var(--lh-s);font-weight:600;color:var(--n9)}
 .fh.plain{font-weight:500;color:var(--n6);font-size:var(--fs-xs);line-height:var(--lh-xs)}
@@ -731,7 +731,7 @@ h2.sec,.rev-head h2,.seo h2{font:800 var(--fs-h2)/var(--lh-h2) var(--font);lette
 
 /* Piloted review and note live inside the method list: after the cards on desktop, right after Piloted on phones */
 @media (max-width:767px){
-  .config{border-radius:var(--r-surface);margin-left:-16px;margin-right:-16px;--cp-t:20px;--cp-x:16px;--cp-b:22px}
+  .config{border-radius:var(--r-modal);margin-left:-16px;margin-right:-16px;--cp-t:20px;--cp-x:16px;--cp-b:22px}
   .opts{gap:32px}
   .fh{margin-bottom:14px}
   .mquote{margin-top:12px}
@@ -1100,5 +1100,6 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 .xl .xp s{margin-right:2px}
 
 /* the three required steps sit on their own raised panel, flush with the card edges; the optional part follows below */
-.req{padding:var(--cp-t) var(--cp-x) var(--cp-x);background:#262b55;display:flex;flex-direction:column;gap:var(--gap);border-radius:var(--r-surface);box-shadow:0 14px 22px -12px #04061bb3,inset 0 1px 0 #ffffff0d;position:relative;z-index:1}
-.optp{display:flex;flex-direction:column;gap:var(--gap);padding:var(--cp-x) var(--cp-x) var(--cp-b)}
+.req{padding:var(--cp-t) var(--cp-x) var(--cp-x);background:#1b1f3f;display:flex;flex-direction:column;gap:var(--gap);border-radius:var(--r-modal);box-shadow:0 14px 22px -12px #02030fcc,inset 0 1px 0 #ffffff0d;position:relative;z-index:1}
+.optp{display:flex;flex-direction:column;gap:var(--gap);padding:var(--cp-x) 12px var(--cp-b)}
+@media (max-width:767px){.optp{padding-left:8px;padding-right:8px}}
