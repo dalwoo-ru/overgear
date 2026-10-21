@@ -123,6 +123,22 @@ $('#fgames').innerHTML = GAMES.map((g) => `<a href="#">${g}</a>`).join('');
   upd();
 })();
 
+/* ================= You may also like: arrows scroll the card row ================= */
+(() => {
+  const track = $('#alsoTrack'), prev = $('#alsoPrev'), next = $('#alsoNext');
+  if (!track) return;
+  const upd = () => {
+    prev.disabled = track.scrollLeft < 4;
+    next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+  };
+  const step = () => (track.firstElementChild?.getBoundingClientRect().width || 260) + 16;
+  prev.addEventListener('click', () => track.scrollBy({ left: -step() }));
+  next.addEventListener('click', () => track.scrollBy({ left: step() }));
+  track.addEventListener('scroll', upd, { passive: true });
+  addEventListener('resize', upd);
+  upd();
+})();
+
 /* ================= Accordions, folds, SEO text ================= */
 document.addEventListener('click', (e) => {
   const b = e.target.closest('.acc > button');
@@ -583,11 +599,6 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* ================= Wishlist, cart, drawer (D5, M6) ================= */
-const CROSS = [
-  { id: 'gearing', title: 'Gearing', line: 'M+, raid, tier set, or PvP gear', price: pretty(53.87), img: 'gearing' },
-  { id: 'omnium', title: 'Omnium Folio', line: 'All 5 rune rows unlocked in about 4 hours', price: pretty(5.38), img: 'omnium-folio' },
-  { id: 'm0', title: 'Mythic +0', line: '292 ilvl loot, ready for M+4', price: pretty(6.72), img: 'mythic-0' },
-];
 let wish = store.get('og:wish', 0);
 let cart = store.get('og:cart7', []);
 let promo = null;                                  // { code, pct }
@@ -683,13 +694,6 @@ function itemHTML(i, idx) {
 }
 function drawerHTML() {
   const t = cartTotals();
-  const left = CROSS.filter((c) => !cart.some((i) => i.cid === c.id));
-  const next = left.map((c) => `
-    <div class="xcard">
-      <img src="assets/img/${c.img}.avif" alt="" loading="lazy" decoding="async">
-      <div><b>${c.title}</b><small>${c.line}</small></div>
-      <button type="button" class="btn ghost" data-add="${c.id}">+ ${money(c.price)}</button>
-    </div>`).join('');
   const foot = cart.length ? `
     <div class="dfoot">
       ${promo ? `<div class="frow small promo-on"><span>Promo ${promo.code} <button type="button" class="rm-promo" data-promo-off>Remove</button></span><b>−${money(t.disc)}</b></div>` : ''}
@@ -708,7 +712,7 @@ function drawerHTML() {
       <p class="dnote"><svg class="ic"><use href="#i-shield"/></svg>100% Money-Back Guarantee</p>
     </div>` : '';
   const items = cart.length ? cart.map(itemHTML).join('') : '<p class="muted">Your cart is empty.</p>';
-  return `<div class="dscroll">${items}${left.length ? `<h4 class="nx">You might also need</h4>${next}` : ''}</div>${foot}`;
+  return `<div class="dscroll">${items}</div>${foot}`;
 }
 function renderDrawer() {
   const keep = $('.dscroll')?.scrollTop || 0;   // re-rendering must not jump the list back to the top
@@ -743,12 +747,6 @@ drawer.addEventListener('click', (e) => {
   if (ms) return openMethodSheet(+ms.dataset.msheet);
   const rm = e.target.closest('[data-rm]');
   if (rm) { cart.splice(+rm.dataset.rm, 1); saveCart(); counters(); return renderDrawer(); }
-  const add = e.target.closest('[data-add]');
-  if (add) {
-    const c = CROSS.find((x) => x.id === add.dataset.add);
-    cart.push({ id: c.id + Date.now(), cid: c.id, img: c.img, title: c.title, line: c.line, sold: 'OvergearSales', extras: [], price: c.price });
-    saveCart(); counters(); bump('cartCnt'); return renderDrawer();
-  }
   if (e.target.closest('[data-promo-toggle]')) {
     const b = e.target.closest('[data-promo-toggle]'), body = $('.promo-body', b.parentElement), open = body.hidden;
     body.hidden = !open; b.setAttribute('aria-expanded', open);
