@@ -1016,7 +1016,7 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 
 /* ---------- step 5: characters ---------- */
 .fh .opt{margin-left:4px}
-.fh #charTag{order:0}
+.fh #charTag,.fh #xTag{order:0}
 .charrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .samelbl{font-size:var(--fs-s);line-height:var(--lh-s);color:var(--n7)}
 .others{display:flex;flex-direction:column;gap:12px;margin-top:12px}
@@ -1057,7 +1057,7 @@ button.mnote .chev{width:20px;height:20px;flex:none;color:var(--n6)}
 }
 
 /* captions next to titles: 2px closer */
-.fh .opt,.fh #charNote{margin-left:-2px}
+.fh .opt,.fh #charNote,.fh #xNote{margin-left:-2px}
 .link{margin-left:2px}
 .fh .opt{text-transform:none}
 

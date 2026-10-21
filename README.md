@@ -77,7 +77,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 
 ## Latest changes
 
-- **Add-ons:** one flat, compact list (no combos, no Take all). Each row has the site's emoji, the name, a **?** (hover tooltip, bottom sheet on touch) with the description, and the price on the right.
+- **Add-ons:** one flat, compact list (no combos, no Take all). Each row has the site's emoji, the name, a **?** (hover tooltip, bottom sheet on touch) with the description, and the price on the right. Volume discount like for characters: 2 add-ons -5%, 3 -10%, 4 -15%, 5 -20% (`PRICING.extraDiscount`); shown as a tag in the heading, struck-through prices on ticked rows, in the buy block and in the cart. Not applied in Ultimate (already -20%).
 - **Captions** next to step titles ("Optional", "Add alts and save up to 20%") start with a capital letter and sit 2px closer to the title.
 - **Cart:** the "Switch method" row is gone. The "?" beside the method opens a pop-up for that method (for Piloted the "Piloted is 100% safe" explainer) with buttons to switch to the other methods and their price difference.
 
@@ -89,7 +89,7 @@ Tags are 36px high on desktop and 28px on phones. Spacing: 28px between form gro
 - **Range:** presets are 80 → 90, 1 → 90, Custom (no "My level", no "Popular" tag). Custom has the slider on every device (above the quick chips) and chips To 60 · To 70 · To 80 · To 90.
 - **Packages:** Basic, Express, **Ultimate** (Express and every add-on, 20% off, struck old price, "-20%" tag). The Express + Gear package is gone.
 - **Characters:** the − 1 + stepper is back (1–5), with the discount tag and a one-line note.
-- **Add-ons:** the "Both gear sets" / "Both campaigns" rows are gone. Each group (Gear, Campaigns) has "15% off when you take both" and a "Take both" button at the right of its title; unticking one of the two drops the set and keeps the other.
+- **Add-ons:** the "Both gear sets" / "Both campaigns" rows are gone. Each group (Gear, Campaigns) has "15% off when you take both" and a "Take both" button at the right of its title; unticking one of the two drops the set and keeps the other. Volume discount like for characters: 2 add-ons -5%, 3 -10%, 4 -15%, 5 -20% (`PRICING.extraDiscount`); shown as a tag in the heading, struck-through prices on ticked rows, in the buy block and in the cart. Not applied in Ultimate (already -20%).
 - **Level below 90 (Custom):** the add-ons that need level 90 (292 gear, Honor gear, Ula'tek, and the two "take both" buttons) and the Ultimate package are blocked and say "Needs level 90"; going below 90 also clears them from the order.
 - **Phones, Boost method:** fixed-size cards (156px), the price at the right of the name, the row scrolls sideways.
 

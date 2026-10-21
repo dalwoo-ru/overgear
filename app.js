@@ -9,6 +9,7 @@ const PRICING = {
   startMinutes: 15,
   express: { pct: 0.30, timeFactor: 0.6 },
   charDiscount: { 1: 0, 2: 0.05, 3: 0.10, 4: 0.15, 5: 0.20 },
+  extraDiscount: { 0: 0, 1: 0, 2: 0.05, 3: 0.10, 4: 0.15, 5: 0.20 },   // by how many add-ons are ticked, same ladder as characters
   method: { piloted: 0, self: 0.70, remote: 0.05 },
   ultimateDiscount: 0.20,                            // off everything inside "Ultimate" (Express boost + every add-on)
   extras: [
@@ -163,6 +164,8 @@ const cfgWith = (patch) => {
   return o;
 };
 
+// volume discount on the add-ons a buyer ticks (Ultimate already has everything at -20%)
+const extraK = (c) => (c.pkg === 'ultimate' ? 1 : 1 - PRICING.extraDiscount[Math.min(5, c.extras.size)]);
 const isExpress = (c) => c.pkg !== 'basic';
 const allExtras = (c) => { const s = new Set(c.extras); if (c.pkg === 'ultimate') BUNDLE.forEach((id) => s.add(id)); return s; };
 const extraDef = (id) => PRICING.extras.find((x) => x.id === id);
@@ -173,9 +176,10 @@ function quote(c) {
   const n = c.chars;
   const core = base * mult * n * (1 - PRICING.charDiscount[c.tier ?? n]);
   let extras = 0;
-  let extrasSave = 0;   // set discounts (-15%) of the extras the buyer ticked
-  allExtras(c).forEach((id) => { extras += extraDef(id).price; });
-  c.extras.forEach((id) => { const x = extraDef(id); if (x.was) extrasSave += x.was - x.price; });
+  let extrasSave = 0;   // what the add-on own discounts and the volume discount take off
+  const kx = extraK(c);
+  allExtras(c).forEach((id) => { extras += extraDef(id).price * (c.pkg === 'ultimate' ? 1 : kx); });
+  c.extras.forEach((id) => { const x = extraDef(id); extrasSave += (x.was ? x.was - x.price : 0) + x.price * (1 - kx); });
   const bundleExtras = BUNDLE.reduce((s, id) => s + extraDef(id).price, 0);
   const bundle = c.pkg === 'ultimate' ? PRICING.ultimateDiscount * (core + bundleExtras) : 0;
   if (isExpress(c)) hours *= PRICING.express.timeFactor;
@@ -189,7 +193,7 @@ function grandOf(c) {
   const parts = [quote({ ...c, tier: N }), ...(c.others || []).map((o) => quote({ ...o, region: c.region, chars: 1, tier: N }))];
   const sum = (f) => parts.reduce((s, p) => s + f(p), 0);
   const raw = sum((p) => p.raw), bundle = sum((p) => p.bundle), charSave = sum((p) => p.charSave), extrasSave = sum((p) => p.extrasSave);
-  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave + extrasSave), raw, bundle, charSave, hours: Math.max(...parts.map((p) => p.hours)), core: parts[0].core, n: N };
+  return { total: pretty(raw), wasBundle: pretty(raw + bundle), was: pretty(raw + bundle + charSave + extrasSave), raw, bundle, charSave, extrasSave, hours: Math.max(...parts.map((p) => p.hours)), core: parts[0].core, n: N };
 }
 const PKG = {
   basic:   () => cfgWith({ pkg: 'basic' }),
@@ -346,6 +350,9 @@ function render() {
   const N = tierN();
   const ct = $('#charTag'); ct.hidden = N === 1; ct.textContent = `-${Math.round(PRICING.charDiscount[N] * 100)}%`;
   $('#charNote').textContent = N === 1 ? 'Add alts and save up to 20%' : `${N} characters · you save $${Math.floor(q.charSave)}`;
+  const nx = state.pkg === 'ultimate' ? 0 : state.extras.size, xt = $('#xTag');
+  xt.hidden = nx < 2; xt.textContent = `-${Math.round(PRICING.extraDiscount[Math.min(5, nx)] * 100)}%`;
+  $('#xNote').textContent = nx < 2 ? 'Optional · add more, save up to 20%' : `${nx} add-ons · you save $${Math.floor(q.extrasSave)}`;
   $('#addChar').disabled = N >= MAX_CHARS;
   $('#addHint').innerHTML = N >= MAX_CHARS ? 'Maximum 5' : `<i class="xtag">Save ${Math.round(PRICING.charDiscount[N + 1] * 100)}%</i>`;
   renderOthers();
@@ -361,10 +368,9 @@ function render() {
     inp.checked = !blocked && (inUlt || state.extras.has(x.id) || !!(parent && state.extras.has(parent)));
     inp.disabled = !!locked;
     row.classList.toggle('locked', !!locked);
-    const inSet = !locked && parent && state.extras.has(parent);
-    const sd = parent && extraDef(parent), k = sd ? sd.price / sd.was : 1;
-    $('.p', row).innerHTML = inSet ? `+${money(pretty(x.price * k))}<s>${money(pretty(x.price))}</s>` : extraPrice(x, locked);
-    $('.p', row).classList.toggle('hot', !!inSet || !!x.was);
+    const kx = extraK(state), picked = !locked && state.extras.has(x.id) && kx < 1;
+    $('.p', row).innerHTML = picked ? `+${money(pretty(x.price * kx))}<s>${money(pretty(x.price))}</s>` : extraPrice(x, locked);
+    $('.p', row).classList.toggle('hot', picked || !!x.was);
   });
   // "Take all" in each group: ticks both items; once both are taken it stays disabled, only unticking by hand brings it back
   XGROUPS.forEach((g) => {
@@ -668,9 +674,9 @@ function itemHTML(i, idx) {
   const row = (icon, label, val) => `<div class="lrow"><svg class="ic"><use href="#${icon}"/></svg><span><b>${label}</b>${val}</span></div>`;
   let extras = '';
   if (c) {
-    const lines = [];
+    const lines = [], kx = extraK(c);
     if (c.pkg === 'ultimate') BUNDLE.forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">Included</span></div>`));
-    [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price))}${extraDef(id).was ? `<s>${money(pretty(extraDef(id).was))}</s>` : ''}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
+    [...c.extras].forEach((id) => lines.push(`<div class="xl"><span>${extraDef(id).label}</span><span class="xp">${money(pretty(extraDef(id).price * kx))}${(kx < 1 || extraDef(id).was) ? `<s>${money(pretty(kx < 1 ? extraDef(id).price : extraDef(id).was))}</s>` : ''}<button type="button" class="xrm" data-xrm="${idx}:${id}" aria-label="Remove ${extraDef(id).label}">×</button></span></div>`));
     if (lines.length) extras = `<div class="xlist">${lines.join('')}</div>`;
   } else if (i.extras?.length) extras = `<div class="lmeta">+ ${i.extras.join(', ')}</div>`;
   return `
